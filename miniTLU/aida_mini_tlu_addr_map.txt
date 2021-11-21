@@ -1,0 +1,72 @@
+*RegName                RegAddr        RegMask       R    W
+*-------------------------------------------------------------
+FirmwareId              0x00000000     0xffffffff    1    0
+*
+* DUT interfaces base = 0x020
+DUTMaskW		0x00000020     0xffffffff    0    1
+IgnoreDUTBusyW		0x00000021     0xffffffff    0    1
+IgnoreShutterVetoW	0x00000022     0xffffffff    0    1
+DUTInterfaceModeW	0x00000023     0xffffffff    0    1
+DUTInterfaceModeModifierW 0x00000024     0xffffffff    0    1
+DUTMaskR		0x00000028     0xffffffff    1    0
+IgnoreDUTBusyR		0x00000029     0xffffffff    1    0
+IgnoreShutterVetoR	0x0000002A     0xffffffff    1    0
+DUTInterfaceModeR 	0x0000002B     0xffffffff    1    0
+DUTInterfaceModeModifierR 0x0000002C     0xffffffff    1    0
+*
+* trigger inputs = 0x040
+SerdesRstW               0x00000040     0xffffffff    0    1
+SerdesRstR               0x00000048     0xffffffff    1    0
+ThrCount0R               0x00000049     0xffffffff    1    0
+ThrCount1R               0x0000004a     0xffffffff    1    0
+ThrCount2R               0x0000004b     0xffffffff    1    0
+ThrCount3R               0x0000004c     0xffffffff    1    0
+*
+* trigger logic = 0x060  **Note the different read and write directions
+
+InternalTriggerIntervalW	0x00000062     0xffffffff    0    1
+TriggerPatternW 		0x00000063     0xffffffff    0    1
+TriggerVetoW 			0x00000064     0xffffffff    0    1
+PulseStretchW			0x00000066     0xffffffff    0    1
+PulseDelayW 			0x00000067     0xffffffff    0    1
+TriggerHoldOffW			0x00000068     0xffffffff    0    1
+
+PostVetoTriggersR       	0x00000070     0xffffffff    1    0
+PreVetoTriggersR        	0x00000071     0xffffffff    1    0
+InternalTriggerIntervalR	0x00000072     0xffffffff    1    0
+TriggerPatternR 		0x00000073     0xffffffff    1    0
+TriggerVetoR 			0x00000074     0xffffffff    1    0
+ExternalTriggerVetoR		0x00000075     0xffffffff    1    0
+PulseStretchR			0x00000076     0xffffffff    1    0
+PulseDelayR 			0x00000077     0xffffffff    1    0
+TriggerHoldOffR			0x00000078     0xffffffff    1    0
+AuxTriggerCountR 		0x00000079     0xffffffff    1    0
+*
+* event buffer = 0x080
+EventFifoData		0x00000080     0xffffffff    1    0
+EventFifoFillLevel	0x00000081     0xffffffff    1    0
+EventFifoCSR		0x00000082     0xffffffff    1    1
+EventFifoFillLevelFlags	0x00000083     0xffffffff    1    0
+*
+* logic clocks = 0x0A0
+LogicClocksCSR          0x000000A0     0xffffffff    1    1
+LogicRst                0x000000A1     0xffffffff    0    1
+*
+* I2C = 0x0C0
+i2c_pre_lo                0x000000C0     0x000000ff    1    1
+i2c_pre_hi                0x000000C1     0x000000ff    1    1
+i2c_ctrl                  0x000000C2     0x000000ff    1    1
+i2c_tx                    0x000000C3     0x000000ff    0    1
+i2c_rx                    0x000000C3     0x000000ff    1    0
+i2c_cmd                   0x000000C4     0x000000ff    0    1
+i2c_status                0x000000C4     0x000000ff    1    0
+*
+* Event formatter = 0x140
+Enable_Record_Data	0x00000140     0xffffffff    1    1
+ResetTimestampW		0x00000141     0xffffffff    0    1
+CurrentTimestampLR	0x00000142     0xffffffff    1    0
+CurrentTimestampHR	0x00000143     0xffffffff    1    0
+*
+* Shutter/T0 control = 0x160
+ShutterStateW			0x00000160     0xffffffff    0    1
+PulseT0				0x00000161     0xffffffff    0    1

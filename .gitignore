@@ -1,0 +1,77 @@
+/TLU_v1e/work/TLU_v1e.runs/*
+/EUDETdummy/work/*
+/TLU_v1e/work/*
+/TLU_v1c/work/*
+/Enclustra_Example/*
+/Enclustra_tests/
+/TLU_v1e/scripts/datafiles
+/Data/*
+/TLU_v1e/.Xil/
+Simulation/
+*.pyc
+.svn/*
+*.jou
+*.str
+*.BKP
+*.repo
+
+## Backup files
+*.py~
+*.md~
+*.sh~
+*.*~
+
+## Core latex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+
+## Bibliography auxiliary files (bibtex/biblatex/biber):
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*-blx.bib
+*.run.xml
+
+## WinEdt project
+*.prj.bak
+*.prj
+
+## Intermediate documents:
+*.dvi
+*.xdv
+*-converted-to.*
+
+## Build tool auxiliary files:
+*.fdb_latexmk
+*.synctex
+*.synctex(busy)
+*.synctex.gz
+*.synctex.gz(busy)
+*.pdfsync
+
+# makeidx
+*.idx
+*.ilg
+*.ind
+*.ist
+
+# glossaries
+*.acn
+*.acr
+*.glg
+*.glo
+*.gls
+*.glsdefs
+
+# xindy
+*.xdy
