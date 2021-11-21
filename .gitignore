@@ -1,77 +1,129 @@
-/TLU_v1e/work/TLU_v1e.runs/*
-/EUDETdummy/work/*
-/TLU_v1e/work/*
-/TLU_v1c/work/*
-/Enclustra_Example/*
-/Enclustra_tests/
-/TLU_v1e/scripts/datafiles
-/Data/*
-/TLU_v1e/.Xil/
-Simulation/
-*.pyc
-.svn/*
-*.jou
-*.str
-*.BKP
-*.repo
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
 
-## Backup files
-*.py~
-*.md~
-*.sh~
-*.*~
+# C extensions
+*.so
 
-## Core latex/pdflatex auxiliary files:
-*.aux
-*.lof
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
 *.log
-*.lot
-*.fls
-*.out
-*.toc
-*.fmt
-*.fot
-*.cb
-*.cb2
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
 
-## Bibliography auxiliary files (bibtex/biblatex/biber):
-*.bbl
-*.bcf
-*.blg
-*-blx.aux
-*-blx.bib
-*.run.xml
+# Flask stuff:
+instance/
+.webassets-cache
 
-## WinEdt project
-*.prj.bak
-*.prj
+# Scrapy stuff:
+.scrapy
 
-## Intermediate documents:
-*.dvi
-*.xdv
-*-converted-to.*
+# Sphinx documentation
+docs/_build/
 
-## Build tool auxiliary files:
-*.fdb_latexmk
-*.synctex
-*.synctex(busy)
-*.synctex.gz
-*.synctex.gz(busy)
-*.pdfsync
+# PyBuilder
+target/
 
-# makeidx
-*.idx
-*.ilg
-*.ind
-*.ist
+# Jupyter Notebook
+.ipynb_checkpoints
 
-# glossaries
-*.acn
-*.acr
-*.glg
-*.glo
-*.gls
-*.glsdefs
+# IPython
+profile_default/
+ipython_config.py
 
-# xindy
-*.xdy
+# pyenv
+.python-version
+
+# pipenv
+#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
+#   However, in case of collaboration, if having platform-specific dependencies or dependencies
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
+#   install all needed dependencies.
+#Pipfile.lock
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/

@@ -1,31 +1,22 @@
-# TLU Software
+# aidatlu
+Repository for controlling new AIDA TLU
 
-
-This repository contains software for AIDA-2020 TLU. I can be used with all variants: V1C (T-shaped pcb) , V1E and V1F (rectangular PCBs; the one most likely to be used outside the UoB lab).
-
-The repository contains Python scripts used to test the hardware (the firm(gate)ware is contained in the fmc-mtlu-gw repository). These scripts rely on a few libraries contained in the "packages" folder as well as on uHAL.
-Ensure your python environmental variable is set to include the packages folder and that uHAL is installed on the machine.
-uHAL can be installed from here:
-
-http://ipbus.web.cern.ch/ipbus/doc/user/html/software/index.html
-
-## Controlling AIDA TLU with Python Script
-
+# Installation
+## IPbus
+You need to install [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html) and its python bindings to the desired interpreter.
+Follow the linked tutorial for pre-requisites and general installation.
+The following commands have been proven useful for custom installation and building against current (non-system) python within an environment:
+```bash
+# Install only uhal core and python bindings, no ControlHub etc.
+make -j 4 Set=uhal
+# Pass current PATH to sudo shell to build against current python
+sudo env PATH=$ make install prefix=<install_location>
 ```
-cd TLU_v1e/scripts
-python2 ./startTLU_v1e.py
+## Python package
+Install the python package as usual
+```
+python setup.py develop
 ```
 
-Connects to TLU. Allows interactive control.
-
-Reads initialization (start up) parameters from `localIni.ini`  ( default clock generator configuration file in `localClock.txt`)
-
-Reads configuration parameters from `localConf.conf`
-
-Initialization and configuration files are in EUDAQ2 format.
-
-
-# EUDAQ2
-The best way to control and read out data from the TLU is by using the EUDAQ2 tools.
-Refer to the official EUDAQ2 page for instructions on how to install them.
-https://github.com/eudaq/eudaq
+# Usage
+Only tested and somehow working file is based on `TLU_v1e/scripts/TLU_v1e.py`. An example can be found in `run_aidatlu.py`.
