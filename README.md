@@ -10,7 +10,7 @@ The following commands have been proven useful for custom installation and build
 # Install only uhal core and python bindings, no ControlHub etc.
 make -j 4 Set=uhal
 # Pass current PATH to sudo shell to build against current python
-sudo env PATH=$ make install prefix=<install_location>
+sudo env PATH=$PATH make install prefix=<install_location>
 ```
 ## Python package
 Install the python package as usual
