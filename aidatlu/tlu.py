@@ -13,7 +13,9 @@ class AidaTLU(object):
         self.i2c.init()
         if self.i2c.modules["eeprom"]:
             self.log.info("Found device with ID %s" % hex(self.get_device_id()))
+
         self.led_controller = LEDControl(self.i2c)
+
 
         # init pwrled
 
@@ -35,4 +37,6 @@ class AidaTLU(object):
         return self.i2c.read_register("version")
 
     def init_power_leds(self) -> None:
-        raise NotImplementedError("TODO")
+        # TODO what should this function do?
+        self.led_controller.test_leds()
+

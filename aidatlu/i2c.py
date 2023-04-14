@@ -102,8 +102,8 @@ class I2CCore(object):
     def set_i2c_tx(self, value: int):
         self.write_register("i2c_master.i2c_rxtx", value & 0xFF)
 
-    def is_done(self):
-        return (self.get_i2c_status() >> 1) & 0x1
+    def is_done(self) -> bool:
+        return bool((self.get_i2c_status() >> 1) & 0x1)
 
     def set_i2c_clock_prescale(self, value: int):
         self.write_register("i2c_master.i2c_pre_lo", value & 0xFF)
