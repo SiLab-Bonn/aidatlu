@@ -3,7 +3,7 @@ import logging
 import logger
 from i2c import I2CCore, i2c_addr
 from led_controller import LEDControl
-
+from voltage_controller import VoltageControl
 
 class AidaTLU(object):
     def __init__(self, hw) -> None:
@@ -15,7 +15,7 @@ class AidaTLU(object):
             self.log.info("Found device with ID %s" % hex(self.get_device_id()))
 
         self.led_controller = LEDControl(self.i2c)
-
+        self.voltage_controller = VoltageControl(self.i2c)
 
         # init pwrled
 
@@ -38,5 +38,5 @@ class AidaTLU(object):
 
     def init_power_leds(self) -> None:
         # TODO what should this function do?
-        self.led_controller.test_leds()
+        pass
 

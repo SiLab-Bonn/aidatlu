@@ -1,5 +1,5 @@
 import logger
-from i2c import I2CCore, i2c_addr
+from i2c import I2CCore
 import time
 from utils import _set_bit
 
@@ -7,7 +7,7 @@ class LEDControl(object):
     def __init__(self, i2c: I2CCore, int_ref: bool = False) -> None:
         self.log = logger.setup_derived_logger("LED Controller")
         self.i2c = i2c
-        self._set_dac_reference(int_ref)
+
         # TODO: WHY?!
         self._set_ioexpander_polarity(exp=1, addr=4, polarity=False)
         self._set_ioexpander_direction(exp=1, addr=6, direction="output")
@@ -26,60 +26,7 @@ class LEDControl(object):
         self._set_ioexpander_output(exp=2, addr=3, value=0xFF)
 
   
-    def set_led(self,led_id: int, rgb: list) -> None:
-        """sets led to a rgb value
-
-        Args:
-            led_id (int): Led id for the 11 LED, led_ id has to be between 1 and 11
-            rgb (list): rgb value for the LED e.q. [0,0,0] #TODO which color has which code?
-
-        """
-        if led_id < 1 or led_id > 11:
-            raise ValueError("1 < led_id < 11")
-
-        # indicator map for LED positions notice the -1 for the clock led
-        indicator = [[30, 29, 31],[27, 26, 28],[24, 23, 25],[21, 20, 22],[18, 17, -1],[15, 14, 16],[12, 11, 13],[9, 8, 10],[6, 5, 7],[3, 2, 4],[1, 0, 19]]
-
-
-        now_status = [] #status of all ioexpander now
-        next_status = [] #status of all ioexpander next
-        now_status.append(0xFF & self._get_ioexpander_output(1,2))
-        now_status.append(0xFF & self._get_ioexpander_output(1,3))
-        now_status.append(0xFF & self._get_ioexpander_output(2,2))
-        now_status.append(0xFF & self._get_ioexpander_output(2,3))  
-        #print(now_status,"now_status of the ioexpander for debugging")
-
-        word = 0x00000000
-        word = word | now_status[0]
-        word = word | (now_status[1] << 8)
-        word = word | (now_status[2] << 16)
-        word = word | (now_status[3] << 24)
-        #print(word,"word for debugging")
-
-        for index in range(3):
-            if led_id == 5: #for clock led not all colors are allowed on clock [1,0,1] is green [0,1,1] is red the og eudaq indicator map produces here an error
-                #TODO some colors also switch on LED 11 
-                word = _set_bit(word,[18,17,19][index],rgb[index])
-            else:
-                word = _set_bit(word,indicator[led_id-1][index],rgb[index])
-
-        next_status.append(0xFF & word)
-        next_status.append(0xFF & (word >> 8))
-        next_status.append(0xFF & (word >> 16))
-        next_status.append(0xFF & (word >> 24))
-        #print(next_status,"next_status of the ioexpander for debugging")
-
-        if now_status[0] != next_status[0]:
-            self._set_ioexpander_output(1,2,next_status[0])
-
-        if now_status[1] != next_status[1]:
-            self._set_ioexpander_output(1,3,next_status[1])
-
-        if now_status[2] != next_status[2]:
-            self._set_ioexpander_output(2,2,next_status[2])
-
-        if now_status[3] != next_status[3]:
-            self._set_ioexpander_output(2,3,next_status[3])
+    
 
 
     def test_leds(self,single=True) -> None:
@@ -89,12 +36,12 @@ class LEDControl(object):
                     if i+1==5:
                         pass
                     else:
-                        self.set_led(i+1,color)
+                        self._set_led(i+1,color)
                         time.sleep(0.1)
                         self.all_off()
                         time.sleep(0.05)
             for color in [[0,0,1],[0,1,1],[1,0,1]]:
-                self.set_led(5,color)
+                self._set_led(5,color)
                 time.sleep(0.15)
                 self.all_off()
                 time.sleep(0.1)
@@ -119,7 +66,7 @@ class LEDControl(object):
             color (str, optional): Color code [white: "w", red: "r", green: "g", blue: "b"] Defaults to "w".
         """
         if color not in ["w","r","g","b"]:
-            raise ValueError("%s not supported",color)
+            raise ValueError("%s color not supported" %color)
 
         if color == "w":
             self._set_ioexpander_output(exp=1, addr=2, value=0x0)
@@ -155,30 +102,101 @@ class LEDControl(object):
         self._set_ioexpander_output(exp=2, addr=3, value=0xFF)
 
 
-    def switch_led(self,exp: int, addr: int, color: str = "off") -> None:
-        """changes led to color
+    def switch_led(self, led_id: int, color: str = "off") -> None:
+        """changes LED with led_id to specific color
 
         Args:
-            exp (int): _description_
-            addr (int): _description_
-            color (str, optional): Color code [white: "w", red: "r", green: "g", blue: "b"]. Defaults to "off".
+            led_id (int): ID for the 11 LEDs, led_ id has to be between 1 and 11
+            color (str, optional): Color code [white: "w", red: "r", green: "g", blue: "b", off: "off"]
+                                   for Clock LED only [red: "r", green: "g", off: "off"]. 
+                                   Defaults to "off".
         """
-        pass
+        
+        if led_id == 5 and color != "r" and color != "g" and color != "off":
+            raise ValueError("%s color not supported for Clock LED" %color)
+        
+        elif color != "w" and color != "r" and color != "g" and color != "b" and color != "off":
+            raise ValueError("%s color not supported for LED" %color)
 
+        if led_id == 5:
+            if color == "r":
+                rgb = [0,1,1]
+            if color == "g":
+                rgb = [1,0,1]
+            if color == "off":
+                rgb = [1,1,1]
 
-    def _set_dac_reference(self, internal: bool = False) -> None:
-        """Choose internal or external DAC reference
-
-        Args:
-            internal (bool, optional): Defaults to False.
-        """
-        if internal:
-            self.i2c.write(self.i2c.modules["pwr_dac"], 0x38, 0x0001)
         else:
-            self.i2c.write(self.i2c.modules["pwr_dac"], 0x38, 0x0001)
-        self.log.info(
-            "Set %s DAC reference for LEDs" % ("internal" if internal else "external")
-        )
+            if color == "w":
+                rgb = [0,0,0]
+            if color == "r":
+                rgb = [0,1,1]
+            if color == "g":
+                rgb = [1,0,1]
+            if color == "b":
+                rgb = [1,0,0]        
+            if color == "off":
+                rgb = [1,1,1]
+
+        self._set_led(led_id,rgb)
+
+
+    def _set_led(self,led_id: int, rgb: list) -> None:
+            """sets led to a rgb value
+
+            Args:
+                led_id (int): Led id for the 11 LED, led_ id has to be between 1 and 11
+                rgb (list): rgb value for the LED e.q. [0,0,0] #TODO which color has which code?
+
+            """
+            if led_id < 1 or led_id > 11:
+                raise ValueError("1 < led_id < 11")
+
+            # indicator map for LED positions notice the -1 for the clock led #TODO should this be global??
+            indicator = [[30, 29, 31],[27, 26, 28],[24, 23, 25],[21, 20, 22],[18, 17, -1],[15, 14, 16],[12, 11, 13],[9, 8, 10],[6, 5, 7],[3, 2, 4],[1, 0, 19]]
+
+
+            now_status = [] #status of all ioexpander now
+            next_status = [] #status of all ioexpander next
+            now_status.append(0xFF & self._get_ioexpander_output(1,2))
+            now_status.append(0xFF & self._get_ioexpander_output(1,3))
+            now_status.append(0xFF & self._get_ioexpander_output(2,2))
+            now_status.append(0xFF & self._get_ioexpander_output(2,3))  
+            #print(now_status,"now_status of the ioexpander for debugging")
+
+            word = 0x00000000
+            word = word | now_status[0]
+            word = word | (now_status[1] << 8)
+            word = word | (now_status[2] << 16)
+            word = word | (now_status[3] << 24)
+            #print(word,"word for debugging")
+
+            for index in range(3):
+                if led_id == 5: #for clock led not all colors are allowed on clock [1,0,1] is green [0,1,1] is red the og eudaq indicator map produces here an error
+                    #TODO some colors also switch on LED 11 
+                    word = _set_bit(word,[18,17,19][index],rgb[index])
+                else:
+                    word = _set_bit(word,indicator[led_id-1][index],rgb[index])
+
+            next_status.append(0xFF & word)
+            next_status.append(0xFF & (word >> 8))
+            next_status.append(0xFF & (word >> 16))
+            next_status.append(0xFF & (word >> 24))
+            #print(next_status,"next_status of the ioexpander for debugging")
+
+            if now_status[0] != next_status[0]:
+                self._set_ioexpander_output(1,2,next_status[0])
+
+            if now_status[1] != next_status[1]:
+                self._set_ioexpander_output(1,3,next_status[1])
+
+            if now_status[2] != next_status[2]:
+                self._set_ioexpander_output(2,2,next_status[2])
+
+            if now_status[3] != next_status[3]:
+                self._set_ioexpander_output(2,3,next_status[3])
+
+
 
     def _set_ioexpander_polarity(
         self, exp: int, addr: int, polarity: bool = False
