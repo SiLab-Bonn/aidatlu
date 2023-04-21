@@ -4,7 +4,7 @@ import time
 from utils import _set_bit
 
 class LEDControl(object):
-    def __init__(self, i2c: I2CCore, int_ref: bool = False) -> None:
+    def __init__(self, i2c: I2CCore) -> None:
         self.log = logger.setup_derived_logger("LED Controller")
         self.i2c = i2c
 
@@ -24,10 +24,6 @@ class LEDControl(object):
         self._set_ioexpander_polarity(exp=2, addr=5, polarity=False)
         self._set_ioexpander_direction(exp=2, addr=7, direction="output")
         self._set_ioexpander_output(exp=2, addr=3, value=0xFF)
-
-  
-    
-
 
     def test_leds(self,single=True) -> None:
         if single:
@@ -56,8 +52,6 @@ class LEDControl(object):
                 time.sleep(1)
                 self.all_off()
                 time.sleep(1)
-
-                    
 
     def all_on(self, color: str = "w") -> None:
         """Set all LEDs to same color
@@ -92,7 +86,6 @@ class LEDControl(object):
             self._set_ioexpander_output(exp=2, addr=2, value=0xb6)
             self._set_ioexpander_output(exp=2, addr=3, value=0x6d)
 
-
     def all_off(self) -> None:
         """Turn off all LEDs
         """
@@ -100,7 +93,6 @@ class LEDControl(object):
         self._set_ioexpander_output(exp=1, addr=3, value=0xFF)
         self._set_ioexpander_output(exp=2, addr=2, value=0xFF)
         self._set_ioexpander_output(exp=2, addr=3, value=0xFF)
-
 
     def switch_led(self, led_id: int, color: str = "off") -> None:
         """changes LED with led_id to specific color
@@ -112,12 +104,13 @@ class LEDControl(object):
                                    Defaults to "off".
         """
         
-        if led_id == 5 and color != "r" and color != "g" and color != "off":
+        if led_id == 5 and color not in ["r","g","off"]:
             raise ValueError("%s color not supported for Clock LED" %color)
         
-        elif color != "w" and color != "r" and color != "g" and color != "b" and color != "off":
+        elif color not in ["w", "r","g", "b","off"]:
             raise ValueError("%s color not supported for LED" %color)
 
+        # Clock LED has only two LEDs
         if led_id == 5:
             if color == "r":
                 rgb = [0,1,1]
@@ -140,7 +133,6 @@ class LEDControl(object):
 
         self._set_led(led_id,rgb)
 
-
     def _set_led(self,led_id: int, rgb: list) -> None:
             """sets led to a rgb value
 
@@ -150,10 +142,10 @@ class LEDControl(object):
 
             """
             if led_id < 1 or led_id > 11:
-                raise ValueError("1 < led_id < 11")
+                raise ValueError("LED ID has to be between 1 and 11")
 
             # indicator map for LED positions notice the -1 for the clock led #TODO should this be global??
-            indicator = [[30, 29, 31],[27, 26, 28],[24, 23, 25],[21, 20, 22],[18, 17, -1],[15, 14, 16],[12, 11, 13],[9, 8, 10],[6, 5, 7],[3, 2, 4],[1, 0, 19]]
+            indicator = [[30, 29, 31], [27, 26, 28], [24, 23, 25], [21, 20, 22], [18, 17, -1], [15, 14, 16], [12, 11, 13], [9, 8, 10], [6, 5, 7], [3, 2, 4], [1, 0, 19]]
 
 
             now_status = [] #status of all ioexpander now
@@ -195,8 +187,6 @@ class LEDControl(object):
 
             if now_status[3] != next_status[3]:
                 self._set_ioexpander_output(2,3,next_status[3])
-
-
 
     def _set_ioexpander_polarity(
         self, exp: int, addr: int, polarity: bool = False
@@ -251,7 +241,6 @@ class LEDControl(object):
         if exp not in [1, 2]:
             raise ValueError("Expander ID should be 1 or 2")
         self.i2c.write(self.i2c.modules["led_expander_%.1s" % exp], addr, value & 0xFF)
-
 
     def _get_ioexpander_output(self, exp: int, addr: int) -> int:
         """Get content of register 2 or 3
