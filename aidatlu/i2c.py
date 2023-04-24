@@ -140,3 +140,24 @@ class I2CCore(object):
 
         return self.read_register("i2c_master.i2c_rxtx")
 
+    def write_array(self,device_addr: int, mem_addr: int, values: list) -> None:
+        self.set_i2c_tx((device_addr << 1) | 0x0)
+        self.set_i2c_command(0x90)
+
+        self.set_i2c_tx(mem_addr)
+        self.set_i2c_command(0x10)
+
+        for i in range(len(values)-1):
+            if i > 0xFF:
+                n_bytes_to_write = ceil(len(hex(i)[2:] / 2))
+                for byte in range(
+                    8 * (n_bytes_to_write - 1), 0, -8
+                ):  # funky magic to write byte by byte
+                    to_write = (i & (0xFF << byte)) >> byte
+                    self.set_i2c_tx(to_write)
+                    self.set_i2c_command(0x10)
+            self.set_i2c_tx(values[i] & 0xFF)
+            self.set_i2c_command(0x10)
+
+        self.set_i2c_tx(values[-1] & 0xFF)
+        self.set_i2c_command(0x50) 

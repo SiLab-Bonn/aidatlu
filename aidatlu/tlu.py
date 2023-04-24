@@ -40,3 +40,5 @@ class AidaTLU(object):
         # TODO what should this function do?
         pass
 
+    def compare_write_read(self):
+        pass
