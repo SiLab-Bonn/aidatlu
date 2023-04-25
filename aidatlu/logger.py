@@ -2,7 +2,7 @@ import logging
 
 import coloredlogs
 
-FORMAT = "%(asctime)s [%(name)-14s] - %(levelname)-7s %(message)s"
+FORMAT = "%(asctime)s [%(name)-18s] - %(levelname)-7s %(message)s"
 
 
 def setup_main_logger(name="AidaTLU", level=logging.INFO):

@@ -3,9 +3,17 @@ from i2c import I2CCore
 import time
 from utils import _set_bit
 
+""" 
+
+PCA9539PW
+
+"""
+
 class LEDControl(object):
     def __init__(self, i2c: I2CCore) -> None:
         self.log = logger.setup_derived_logger("LED Controller")
+
+        self.log.info("Initializing LED Control")
         self.i2c = i2c
 
         # TODO: WHY?!
@@ -25,7 +33,14 @@ class LEDControl(object):
         self._set_ioexpander_direction(exp=2, addr=7, direction="output")
         self._set_ioexpander_output(exp=2, addr=3, value=0xFF)
 
+
     def test_leds(self,single=True) -> None:
+        """Test the 11 LEDs
+
+        Args:
+            single (bool, optional): Test all possible RGB combinations for all LEDs. Defaults to True.
+        """
+        self.log.info("Testing LEDs colors")
         if single:
             for color in [[0,1,1],[1,0,1],[1,1,0],[1,0,0],[0,1,0],[0,0,1],[0,0,0]]:
                 for i in range(11):
@@ -258,3 +273,4 @@ class LEDControl(object):
         
         output = self.i2c.read(self.i2c.modules["led_expander_%.1s" % exp], addr)
         return output
+

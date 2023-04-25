@@ -1,9 +1,11 @@
 import logging
-
+import uhal
 import logger
+
 from i2c import I2CCore, i2c_addr
 from led_controller import LEDControl
 from voltage_controller import VoltageControl
+from clock_controller import ClockControl
 
 class AidaTLU(object):
     def __init__(self, hw) -> None:
@@ -16,6 +18,7 @@ class AidaTLU(object):
 
         self.led_controller = LEDControl(self.i2c)
         self.voltage_controller = VoltageControl(self.i2c)
+        self.clock_controller = ClockControl(self.i2c)
 
         # init pwrled
 
@@ -30,7 +33,6 @@ class AidaTLU(object):
         id = []
         for addr in range(6):
             id.append(self.i2c.read(self.i2c.modules["eeprom"], 0xFA + addr) & 0xFF)
-
         return int("0x" + "".join(["{:x}".format(i) for i in id]), 16) & 0xFFFFFFFFFFFF
 
     def get_fw_version(self) -> int:
@@ -42,3 +44,12 @@ class AidaTLU(object):
 
     def compare_write_read(self):
         pass
+
+
+if __name__ == "__main__":
+
+    uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
+    manager = uhal.ConnectionManager("file://./misc/aida_tlu_connection.xml")
+    hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
+
+    tlu = AidaTLU(hw)

@@ -1,9 +1,17 @@
 from i2c import I2CCore
 import logger
 
+""" 
+
+AD5665R
+
+"""
+
 class VoltageControl(object):
     def __init__(self, i2c: I2CCore, int_ref: bool = False) -> None:
         self.log = logger.setup_derived_logger("Voltage Controller")
+
+        self.log.info("Initializing Power DAC Control")
         self.i2c = i2c
         self._set_dac_reference(int_ref)
 
