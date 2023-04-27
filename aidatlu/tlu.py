@@ -45,7 +45,6 @@ class AidaTLU(object):
     def compare_write_read(self):
         pass
 
-
 if __name__ == "__main__":
 
     uhal.setLogLevelTo(uhal.LogLevel.NOTICE)

@@ -16,6 +16,51 @@ class ClockControl(object):
         
         self.write_clock_conf("misc/aida_tlu_clk_config.txt")
 
+    def get_internal_trigger_frequency(self) -> int:
+        """Reads the internal trigger frequency from the register.
+
+        Returns:
+            int: Frequency in Hz #TODO Hz?
+        """
+        interval = self.i2c.read_register("triggerLogic.InternalTriggerIntervalR")
+        if interval == 0:
+            freq = 0
+        else:
+            freq = int(160000000/interval)
+        return freq
+
+    def set_internal_trigger_frequency(self, frequency: int) -> None:
+        """ Sets the internal trigger frequency. This frequency is calculated from an interval size by the Si5344 chip.
+        The maximum allowed Frequency is 160 MHz. #TODO the Si5344 datasheet says the chip can go higer.
+        The Si5344 chip needs to be configured for this function to work.
+
+        Args:
+            frequency (int): Frequency in Hz #TODO is this Hz?
+        """
+        max_freq = 160000000
+        if frequency < 0:
+            raise ValueError("Frequency smaller than 0 does not work")
+        if frequency > max_freq:
+            raise ValueError("Frequency larger than 160MHz does not work")
+        if frequency == 0:
+            interval = frequency
+        else:
+            interval = int(160000000/frequency)
+        self._set_internal_trigger_interval(interval)
+        #TODO check if this is really Hz
+        self.log.info("Internal trigger frequency: %i Hz" %self.get_internal_trigger_frequency())
+        if self.get_internal_trigger_frequency() != frequency:
+            self.log.warn("Error setting frequency. Internal Trigger frequency is %i Hz" %self.get_internal_trigger_frequency())
+
+    def _set_internal_trigger_interval(self, interval) -> None:
+        """Number of internal clock cycles to be used as period for the internal trigger generator.
+        #TODO In the documentation what is meant by smaller 5 and -2
+
+        Args:
+            interval (_type_): Number of internal clock cycles.
+        """
+        self.i2c.write_register("triggerLogic.InternalTriggerIntervalW", interval) 
+
     def get_device_version(self) -> int:
         """Get Chip informations.
 
