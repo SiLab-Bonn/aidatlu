@@ -42,7 +42,7 @@ class LEDControl(object):
         """
         self.log.info("Testing LEDs colors")
         if single:
-            for color in [[0,1,1],[1,0,1],[1,1,0],[1,0,0],[0,1,0],[0,0,1],[0,0,0]]:
+            for color in [[0,1,1], [1,0,1], [1,1,0], [1,0,0], [0,1,0], [0,0,1], [0,0,0]]:
                 for i in range(11):
                     if i+1==5:
                         pass
@@ -192,16 +192,16 @@ class LEDControl(object):
             #print(next_status,"next_status of the ioexpander for debugging")
 
             if now_status[0] != next_status[0]:
-                self._set_ioexpander_output(1,2,next_status[0])
+                self._set_ioexpander_output(1,2, next_status[0])
 
             if now_status[1] != next_status[1]:
-                self._set_ioexpander_output(1,3,next_status[1])
+                self._set_ioexpander_output(1,3, next_status[1])
 
             if now_status[2] != next_status[2]:
-                self._set_ioexpander_output(2,2,next_status[2])
+                self._set_ioexpander_output(2,2, next_status[2])
 
             if now_status[3] != next_status[3]:
-                self._set_ioexpander_output(2,3,next_status[3])
+                self._set_ioexpander_output(2,3, next_status[3])
 
     def _set_ioexpander_polarity(
         self, exp: int, addr: int, polarity: bool = False

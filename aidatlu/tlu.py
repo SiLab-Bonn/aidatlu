@@ -6,6 +6,8 @@ from i2c import I2CCore, i2c_addr
 from led_controller import LEDControl
 from voltage_controller import VoltageControl
 from clock_controller import ClockControl
+from output_controller import OutputControl
+
 
 class AidaTLU(object):
     def __init__(self, hw) -> None:
@@ -19,6 +21,7 @@ class AidaTLU(object):
         self.led_controller = LEDControl(self.i2c)
         self.voltage_controller = VoltageControl(self.i2c)
         self.clock_controller = ClockControl(self.i2c)
+        self.output_controller = OutputControl(self.i2c, self.led_controller)
 
         # init pwrled
 

@@ -120,17 +120,21 @@ class ClockControl(object):
         
         self.i2c.write(self.i2c.modules["clk"], address, data)
         
-    def parse_clock_conf(self, file_path: str) -> pd.core.frame.DataFrame:
+    def parse_clock_conf(self, file_path: str) -> list:
         """reads the clock config file and returns a panda dataframe with two rows Adress and Data
-           The configuration file is produced by Clockbuilder Pro (Silicon Labs).
-           This function uses pandas. 
+           The configuration file is produced by Clockbuilder Pro (Silicon Labs). 
         Args:
             file_path (str): File path to the configuration file.
         
         Returns:
-            panda Dataframe: 2-dim. dataframe, consisting of the address and data values.
+            list: 2-dim. list, consisting of the address and data values.
         """
-        return pd.read_csv(file_path,sep=",", skiprows = 9)
+        with open('misc/aida_tlu_clk_config.txt', newline='') as clk_conf:
+            contends = clk_conf.read().splitlines()
+            contends = [i.split(',') for i in contends[10:]]
+        clk_conf.close()
+        return contends
+        #return pd.read_csv(file_path, sep=",", skiprows = 9)
 
     def write_clock_conf(self, file_path: str) -> None:
         """Writes clock configuration consecutivly in register. This takes a few seconds.
@@ -140,8 +144,10 @@ class ClockControl(object):
         """
         clock_conf = self.parse_clock_conf(file_path)
         self.log.info("Writing Clock Configuration")
-        for index,row in clock_conf.iterrows():
-            self.write_clock_register(int(row["Address"],0), int(row["Data"],0))
+        #for index,row in clock_conf.iterrows():
+        #    self.write_clock_register(int(row["Address"],0), int(row["Data"],0))
+        for row in clock_conf:
+            self.write_clock_register(int(row[0],0), int(row[1], 0))
         self.log.info("DONE")
 
     def _set_page(self, page: int) -> None:
