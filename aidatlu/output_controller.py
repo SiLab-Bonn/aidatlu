@@ -26,21 +26,22 @@ class OutputControl(object):
         """
     
         if hdmi_channel < 1 and hdmi_channel > 4:
-            raise ValueError("HDMI number should be between 1 and 4")
-        bank = int(hdmi_channel / 2)
+            raise ValueError("HDMI channel should be between 1 and 4")
+
+        expander = 1
 
         #TODO what is the difference between nibble and bank and address?
         hdmi_channel = hdmi_channel -1 #shift channel
-        bank = int(hdmi_channel/2) # DUT0 and DUT1 are on bank0. DUT2 and DUT 3 are on bank 1.
+        bank = int(hdmi_channel/2) + 2 # DUT0 and DUT1 are on bank0. DUT2 and DUT 3 are on bank 1. Shift of +2 due to the command bytes.
         nibble = hdmi_channel % 2  #DUT0 and DUT2 are on nibble 0. DUT1 and DUT3 are on nibble 1.
 
         #TODO what is happening here
-        old_status = self._get_ioexpander_output_out(1, bank)
+        old_status = self._get_ioexpander_output_out(expander, bank)
         new_nibble = (enable & 0xF) << 4*nibble
         mask = 0xF << 4*nibble
-        new_status = (old_status & ~mask) | (new_nibble & mask)
+        new_status = (old_status & (~mask)) | (new_nibble & mask)
 
-        self._set_ioexpander_output(1, bank, new_status)
+        self._set_ioexpander_output_out(expander, bank, new_status)
         if enable:
             self.led_controller.switch_led(hdmi_channel+1, "g")
         else:
@@ -53,17 +54,16 @@ class OutputControl(object):
             enable (bool, optional): Enable clock LEMO output. Defaults to True.
         """
         #TODO this does not work I checked with all combinations of expander[1,2] and bank[1,2,3]
-        bank = 1
+        cmd_byte = 3 #this is bank+2 in EUDAQ
         mask = 0x10
         expander = 2
 
-        old_status = self._get_ioexpander_output_out(expander, bank)
-        new_status = old_status & ~mask
+        old_status = self._get_ioexpander_output_out(expander, cmd_byte) & 0xFF
+        new_status = old_status & (~mask) & 0xFF
         if enable:
-            new_status = new_status | mask
+            new_status = new_status | mask & 0xFF
 
-        self._set_ioexpander_output_out(expander, bank, new_status)
-        #print(hex(new_status))
+        self._set_ioexpander_output_out(expander, cmd_byte, new_status)
         if enable:
             self.led_controller.switch_led(5, "g")  
         else:
@@ -72,29 +72,29 @@ class OutputControl(object):
             
     def _set_ioexpander_output_out(self, exp: int, addr: int, value: int) -> None:
         """Set content of register 2 or 3 which determine signal if direction is output
-        #TODO these are the smae functions as also in LEDControll but all address or Banks are enabled.
+            A command byte of 2 or 3 reflects the outgoing logic levels of the output pins on the two different banks of the chip.
         Args:
             exp (int): ID of LED Expander (1 or 2))
-            addr (int): # TODO, what is this?!
+            addr (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
             value (int): 8 bit value for the output
         """
-        #if addr not in [2, 3]:
-        #    raise ValueError("Address should be 2 or 3")
+        if addr not in [2, 3]:
+            raise ValueError("Address should be 2 or 3")
         if exp not in [1, 2]:
             raise ValueError("Expander ID should be 1 or 2")
         self.i2c.write(self.i2c.modules["expander_%.1s" % exp], addr, value & 0xFF)
 
     def _get_ioexpander_output_out(self, exp: int, addr: int) -> int:
         """Get content of register 2 or 3
-
+            A command byte of 2 or 3 reflects the outgoing logic levels of the output pins on the two different banks of the chip.
         Args:
             exp (int): _ID of LED Expander (1 or 2))
-            addr (int): # TODO, what is this?!
+            addr (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
         Returns:
             int: content of the ioexpander
         """
-        #if addr not in [2, 3]:
-        #    raise ValueError("Address should be 2 or 3")
+        if addr not in [2, 3]:
+            raise ValueError("Address should be 2 or 3")
         if exp not in [1, 2]:
             raise ValueError("Expander ID should be 1 or 2")
         

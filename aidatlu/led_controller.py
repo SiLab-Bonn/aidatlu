@@ -153,7 +153,7 @@ class LEDControl(object):
 
             Args:
                 led_id (int): Led id for the 11 LED, led_ id has to be between 1 and 11
-                rgb (list): rgb value for the LED e.q. [0,0,0] #TODO which color has which code?
+                rgb (list): rgb value for the LED e.q. [0,0,0]
 
             """
             if led_id < 1 or led_id > 11:
@@ -192,25 +192,26 @@ class LEDControl(object):
             #print(next_status,"next_status of the ioexpander for debugging")
 
             if now_status[0] != next_status[0]:
-                self._set_ioexpander_output(1,2, next_status[0])
+                self._set_ioexpander_output(1, 2, next_status[0])
 
             if now_status[1] != next_status[1]:
-                self._set_ioexpander_output(1,3, next_status[1])
+                self._set_ioexpander_output(1, 3, next_status[1])
 
             if now_status[2] != next_status[2]:
-                self._set_ioexpander_output(2,2, next_status[2])
+                self._set_ioexpander_output(2, 2, next_status[2])
 
             if now_status[3] != next_status[3]:
-                self._set_ioexpander_output(2,3, next_status[3])
+                self._set_ioexpander_output(2, 3, next_status[3])
 
     def _set_ioexpander_polarity(
         self, exp: int, addr: int, polarity: bool = False
     ) -> None:
-        """Set content of register 4 or 5 which determine polarity of ports
+        """Set content of register 4 or 5 which determine polarity of ports.
+            A command byte of 4 or 5 determines the polarity of ports on the two different banks of the chip.
 
         Args:
             exp (int): ID of LED Expander (1 or 2))
-            addr (int):  # TODO, what is this?!
+            addr (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
             polarity (bool, optional): False (0) = normal, True (1) = inverted. Defaults to False.
         """
         if addr not in [4, 5]:
@@ -224,10 +225,11 @@ class LEDControl(object):
         self, exp: int, addr: int, direction: str = "input"
     ) -> None:
         """Set content of register 6 or 7 which determine direction of signal
-
+        A command byte of 6 or 7 determines the direction of signal on the two different banks of the chip.
+        
         Args:
             exp (int): ID of LED Expander (1 or 2))
-            addr (int): # TODO, what is this?!
+            addr (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
             direction (str, optional): "input or "output" direction of port. Defaults to "input".
         """
         if addr not in [6, 7]:
@@ -245,10 +247,10 @@ class LEDControl(object):
 
     def _set_ioexpander_output(self, exp: int, addr: int, value: int) -> None:
         """Set content of register 2 or 3 which determine signal if direction is output
-
+            A command byte of 2 or 3 reflects the outgoing logic levels of the output pins on the two different banks of the chip.
         Args:
             exp (int): ID of LED Expander (1 or 2))
-            addr (int): # TODO, what is this?!
+            addr (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
             value (int): 8 bit value for the output
         """
         if addr not in [2, 3]:
@@ -259,10 +261,10 @@ class LEDControl(object):
 
     def _get_ioexpander_output(self, exp: int, addr: int) -> int:
         """Get content of register 2 or 3
-
+            A command byte of 2 or 3 reflects the outgoing logic levels of the output pins on the two different banks of the chip.
         Args:
             exp (int): _ID of LED Expander (1 or 2))
-            addr (int): # TODO, what is this?!
+            addr (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
         Returns:
             int: content of the ioexpander
         """

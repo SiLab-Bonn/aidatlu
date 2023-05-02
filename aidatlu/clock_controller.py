@@ -1,6 +1,5 @@
 from i2c import I2CCore
 import logger
-import pandas as pd
 
 """
 
@@ -50,7 +49,7 @@ class ClockControl(object):
         #TODO check if this is really Hz
         self.log.info("Internal trigger frequency: %i Hz" %self.get_internal_trigger_frequency())
         if self.get_internal_trigger_frequency() != frequency:
-            self.log.warn("Error setting frequency. Internal Trigger frequency is %i Hz" %self.get_internal_trigger_frequency())
+            self.log.warn("Frequency is set to different value. Internal Trigger frequency is %i Hz" %self.get_internal_trigger_frequency())
 
     def _set_internal_trigger_interval(self, interval) -> None:
         """Number of internal clock cycles to be used as period for the internal trigger generator.
@@ -131,10 +130,9 @@ class ClockControl(object):
         """
         with open('misc/aida_tlu_clk_config.txt', newline='') as clk_conf:
             contends = clk_conf.read().splitlines()
-            contends = [i.split(',') for i in contends[10:]]
+            contends = [row.split(',') for row in contends[10:]]
         clk_conf.close()
         return contends
-        #return pd.read_csv(file_path, sep=",", skiprows = 9)
 
     def write_clock_conf(self, file_path: str) -> None:
         """Writes clock configuration consecutivly in register. This takes a few seconds.
@@ -144,8 +142,6 @@ class ClockControl(object):
         """
         clock_conf = self.parse_clock_conf(file_path)
         self.log.info("Writing Clock Configuration")
-        #for index,row in clock_conf.iterrows():
-        #    self.write_clock_register(int(row["Address"],0), int(row["Data"],0))
         for row in clock_conf:
             self.write_clock_register(int(row[0],0), int(row[1], 0))
         self.log.info("DONE")
