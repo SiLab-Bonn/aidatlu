@@ -17,21 +17,21 @@ class LEDControl(object):
         self.i2c = i2c
 
         # TODO: WHY?!
-        self._set_ioexpander_polarity(exp=1, addr=4, polarity=False)
-        self._set_ioexpander_direction(exp=1, addr=6, direction="output")
-        self._set_ioexpander_output(exp=1, addr=2, value=0xFF)
+        self._set_ioexpander_polarity(exp=1, cmd_byte=4, polarity=False)
+        self._set_ioexpander_direction(exp=1, cmd_byte=6, direction="output")
+        self._set_ioexpander_output(exp=1, cmd_byte=2, value=0xFF)
 
-        self._set_ioexpander_polarity(exp=1, addr=5, polarity=False)
-        self._set_ioexpander_direction(exp=1, addr=7, direction="output")
-        self._set_ioexpander_output(exp=1, addr=3, value=0xFF)
+        self._set_ioexpander_polarity(exp=1, cmd_byte=5, polarity=False)
+        self._set_ioexpander_direction(exp=1, cmd_byte=7, direction="output")
+        self._set_ioexpander_output(exp=1, cmd_byte=3, value=0xFF)
 
-        self._set_ioexpander_polarity(exp=2, addr=4, polarity=False)
-        self._set_ioexpander_direction(exp=2, addr=6, direction="output")
-        self._set_ioexpander_output(exp=2, addr=2, value=0xFF)
+        self._set_ioexpander_polarity(exp=2, cmd_byte=4, polarity=False)
+        self._set_ioexpander_direction(exp=2, cmd_byte=6, direction="output")
+        self._set_ioexpander_output(exp=2, cmd_byte=2, value=0xFF)
 
-        self._set_ioexpander_polarity(exp=2, addr=5, polarity=False)
-        self._set_ioexpander_direction(exp=2, addr=7, direction="output")
-        self._set_ioexpander_output(exp=2, addr=3, value=0xFF)
+        self._set_ioexpander_polarity(exp=2, cmd_byte=5, polarity=False)
+        self._set_ioexpander_direction(exp=2, cmd_byte=7, direction="output")
+        self._set_ioexpander_output(exp=2, cmd_byte=3, value=0xFF)
 
 
     def test_leds(self,single=True) -> None:
@@ -78,36 +78,36 @@ class LEDControl(object):
             raise ValueError("%s color not supported" %color)
 
         if color == "w":
-            self._set_ioexpander_output(exp=1, addr=2, value=0x0)
-            self._set_ioexpander_output(exp=1, addr=3, value=0x0)
-            self._set_ioexpander_output(exp=2, addr=2, value=0x0)
-            self._set_ioexpander_output(exp=2, addr=3, value=0x0)
+            self._set_ioexpander_output(exp=1, cmd_byte=2, value=0x0)
+            self._set_ioexpander_output(exp=1, cmd_byte=3, value=0x0)
+            self._set_ioexpander_output(exp=2, cmd_byte=2, value=0x0)
+            self._set_ioexpander_output(exp=2, cmd_byte=3, value=0x0)
 
         if color == "r":
-            self._set_ioexpander_output(exp=1, addr=2, value=0xb5)
-            self._set_ioexpander_output(exp=1, addr=3, value=0x6d)
-            self._set_ioexpander_output(exp=2, addr=2, value=0xdb)
-            self._set_ioexpander_output(exp=2, addr=3, value=0xb6)
+            self._set_ioexpander_output(exp=1, cmd_byte=2, value=0xb5)
+            self._set_ioexpander_output(exp=1, cmd_byte=3, value=0x6d)
+            self._set_ioexpander_output(exp=2, cmd_byte=2, value=0xdb)
+            self._set_ioexpander_output(exp=2, cmd_byte=3, value=0xb6)
 
         if color == "g":
-            self._set_ioexpander_output(exp=1, addr=2, value=0xda)
-            self._set_ioexpander_output(exp=1, addr=3, value=0xb6)
-            self._set_ioexpander_output(exp=2, addr=2, value=0x6d)
-            self._set_ioexpander_output(exp=2, addr=3, value=0xdb)
+            self._set_ioexpander_output(exp=1, cmd_byte=2, value=0xda)
+            self._set_ioexpander_output(exp=1, cmd_byte=3, value=0xb6)
+            self._set_ioexpander_output(exp=2, cmd_byte=2, value=0x6d)
+            self._set_ioexpander_output(exp=2, cmd_byte=3, value=0xdb)
 
         if color == "b":
-            self._set_ioexpander_output(exp=1, addr=2, value=0x6f)
-            self._set_ioexpander_output(exp=1, addr=3, value=0xdb)
-            self._set_ioexpander_output(exp=2, addr=2, value=0xb6)
-            self._set_ioexpander_output(exp=2, addr=3, value=0x6d)
+            self._set_ioexpander_output(exp=1, cmd_byte=2, value=0x6f)
+            self._set_ioexpander_output(exp=1, cmd_byte=3, value=0xdb)
+            self._set_ioexpander_output(exp=2, cmd_byte=2, value=0xb6)
+            self._set_ioexpander_output(exp=2, cmd_byte=3, value=0x6d)
 
     def all_off(self) -> None:
         """Turn off all LEDs
         """
-        self._set_ioexpander_output(exp=1, addr=2, value=0xFF)
-        self._set_ioexpander_output(exp=1, addr=3, value=0xFF)
-        self._set_ioexpander_output(exp=2, addr=2, value=0xFF)
-        self._set_ioexpander_output(exp=2, addr=3, value=0xFF)
+        self._set_ioexpander_output(exp=1, cmd_byte=2, value=0xFF)
+        self._set_ioexpander_output(exp=1, cmd_byte=3, value=0xFF)
+        self._set_ioexpander_output(exp=2, cmd_byte=2, value=0xFF)
+        self._set_ioexpander_output(exp=2, cmd_byte=3, value=0xFF)
 
     def switch_led(self, led_id: int, color: str = "off") -> None:
         """changes LED with led_id to specific color
@@ -204,36 +204,36 @@ class LEDControl(object):
                 self._set_ioexpander_output(2, 3, next_status[3])
 
     def _set_ioexpander_polarity(
-        self, exp: int, addr: int, polarity: bool = False
+        self, exp: int, cmd_byte: int, polarity: bool = False
     ) -> None:
         """Set content of register 4 or 5 which determine polarity of ports.
             A command byte of 4 or 5 determines the polarity of ports on the two different banks of the chip.
 
         Args:
             exp (int): ID of LED Expander (1 or 2))
-            addr (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
+            cmd_byte (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
             polarity (bool, optional): False (0) = normal, True (1) = inverted. Defaults to False.
         """
-        if addr not in [4, 5]:
-            raise ValueError("Address should be 4 or 5")
+        if cmd_byte not in [4, 5]:
+            raise ValueError("Command byte should be 4 or 5")
         if exp not in [1, 2]:
             raise ValueError("Expander ID should be 1 or 2")
 
-        self.i2c.write(self.i2c.modules["led_expander_%.1s" % exp], addr, polarity)
+        self.i2c.write(self.i2c.modules["led_expander_%.1s" % exp], cmd_byte, polarity)
 
     def _set_ioexpander_direction(
-        self, exp: int, addr: int, direction: str = "input"
+        self, exp: int, cmd_byte: int, direction: str = "input"
     ) -> None:
         """Set content of register 6 or 7 which determine direction of signal
         A command byte of 6 or 7 determines the direction of signal on the two different banks of the chip.
         
         Args:
             exp (int): ID of LED Expander (1 or 2))
-            addr (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
+            cmd_byte (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
             direction (str, optional): "input or "output" direction of port. Defaults to "input".
         """
-        if addr not in [6, 7]:
-            raise ValueError("Address should be 6 or 7")
+        if cmd_byte not in [6, 7]:
+            raise ValueError("Command byte should be 6 or 7")
         if direction not in ["input", "output"]:
             raise ValueError('Direction parameter must be "input" or "output"')
         if exp not in [1, 2]:
@@ -241,38 +241,38 @@ class LEDControl(object):
         
         self.i2c.write(
             self.i2c.modules["led_expander_%.1s" % exp],
-            addr,
+            cmd_byte,
             1 if direction == "input" else 0,
         )
 
-    def _set_ioexpander_output(self, exp: int, addr: int, value: int) -> None:
+    def _set_ioexpander_output(self, exp: int, cmd_byte: int, value: int) -> None:
         """Set content of register 2 or 3 which determine signal if direction is output
             A command byte of 2 or 3 reflects the outgoing logic levels of the output pins on the two different banks of the chip.
         Args:
             exp (int): ID of LED Expander (1 or 2))
-            addr (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
+            cmd_byte (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
             value (int): 8 bit value for the output
         """
-        if addr not in [2, 3]:
-            raise ValueError("Address should be 2 or 3")
+        if cmd_byte not in [2, 3]:
+            raise ValueError("Command byte should be 2 or 3")
         if exp not in [1, 2]:
             raise ValueError("Expander ID should be 1 or 2")
-        self.i2c.write(self.i2c.modules["led_expander_%.1s" % exp], addr, value & 0xFF)
+        self.i2c.write(self.i2c.modules["led_expander_%.1s" % exp], cmd_byte, value & 0xFF)
 
-    def _get_ioexpander_output(self, exp: int, addr: int) -> int:
+    def _get_ioexpander_output(self, exp: int, cmd_byte: int) -> int:
         """Get content of register 2 or 3
             A command byte of 2 or 3 reflects the outgoing logic levels of the output pins on the two different banks of the chip.
         Args:
-            exp (int): _ID of LED Expander (1 or 2))
-            addr (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
+            exp (int): ID of LED Expander (1 or 2))
+            cmd_byte (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
         Returns:
             int: content of the ioexpander
         """
-        if addr not in [2, 3]:
-            raise ValueError("Address should be 2 or 3")
+        if cmd_byte not in [2, 3]:
+            raise ValueError("Command byte should be 2 or 3")
         if exp not in [1, 2]:
             raise ValueError("Expander ID should be 1 or 2")
         
-        output = self.i2c.read(self.i2c.modules["led_expander_%.1s" % exp], addr)
+        output = self.i2c.read(self.i2c.modules["led_expander_%.1s" % exp], cmd_byte)
         return output
 

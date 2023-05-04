@@ -15,64 +15,39 @@ class ClockControl(object):
         
         self.write_clock_conf("misc/aida_tlu_clk_config.txt")
 
-    def get_internal_trigger_frequency(self) -> int:
-        """Reads the internal trigger frequency from the register.
-
-        Returns:
-            int: Frequency in Hz #TODO Hz?
-        """
-        interval = self.i2c.read_register("triggerLogic.InternalTriggerIntervalR")
-        if interval == 0:
-            freq = 0
-        else:
-            freq = int(160000000/interval)
-        return freq
-
-    def set_internal_trigger_frequency(self, frequency: int) -> None:
-        """ Sets the internal trigger frequency. This frequency is calculated from an interval size by the Si5344 chip.
-        The maximum allowed Frequency is 160 MHz. #TODO the Si5344 datasheet says the chip can go higer.
-        The Si5344 chip needs to be configured for this function to work.
-
-        Args:
-            frequency (int): Frequency in Hz #TODO is this Hz?
-        """
-        max_freq = 160000000
-        if frequency < 0:
-            raise ValueError("Frequency smaller than 0 does not work")
-        if frequency > max_freq:
-            raise ValueError("Frequency larger than 160MHz does not work")
-        if frequency == 0:
-            interval = frequency
-        else:
-            interval = int(160000000/frequency)
-        self._set_internal_trigger_interval(interval)
-        #TODO check if this is really Hz
-        self.log.info("Internal trigger frequency: %i Hz" %self.get_internal_trigger_frequency())
-        if self.get_internal_trigger_frequency() != frequency:
-            self.log.warn("Frequency is set to different value. Internal Trigger frequency is %i Hz" %self.get_internal_trigger_frequency())
-
-    def _set_internal_trigger_interval(self, interval) -> None:
-        """Number of internal clock cycles to be used as period for the internal trigger generator.
-        #TODO In the documentation what is meant by smaller 5 and -2
-
-        Args:
-            interval (_type_): Number of internal clock cycles.
-        """
-        self.i2c.write_register("triggerLogic.InternalTriggerIntervalW", interval) 
-
     def get_device_version(self) -> int:
-        """Get Chip informations.
+        """Get Chip information.
 
         Returns:
             int: The Chip ID. #TODO what is this chip id what format should this be??
         """
         my_adress = 0x02
-        chip_id = 0x00000
+        chip_id = 0x0
         self._set_page(0)
         for i in range(2):
-            nibble = self.i2c.read(self.i2c.modules["clk"], my_adress) 
+            nibble = self.i2c.read(self.i2c.modules["clk"], my_adress + i) 
             chip_id = ((nibble & 0xFF) << (i*8)) | chip_id
         return chip_id
+
+    def check_design_id(self, hex_str: bool = False ) -> list:
+        """Checks the Chip ID. If the chip is correctly configured the list corresponds 
+           to the data in the clock configuration file between the addresses 0x026B and 0x0272.
+
+        Args:
+            hex_str (bool): Returns the design ID as a list of hex strings. Defaults to False. 
+
+        Returns:
+            list: List of the design ID contains 8 integers or hex strings.
+        """
+        reg_address = 0x026B
+        numb_words = 8
+        words = []
+        for _ in range(numb_words):
+            words.append(self.read_clock_register(reg_address)) 
+            reg_address += 1
+        if hex_str:
+            words = [hex(words[i]) for i in range(numb_words)]
+        return words
 
     def read_clock_register(self, address: int) -> int:
         """Reads register of the clock chip.
@@ -90,20 +65,6 @@ class ClockControl(object):
             self._set_page(required_page)
         return self.i2c.read(self.i2c.modules["clk"], address)
         
-    def check_design_id(self) -> list:
-        """Checks the Chip ID
-
-        Returns:
-            list: List of the Design ID should contain 8 integers. #TODO what is this now? What format should this be??
-        """
-        reg_address = 0x026B
-        numb_words = 8
-        words = []
-        for _ in range(numb_words):
-            words.append(self.read_clock_register(reg_address)) 
-            reg_address += 1
-        return words
-
     def write_clock_register(self, address: int, data: int) -> None:
         """Write data in specific Clock Chip register.
 
@@ -128,11 +89,10 @@ class ClockControl(object):
         Returns:
             list: 2-dim. list, consisting of the address and data values.
         """
-        with open('misc/aida_tlu_clk_config.txt', newline='') as clk_conf:
-            contends = clk_conf.read().splitlines()
-            contends = [row.split(',') for row in contends[10:]]
-        clk_conf.close()
-        return contends
+        with open(file_path, newline='') as clk_conf:
+            contents = clk_conf.read().splitlines()
+            contents = [row.split(',') for row in contents[10:]]
+        return contents
 
     def write_clock_conf(self, file_path: str) -> None:
         """Writes clock configuration consecutivly in register. This takes a few seconds.
@@ -143,7 +103,7 @@ class ClockControl(object):
         clock_conf = self.parse_clock_conf(file_path)
         self.log.info("Writing Clock Configuration")
         for row in clock_conf:
-            self.write_clock_register(int(row[0],0), int(row[1], 0))
+            self.write_clock_register(int(row[0], 16), int(row[1], 16))
         self.log.info("DONE")
 
     def _set_page(self, page: int) -> None:
@@ -160,7 +120,7 @@ class ClockControl(object):
         Returns:
             int: Current address page
         """
-        return self.i2c.read(self.i2c.modules["clk"],0x01)
+        return self.i2c.read(self.i2c.modules["clk"], 0x01)
 
 
     

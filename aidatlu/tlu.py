@@ -7,7 +7,7 @@ from led_controller import LEDControl
 from voltage_controller import VoltageControl
 from clock_controller import ClockControl
 from output_controller import OutputControl
-from trigger_controller import TriggerControll
+from trigger_controller import TriggerControl
 
 class AidaTLU(object):
     def __init__(self, hw) -> None:
@@ -22,9 +22,11 @@ class AidaTLU(object):
         self.voltage_controller = VoltageControl(self.i2c)
         self.clock_controller = ClockControl(self.i2c)
         self.output_controller = OutputControl(self.i2c, self.led_controller)
-        self.trigger_controller = TriggerControll(self.i2c)
+        self.trigger_controller = TriggerControl(self.i2c)
 
-        # init pwrled
+        #Disable all outputs
+        self.output_controller.clock_lemo_output(False)
+        for i in range(4): self.output_controller.configure_hdmi(i+1, False)
 
         # if present, init display
 

@@ -17,6 +17,22 @@ class OutputControl(object):
         self.i2c = i2c
         self.led_controller = led
 
+        self._set_ioexpander_polarity_out(exp=1, cmd_byte=4, polarity=False)
+        self._set_ioexpander_direction_out(exp=1, cmd_byte=6, direction="output")
+        self._set_ioexpander_output_out(exp=1, cmd_byte=2, value=0xFF)
+
+        self._set_ioexpander_polarity_out(exp=1, cmd_byte=5, polarity=False)
+        self._set_ioexpander_direction_out(exp=1, cmd_byte=7, direction="output")
+        self._set_ioexpander_output_out(exp=1, cmd_byte=3, value=0xFF)
+
+        self._set_ioexpander_polarity_out(exp=2, cmd_byte=4, polarity=False)
+        self._set_ioexpander_direction_out(exp=2, cmd_byte=6, direction="output")
+        self._set_ioexpander_output_out(exp=2, cmd_byte=2, value=0x00)
+
+        self._set_ioexpander_polarity_out(exp=2, cmd_byte=5, polarity=False)
+        self._set_ioexpander_direction_out(exp=2, cmd_byte=7, direction="output")
+        self._set_ioexpander_output_out(exp=2, cmd_byte=3, value=0xB0)
+
     def configure_hdmi(self, hdmi_channel: int, enable: bool = True) -> None:
         """This enables the HDMI output of one specific HDMI channel. #TODO not tested
 
@@ -48,12 +64,12 @@ class OutputControl(object):
             self.led_controller.switch_led(hdmi_channel+1, "off")
 
     def clock_lemo_output(self, enable: bool = True) -> None:
-        """Enables the clock LEMO output. #TODO not tested
+        """Enables the clock LEMO output. #TODO only with ~40MHz default clock
 
         Args:
             enable (bool, optional): Enable clock LEMO output. Defaults to True.
         """
-        #TODO this does not work I checked with all combinations of expander[1,2] and bank[1,2,3]
+        
         cmd_byte = 3 #this is bank+2 in EUDAQ
         mask = 0x10
         expander = 2
@@ -70,33 +86,76 @@ class OutputControl(object):
             self.led_controller.switch_led(5, "off")
         self.log.info("Clock LEMO output %s" %("enabled" if enable else "disabled"))
             
-    def _set_ioexpander_output_out(self, exp: int, addr: int, value: int) -> None:
+    def _set_ioexpander_output_out(self, exp: int, cmd_byte: int, value: int) -> None:
         """Set content of register 2 or 3 which determine signal if direction is output
             A command byte of 2 or 3 reflects the outgoing logic levels of the output pins on the two different banks of the chip.
         Args:
             exp (int): ID of LED Expander (1 or 2))
-            addr (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
+            cmd_byte (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
             value (int): 8 bit value for the output
         """
-        if addr not in [2, 3]:
-            raise ValueError("Address should be 2 or 3")
+        if cmd_byte not in [2, 3]:
+            raise ValueError("Command byte should be 2 or 3")
         if exp not in [1, 2]:
             raise ValueError("Expander ID should be 1 or 2")
-        self.i2c.write(self.i2c.modules["expander_%.1s" % exp], addr, value & 0xFF)
+        self.i2c.write(self.i2c.modules["expander_%.1s" % exp], cmd_byte, value & 0xFF)
 
-    def _get_ioexpander_output_out(self, exp: int, addr: int) -> int:
+    def _get_ioexpander_output_out(self, exp: int, cmd_byte: int) -> int:
         """Get content of register 2 or 3
             A command byte of 2 or 3 reflects the outgoing logic levels of the output pins on the two different banks of the chip.
         Args:
             exp (int): _ID of LED Expander (1 or 2))
-            addr (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
+            cmd_byte (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
         Returns:
             int: content of the ioexpander
         """
-        if addr not in [2, 3]:
-            raise ValueError("Address should be 2 or 3")
+        if cmd_byte not in [2, 3]:
+            raise ValueError("Command byte should be 2 or 3")
         if exp not in [1, 2]:
             raise ValueError("Expander ID should be 1 or 2")
         
-        output = self.i2c.read(self.i2c.modules["expander_%.1s" % exp], addr)
+        output = self.i2c.read(self.i2c.modules["expander_%.1s" % exp], cmd_byte)
         return output
+    
+    def _set_ioexpander_polarity_out(
+        self, exp: int, cmd_byte: int, polarity: bool = False
+        ) -> None:
+        """Set content of register 4 or 5 which determine polarity of ports.
+            A command byte of 4 or 5 determines the polarity of ports on the two different banks of the chip.
+
+        Args:
+            exp (int): ID of LED Expander (1 or 2))
+            cmd_byte (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
+            polarity (bool, optional): False (0) = normal, True (1) = inverted. Defaults to False.
+        """
+        if cmd_byte not in [4, 5]:
+            raise ValueError("Command byte should be 4 or 5")
+        if exp not in [1, 2]:
+            raise ValueError("Expander ID should be 1 or 2")
+
+        self.i2c.write(self.i2c.modules["expander_%.1s" % exp], cmd_byte, polarity)
+
+    def _set_ioexpander_direction_out(
+        self, exp: int, cmd_byte: int, direction: str = "input"
+    ) -> None:
+        """Set content of register 6 or 7 which determine direction of signal
+        A command byte of 6 or 7 determines the direction of signal on the two different banks of the chip.
+        
+        Args:
+            exp (int): ID of LED Expander (1 or 2))
+            cmd_byte (int): The Command byte is used as a pointer to a specific register see datasheet PC9539.
+            direction (str, optional): "input or "output" direction of port. Defaults to "input".
+        """
+        if cmd_byte not in [6, 7]:
+            raise ValueError("Command byte should be 6 or 7")
+        if direction not in ["input", "output"]:
+            raise ValueError('Direction parameter must be "input" or "output"')
+        if exp not in [1, 2]:
+            raise ValueError("Expander ID should be 1 or 2")
+        
+        self.i2c.write(
+            self.i2c.modules["expander_%.1s" % exp],
+            cmd_byte,
+            1 if direction == "input" else 0,
+        )
+
