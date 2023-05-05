@@ -37,11 +37,11 @@ class OutputControl(object):
         """This enables the HDMI output of one specific HDMI channel. #TODO not tested
 
         Args:
-            hdmi_num (int): _description_
-            enable (bool, optional): _description_. Defaults to True.
+            hdmi_num (int): HDMI channels from 1 to 4
+            enable (bool, optional): Enables the HDMI channel. Defaults to True.
         """
     
-        if hdmi_channel < 1 and hdmi_channel > 4:
+        if hdmi_channel < 1 or hdmi_channel > 4:
             raise ValueError("HDMI channel should be between 1 and 4")
 
         expander = 1
@@ -62,6 +62,41 @@ class OutputControl(object):
             self.led_controller.switch_led(hdmi_channel+1, "g")
         else:
             self.led_controller.switch_led(hdmi_channel+1, "off")
+        self.log.info("HDMI Channel %i %s" %(hdmi_channel+1, ("enabled" if enable else "disabled")))
+
+    def clock_hdmi_output(self, hdmi_channel: int, clock_source: str) -> None:
+        """Enables the Clock output for one HDMI channel. 
+           Valid Clock sources are Si5453 clock chip 'chip' and FPGA 'fpga'.
+
+        Args:
+            hdmi_channel (int): HDMI channels from 1 to 4
+            clock_source (str): Clock source valid options are 'off', 'chip' and 'fpga'.
+        """
+        if clock_source not in ["off", "chip", "fpga"]:
+            raise ValueError("Clock source has to be 'off', 'chip' or 'fpga'")
+        if hdmi_channel < 1 or hdmi_channel > 4:
+            raise ValueError("HDMI channel should be between 1 and 4")
+        
+        cmd_byte = 2
+        expander = 2 
+
+        hdmi_channel = hdmi_channel -1 #shift channel
+        mask_low = 1 << (hdmi_channel)
+        mask_high = 1 << (hdmi_channel + 4)
+        mask = mask_low | mask_high
+        old_status = self._get_ioexpander_output_out(expander, cmd_byte)
+
+        if clock_source == 'off':
+            new_status = old_status & ~mask
+        elif clock_source == 'chip': #TODO Signal looks unstable
+            new_status = (old_status | mask_high) & ~mask_low
+        elif clock_source == 'fpga': #TODO nothing measurable here for now
+            new_status = (old_status | mask_high) & ~mask_high
+        else:
+            new_status = old_status
+        self._set_ioexpander_output_out(expander, cmd_byte, new_status)
+        self.log.info("Clock source of HDMI Channel %i set to %s." %(hdmi_channel+1,clock_source))
+
 
     def clock_lemo_output(self, enable: bool = True) -> None:
         """Enables the clock LEMO output. #TODO only with ~40MHz default clock

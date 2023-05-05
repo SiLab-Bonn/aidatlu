@@ -1,14 +1,20 @@
 from i2c import I2CCore
 import logger
 
-class TriggerControl(object):
+class TriggerLogic(object):
     def __init__(self, i2c: I2CCore) -> None:
         self.log = logger.setup_derived_logger("Trigger Controller")
         self.i2c = i2c
 
+    """ 
+
+    Internal Trigger Generation 
+
+    """
+
     def set_internal_trigger_frequency(self, frequency: int) -> None:
         """ Sets the internal trigger frequency.
-        The maximum allowed Frequency is 160 MHz. #TODO What is the actual purpose of this function. It operates above the 
+        The maximum allowed Frequency is 160 MHz. #TODO This should generate internal triggers with frequency > 0
 
         Args:
             frequency (int): Frequency in Hz #TODO is this Hz?
@@ -44,12 +50,19 @@ class TriggerControl(object):
 
     def _set_internal_trigger_interval(self, interval: int) -> None:
         """Number of internal clock cycles to be used as period for the internal trigger generator.
-        #TODO In the documentation what is meant by smaller 5 and -2
+           The period for the internal trigger generator is reduced by 2 prob. in some harware configuration. 
+        #TODO In the documentation what is meant by smaller 5
 
         Args:
             interval (int): Number of internal clock cycles.
         """
         self.i2c.write_register("triggerLogic.InternalTriggerIntervalW", interval) 
+
+    """ 
+     
+    Trigger Logic #TODO where are here the different DUT or trigger inpout channels and so on
+    
+    """
 
     def set_trigger_veto(self, value: int) -> None:
         self.i2c.write_register("triggerLogic.TriggerVetoW", value)
@@ -78,6 +91,37 @@ class TriggerControl(object):
         veto_state = self.i2c.read_register("triggerLogic.TriggerVetoR")
         return veto_state
 
+    def get_post_veto_trigger(self) -> int:
+        return self.i2c.read_register("triggerLogic.PostVetoTriggersR")
+    
+    def get_pre_veto_trigger(self) -> int:
+        return self.i2c.read_register("triggerLogic.PreVetoTriggersR")
 
+    """ 
+    
+    Trigger Pulse Length and Delay #TODO prob. to account for cable length and so on 
+    
+    """
 
+    def set_pulse_stretch_pack(self) -> None:
+        pass
+    
+    def set_pulse_delay_pack(self) -> None:
+        pass
+    
+    def get_pulse_stretch_pack(self) -> int:
+        return self.i2c.read_register("triggerLogic.PulseStretchR")
+    
+    def get_pulse_delay_pack(self) -> int:
+        return self.i2c.read_register("triggerLogic.PulseDelayR")
+    
+    def set_pulse_stretch(self, value: int) -> None:
+        self.i2c.write_register("triggerLogic.PulseStretchW", value)
 
+    def set_pulse_delay(self, value: int) -> None:
+        self.i2c.write_register("triggerLogic.PulseDelayW", value)
+
+    def pack_bits(self) -> None:
+        #TODO this is a weird bit shift utils function only used in the packed pulse functions
+        #     but it still uses the number of trigger inputs
+        pass
