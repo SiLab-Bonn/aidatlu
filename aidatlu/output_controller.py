@@ -33,12 +33,14 @@ class OutputControl(object):
         self._set_ioexpander_direction_out(exp=2, cmd_byte=7, direction="output")
         self._set_ioexpander_output_out(exp=2, cmd_byte=3, value=0xB0)
 
-    def configure_hdmi(self, hdmi_channel: int, enable: bool = True) -> None:
-        """This enables the HDMI output of one specific HDMI channel. #TODO not tested
-
+    def configure_hdmi(self, hdmi_channel: int, enable: int = 0) -> None:
+        """ This enables the pins of the HDMI channel as input (0) or output (1).
+            Enable is here a 4-bit number for each pin. E.q. 0b0111 sets CONT, SPARE and TRIGGER as outputs and BUSY as input.
+            Clock runs with seperate function clock_hdmi_output. #TODO see TLU doc p. 60
+        
         Args:
             hdmi_num (int): HDMI channels from 1 to 4
-            enable (bool, optional): Enables the HDMI channel. Defaults to True.
+            enable (int, optional): Enables the HDMI channel. Defaults to 0b0. #TODO this is wrong! I think this can also configure each pin individually of the HDMI output
         """
     
         if hdmi_channel < 1 or hdmi_channel > 4:
@@ -67,7 +69,8 @@ class OutputControl(object):
     def clock_hdmi_output(self, hdmi_channel: int, clock_source: str) -> None:
         """Enables the Clock output for one HDMI channel. 
            Valid Clock sources are Si5453 clock chip 'chip' and FPGA 'fpga'.
-
+           #TODO does FPGA work?   
+           
         Args:
             hdmi_channel (int): HDMI channels from 1 to 4
             clock_source (str): Clock source valid options are 'off', 'chip' and 'fpga'.

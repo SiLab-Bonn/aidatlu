@@ -8,6 +8,7 @@ from voltage_controller import VoltageControl
 from clock_controller import ClockControl
 from output_controller import OutputControl
 from trigger_controller import TriggerLogic
+from dut_controller import DUTLogic
 
 class AidaTLU(object):
     def __init__(self, hw) -> None:
@@ -23,6 +24,7 @@ class AidaTLU(object):
         self.clock_controller = ClockControl(self.i2c)
         self.output_controller = OutputControl(self.i2c, self.led_controller)
         self.trigger_logic = TriggerLogic(self.i2c)
+        self.dut_logic = DUTLogic(self.i2c)
 
         #Disable all outputs
         self.output_controller.clock_lemo_output(False)
@@ -50,6 +52,26 @@ class AidaTLU(object):
 
     def compare_write_read(self):
         pass
+
+    def test_configuration(self) -> None:
+        """ #TODO I tried to translate the default configuration file and configure
+            DUT 1 to run in EUDET mode.
+        
+        """
+        test_stretch = [1,1,1,1,1,1]
+        test_delay = [0,0,0,0,0,0] 
+
+
+        self.trigger_logic.set_trigger_veto(0)
+        self.trigger_logic.set_pulse_delay_pack(test_delay)
+        self.trigger_logic.set_pulse_stretch_pack(test_stretch)
+        self.trigger_logic.set_trigger_mask(mask_high=0xFFFFFFFF, mask_low=0xFFFEFFFE)
+        self.trigger_logic.set_trigger_polarity(1)
+        self.output_controller.configure_hdmi(1, 0b0111)
+        self.output_controller.clock_hdmi_output(1, 'chip')
+        self.dut_logic.set_dut_mask(0b0001)
+        self.dut_logic.set_dut_mask_mode(0b00000000)
+
 
 if __name__ == "__main__":
 
