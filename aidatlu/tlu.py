@@ -67,10 +67,11 @@ class AidaTLU(object):
         self.trigger_logic.set_pulse_stretch_pack(test_stretch)
         self.trigger_logic.set_trigger_mask(mask_high=0xFFFFFFFF, mask_low=0xFFFEFFFE)
         self.trigger_logic.set_trigger_polarity(1)
-        self.output_controller.configure_hdmi(1, 0b0111)
+        self.output_controller.configure_hdmi(1, '0111')
         self.output_controller.clock_hdmi_output(1, 'chip')
-        self.dut_logic.set_dut_mask(0b0001)
-        self.dut_logic.set_dut_mask_mode(0b00000000)
+        self.dut_logic.set_dut_mask('0001')
+        self.dut_logic.set_dut_mask_mode('00000000')
+
 
 
 if __name__ == "__main__":

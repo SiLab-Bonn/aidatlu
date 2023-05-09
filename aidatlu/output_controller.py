@@ -33,18 +33,28 @@ class OutputControl(object):
         self._set_ioexpander_direction_out(exp=2, cmd_byte=7, direction="output")
         self._set_ioexpander_output_out(exp=2, cmd_byte=3, value=0xB0)
 
-    def configure_hdmi(self, hdmi_channel: int, enable: int = 0) -> None:
-        """ This enables the pins of the HDMI channel as input (0) or output (1).
-            Enable is here a 4-bit number for each pin. E.q. 0b0111 sets CONT, SPARE and TRIGGER as outputs and BUSY as input.
-            Clock runs with seperate function clock_hdmi_output. #TODO see TLU doc p. 60
+    def configure_hdmi(self, hdmi_channel: int, enable: int | str) -> None:
+        """ This enables the pins of one HDMI channel as input (0) or output (1).
+            Enable is a 4-bit WORD for each pin as integer or binary string. With CONT = bit 0, SPARE = bit 1, TRIG = bit 2 and BUSY = bit 3. 
+            E.q. 0b0111 or '0111' sets CONT, SPARE and TRIGGER as outputs and BUSY as input. '1100' sets CONT and SPARE as input and BUSY and TRIG as output. 
+            The clock runs with the seperate function: clock_hdmi_output.
         
         Args:
             hdmi_num (int): HDMI channels from 1 to 4
-            enable (int, optional): Enables the HDMI channel. Defaults to 0b0. #TODO this is wrong! I think this can also configure each pin individually of the HDMI output
+            enable (int | str, optional): 4-bit WORD to enable the 4 pins on the HDMI output. Can be an integer or binary string.
+
         """
-    
+        #TODO use DUT Interface or HDMI channel?
         if hdmi_channel < 1 or hdmi_channel > 4:
             raise ValueError("HDMI channel should be between 1 and 4")
+
+        if type(enable) == str:
+            enable = int(enable, 2)
+
+        if enable > 0b1111:
+            raise ValueError("Enable has to be smaller than 16 ('10000').")
+        if enable < 0b0000:
+            raise ValueError("Enable has to be positive.")
 
         expander = 1
 
@@ -60,7 +70,7 @@ class OutputControl(object):
         new_status = (old_status & (~mask)) | (new_nibble & mask)
 
         self._set_ioexpander_output_out(expander, bank, new_status)
-        if enable:
+        if enable: #TODO move these LEDS to DUT mode blue AIDA and green EUDET or so?
             self.led_controller.switch_led(hdmi_channel+1, "g")
         else:
             self.led_controller.switch_led(hdmi_channel+1, "off")
