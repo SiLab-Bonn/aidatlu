@@ -18,10 +18,8 @@ class DUTLogic(object):
         if type(enable) == str:
             enable = int(enable, 2)
 
-        if enable > 0b1111:
-            raise ValueError("Enable has to be smaller than 16 ('10000').")
-        if enable < 0b0000:
-            raise ValueError("Enable has to be positive.")
+        if enable > 0b1111 or enable < 0b0000:
+            raise ValueError("Enable has to be between 0 and 16 ('10000')")
 
         self.i2c.write_register("DUTInterfaces.DUTMaskW", enable)
         self.log.info("DUT mask is set to %s" %self.get_dut_mask())
@@ -40,10 +38,8 @@ class DUTLogic(object):
         if type(mode) == str:
             mode = int(mode, 2)
 
-        if mode > 0b11111111:
-            raise ValueError("Mode has to be smaller than 256 ('100000000').")
-        if mode < 0b00000000:
-            raise ValueError("Mode has to be positive.")
+        if mode > 0b11111111 or mode < 0b00000000:
+            raise ValueError("Mode has to be between 0 and 256 ('100000000').")
 
         self.i2c.write_register("DUTInterfaces.DUTInterfaceModeW", mode)
         self.log.info("DUT mask mode is set to %s" %self.get_dut_mask_mode())
@@ -69,16 +65,14 @@ class DUTLogic(object):
         if type(channels) == str:
             channels = int(channels, 2)
 
-        if channels > 0b1111:
-            raise ValueError("Channels has to be smaller than 16 ('10000').")
-        if channels < 0b0000:
-            raise ValueError("Channels has to be positive.")
+        if channels > 0b1111 or channels < 0b0000:
+            raise ValueError("Channels has to be between 0 and 16 ('10000').")
 
         self.i2c.write_register("DUTInterfaces.IgnoreDUTBusyW", channels)
         self.log.info("DUT ignore busy is set to %s" %self.get_dut_ignore_busy())
 
     def get_dut_mask(self) -> int:
-        """ Reads the contend in the register 'DUTInterfaceModeModifierR'.
+        """ Reads the contend in the register 'DUTMaskR'.
 
         Returns:
             int: Integer content of the register.
@@ -86,7 +80,7 @@ class DUTLogic(object):
         return self.i2c.read_register("DUTInterfaces.DUTMaskR")
 
     def get_dut_mask_mode(self)  -> int:
-        """ Reads the contend in the register 'DUTInterfaceModeModifierR'.
+        """ Reads the contend in the register 'DUTInterfaceModeR'.
 
         Returns:
             int: Integer content of the register.
@@ -94,7 +88,7 @@ class DUTLogic(object):
         return self.i2c.read_register("DUTInterfaces.DUTInterfaceModeR")
 
     def get_dut_mask_mode_modifier(self)  -> int:
-        """ Reads the contend in the register 'DUTInterfaceModeModifierR'.
+        """ Reads the content in the register 'DUTInterfaceModeModifierR'.
 
         Returns:
             int: Integer content of the register.
@@ -102,10 +96,12 @@ class DUTLogic(object):
         return self.i2c.read_register("DUTInterfaces.DUTInterfaceModeModifierR")
 
     def get_dut_ignore_busy(self) -> int:
-        """ Reads the contend in the register 'IgnoreDUTBusyR'.
+        """ Reads the content in the register 'IgnoreDUTBusyR'.
 
         Returns:
             int: Integer content of the register.
         """
         return self.i2c.read_register("DUTInterfaces.IgnoreDUTBusyR")
 
+    def set_dut_ignore_shutter(self, value: int) -> None:
+        self.i2c.write_register("DUTInterfaces.IgnoreShutterVetoW", value)

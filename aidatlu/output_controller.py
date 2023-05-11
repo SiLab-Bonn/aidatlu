@@ -8,7 +8,7 @@ PCA9539PW
 
 """
 
-#TODO should this be merged with LEDControll to I/OExpanderControll
+#TODO should this be merged with LEDControll to I/OExpanderControl
 
 class OutputControl(object):
     def __init__(self, i2c: I2CCore, led: LEDControl):
@@ -51,10 +51,8 @@ class OutputControl(object):
         if type(enable) == str:
             enable = int(enable, 2)
 
-        if enable > 0b1111:
-            raise ValueError("Enable has to be smaller than 16 ('10000').")
-        if enable < 0b0000:
-            raise ValueError("Enable has to be positive.")
+        if enable > 0b1111 or enable < 0b0000:
+            raise ValueError("Enable has to be between 0 and 16 ('10000').")
 
         expander = 1
 

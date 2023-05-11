@@ -101,10 +101,10 @@ class ClockControl(object):
             file_path (str): File path to the clock configuration file.
         """
         clock_conf = self.parse_clock_conf(file_path)
-        self.log.info("Writing Clock Configuration")
+        self.log.info("Writing clock configuration")
         for row in clock_conf:
             self.write_clock_register(int(row[0], 16), int(row[1], 16))
-        self.log.info("DONE")
+        self.log.success("Done writing clock configuration ")
 
     def _set_page(self, page: int) -> None:
         """Configures chip to perform operations on specific address page.
