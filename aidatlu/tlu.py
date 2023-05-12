@@ -3,12 +3,13 @@ import uhal
 import logger
 
 from i2c import I2CCore, i2c_addr
-from led_controller import LEDControl
-from voltage_controller import VoltageControl
+
 from clock_controller import ClockControl
-from output_controller import OutputControl
+from ioexpander_controller import IOControl
+from voltage_controller import VoltageControl
 from trigger_controller import TriggerLogic
 from dut_controller import DUTLogic
+
 
 class AidaTLU(object):
     def __init__(self, hw) -> None:
@@ -20,18 +21,18 @@ class AidaTLU(object):
         if self.i2c.modules["eeprom"]:
             self.log.info("Found device with ID %s" % hex(self.get_device_id()))
 
-        self.led_controller = LEDControl(self.i2c)
-        self.voltage_controller = VoltageControl(self.i2c)
         self.clock_controller = ClockControl(self.i2c)
-        self.output_controller = OutputControl(self.i2c, self.led_controller)
+        self.io_controller = IOControl(self.i2c)
+        self.voltage_controller = VoltageControl(self.i2c)
         self.trigger_logic = TriggerLogic(self.i2c)
         self.dut_logic = DUTLogic(self.i2c)
 
         #Disable all outputs
-        self.output_controller.clock_lemo_output(False)
-        for i in range(4): self.output_controller.configure_hdmi(i+1, False)
-
-        #Resets all internal counters and raises the trigger veto.
+        self.io_controller.clock_lemo_output(False)
+        for i in range(4): self.io_controller.configure_hdmi(i+1, False)
+        self.voltage_controller.set_all_voltage(0)
+        
+        #Resets all internal counters and raise the trigger veto.
         self.set_run_active(False)
         self.reset_status()
         self.reset_counters()
@@ -128,10 +129,8 @@ class AidaTLU(object):
         test_stretch = [1,1,1,1,1,1]
         test_delay = [0,0,0,0,0,0] 
 
-        #self.set_run_active(False)
-        #self.trigger_logic.set_trigger_veto(False)
-        self.output_controller.configure_hdmi(1, '0111')
-        self.output_controller.clock_hdmi_output(1, 'off')
+        self.io_controller.configure_hdmi(1, '0111')
+        self.io_controller.clock_hdmi_output(1, 'off')
         #self.trigger_logic.set_pulse_stretch_pack(test_stretch)
         #self.trigger_logic.set_pulse_delay_pack(test_delay)
         #self.trigger_logic.set_trigger_mask(mask_high=0x00000000, mask_low=0x00000002)
@@ -227,8 +226,7 @@ class AidaTLU(object):
         """
         self.start_run()
         run_active = True
-        last_time = self.get_timestamp()
-        start_time = last_time
+        start_time = self.get_timestamp()
         while run_active:
             try:
                 last_time = self.get_timestamp()
