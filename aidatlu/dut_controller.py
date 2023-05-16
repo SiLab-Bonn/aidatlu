@@ -19,10 +19,10 @@ class DUTLogic(object):
             enable = int(enable, 2)
 
         if enable > 0b1111 or enable < 0b0000:
-            raise ValueError("Enable has to be between 0 and 16 ('10000')")
+            raise ValueError("Enable has to be between 0 and 15 ('1111')")
 
-        self.i2c.write_register("DUTInterfaces.DUTMaskW", enable)
-        self.log.info("DUT mask is set to %s" %self.get_dut_mask())
+        self.i2c.write_register("DUTInterfaces.DUTMaskW", enable & 0xF)
+        self.log.info("DUT mask set to %s" %self.get_dut_mask())
 
     def set_dut_mask_mode(self, mode: int | str) -> None:
         """ Sets the DUT interface mode. Mode consits of one 8-bit WORD or more specific 4 2-bit WORDs. 

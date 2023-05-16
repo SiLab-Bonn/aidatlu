@@ -27,11 +27,19 @@ class AidaTLU(object):
         self.trigger_logic = TriggerLogic(self.i2c)
         self.dut_logic = DUTLogic(self.i2c)
 
+        self.reset_configuration()
+
+        # if present, init display
+
+    def reset_configuration(self) -> None:
+        """Switch off all outputs, reset all counters and set threshold to 1.2V
+        """
         #Disable all outputs
         self.io_controller.clock_lemo_output(False)
         for i in range(4): self.io_controller.configure_hdmi(i+1, False)
         self.voltage_controller.set_all_voltage(0)
-        
+        #sets all thresholds to 1.2 V
+        for i in range(6): self.voltage_controller.set_threshold(i+1, 1.2)
         #Resets all internal counters and raise the trigger veto.
         self.set_run_active(False)
         self.reset_status()
@@ -39,8 +47,6 @@ class AidaTLU(object):
         self.trigger_logic.set_trigger_veto(True)
         self.reset_fifo()
         self.reset_timestamp()
-
-        # if present, init display
 
     def get_device_id(self) -> int:
         """Read back board id. Consists of six blocks of hex data
@@ -52,13 +58,13 @@ class AidaTLU(object):
         for addr in range(6):
             id.append(self.i2c.read(self.i2c.modules["eeprom"], 0xFA + addr) & 0xFF)
         return int("0x" + "".join(["{:x}".format(i) for i in id]), 16) & 0xFFFFFFFFFFFF
-
+ 
     def get_fw_version(self) -> int:
         return self.i2c.read_register("version")
 
-    def reset_board(self) -> None:
-        #TODO THIS FUNCTION CRASHES THE TLU. This does not work at all...
-        self.i2c.write_register("logic_clocks.LogicRst", 1)
+    # def reset_board(self) -> None:
+    #     #TODO THIS FUNCTION CRASHES THE TLU. This does not work at all...
+    #     self.i2c.write_register("logic_clocks.LogicRst", 1)
 
     def reset_timestamp(self) -> None:
         """ Sets bit to  'ResetTimestampW' register to reset the time stamp. 
@@ -131,20 +137,47 @@ class AidaTLU(object):
 
         self.io_controller.configure_hdmi(1, '0111')
         self.io_controller.clock_hdmi_output(1, 'off')
-        #self.trigger_logic.set_pulse_stretch_pack(test_stretch)
-        #self.trigger_logic.set_pulse_delay_pack(test_delay)
-        #self.trigger_logic.set_trigger_mask(mask_high=0x00000000, mask_low=0x00000002)
-        #self.trigger_logic.set_trigger_polarity(1)
+        self.trigger_logic.set_pulse_stretch_pack(test_stretch)
+        self.trigger_logic.set_pulse_delay_pack(test_delay)
+        self.trigger_logic.set_trigger_mask(mask_high=0x00000000, mask_low=0x00000002)
+        self.trigger_logic.set_trigger_polarity(1)
         self.dut_logic.set_dut_mask('0001')
         self.dut_logic.set_dut_mask_mode('00000000')
-        # self.dut_logic.set_dut_mask_mode_modifier(0)
-        # self.dut_logic.set_dut_ignore_busy(0)
-        # self.dut_logic.set_dut_ignore_shutter(0x1)
         self.trigger_logic.set_internal_trigger_frequency(500)
- 
-        #self.set_enable_record_data(1)
-        #self.get_event_fifo_csr()
-        #self.get_event_fifo_fill_level()
+
+    def default_configuration(self) -> None:
+        """Default configuration. Configures DUT 1 to run in EUDET mode.
+            #TODO set dut mask does not work with multiple DUTS
+            #TODO this needs a better solution, some kind of config file. But its now useful for bugfixing.
+        """
+        test_stretch = [1,1,1,1,1,1]
+        test_delay = [0,0,0,0,0,0] 
+
+        self.io_controller.configure_hdmi(1, '0111')
+        self.io_controller.configure_hdmi(2, '0111')
+        self.io_controller.configure_hdmi(3, '0111')
+        self.io_controller.configure_hdmi(4, '0111')
+        self.io_controller.clock_hdmi_output(1, 'off')
+        self.io_controller.clock_hdmi_output(2, 'off')
+        self.io_controller.clock_hdmi_output(3, 'off')
+        self.io_controller.clock_hdmi_output(4, 'off')
+        self.io_controller.clock_lemo_output(False)
+        self.voltage_controller.set_threshold(1, -0.04)
+        self.voltage_controller.set_threshold(2, -0.04)
+        self.voltage_controller.set_threshold(3, -0.04)
+        self.voltage_controller.set_threshold(4, -0.04)
+        self.voltage_controller.set_threshold(5, -0.2)
+        self.voltage_controller.set_threshold(6, -0.2)
+        self.trigger_logic.set_pulse_stretch_pack(test_stretch)
+        self.trigger_logic.set_pulse_delay_pack(test_delay)
+        self.trigger_logic.set_trigger_mask(mask_high=0, mask_low=2)
+        self.trigger_logic.set_trigger_polarity(1)
+        self.dut_logic.set_dut_mask('0001') #TODO the mask does not work with multiple DUTs only with single
+        self.dut_logic.set_dut_mask_mode('00000000')
+        self.dut_logic.set_dut_mask_mode_modifier(0)
+        self.dut_logic.set_dut_ignore_busy(0)
+        self.dut_logic.set_dut_ignore_shutter(0x1)
+        self.trigger_logic.set_internal_trigger_frequency(0)
 
     def start_run(self) -> None:
         """ Start run configurations

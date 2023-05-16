@@ -91,7 +91,8 @@ class TriggerLogic(object):
     def set_trigger_mask(self, mask_high: int, mask_low: int) -> None:  #TODO EUDAQ uses both functions with same name      
         """ Sets the trigger logic. Each of the 64 possible combination is divided into two 32-bit words mask high and mask low.
             #TODO To set a specific trigger logic one must find right two words in the TLU. doc p. 30 
-
+            #TODO CAREFUL LOGIC TABLE IN DOC IS WRONG! The inputs are connected differently see DAC connections for threshold. 
+                    The trigger inputs are connected in the wrong way 
         Args:
             mask_high (int): _description_ #TODO
             mask_low (int): _description_ #TODO
