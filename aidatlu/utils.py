@@ -12,7 +12,7 @@ def _set_bit(value: int, index: int, set: bool=True) -> int:
     Returns:
         int: value with a set bit at index
     """
-    #I stole this from https://stackoverflow.com/questions/12173774/how-to-modify-bits-in-an-integer
+    
     if set:
         return value | (1<<index)
     else:

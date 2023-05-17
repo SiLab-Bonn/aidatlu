@@ -1,6 +1,7 @@
 import logging
 import uhal
 import logger
+import numpy as np
 
 from i2c import I2CCore, i2c_addr
 
@@ -29,6 +30,7 @@ class AidaTLU(object):
 
         self.reset_configuration()
 
+        self.log.success("Done")
         # if present, init display
 
     def reset_configuration(self) -> None:
@@ -38,7 +40,7 @@ class AidaTLU(object):
         self.io_controller.clock_lemo_output(False)
         for i in range(4): self.io_controller.configure_hdmi(i+1, False)
         self.voltage_controller.set_all_voltage(0)
-        #sets all thresholds to 1.2 V
+        #set all thresholds to 1.2 V
         for i in range(6): self.voltage_controller.set_threshold(i+1, 1.2)
         #Resets all internal counters and raise the trigger veto.
         self.set_run_active(False)
@@ -170,7 +172,7 @@ class AidaTLU(object):
         self.voltage_controller.set_threshold(6, -0.2)
         self.trigger_logic.set_pulse_stretch_pack(test_stretch)
         self.trigger_logic.set_pulse_delay_pack(test_delay)
-        self.trigger_logic.set_trigger_mask(mask_high=0, mask_low=2)
+        self.trigger_logic.set_trigger_mask(mask_high=0x00000000, mask_low=0x00000002)
         self.trigger_logic.set_trigger_polarity(1)
         self.dut_logic.set_dut_mask('0001') #TODO the mask does not work with multiple DUTs only with single
         self.dut_logic.set_dut_mask_mode('00000000')
@@ -198,6 +200,7 @@ class AidaTLU(object):
         self.log.info("fifo csr: %s fifo fill level: %s" %(self.get_event_fifo_csr(),self.get_event_fifo_csr()))
         self.log.info("post: %s pre: %s" %(self.trigger_logic.get_post_veto_trigger(),self.trigger_logic.get_pre_veto_trigger()))
         self.log.info("time stamp: %s" %(self.get_timestamp()))
+        #self.log.info(self.trigger_logic.get_post_veto_trigger()/current_time) #TODO mean trigger rate over whole run.
 
     def set_enable_record_data(self, value: int) -> None:
         """ #TODO not sure what this does. Looks like a seperate internal event buffer to the FIFO.
@@ -251,24 +254,57 @@ class AidaTLU(object):
         if event_numb:
             fifo_content = self.i2c_hw.getNode("eventBuffer.EventFifoData").readBlock(event_numb & 0xFF) #TODO check 0xFF
             self.i2c_hw.dispatch()
-            return fifo_content
-        pass            
+            # print(fifo_content)
+            return np.array(fifo_content)
+        else:
+            return np.zeros(6)            
+
+    def event_handler(self, raw_data: list) -> list:
+        """ #TODO data format for now array with size 7 first 6 entries are from fifo and last is timestamp.
+            #TODO Except for status updates during run all calculations should be after the run to minimize calculation time in while true loop.
+            but pob. not so important I dont have huge np arrays.
+        Args:
+            raw_data (list): _description_
+
+        Returns:
+            list: _description_
+        """
+        self.log.info("Event handler")
+        
+        #loop/slice through data
+
+        raw_data[:,6] = raw_data[:,6]*25/1000000000 # Transform timestamp to seconds.
+        self.log.success("Done")
+        return raw_data
+
+    def run_header(self, stuff) -> list:
+        #creates makro list of run number.. 
+        #timestamp
+        pass
 
     def run(self) -> None:
         """ Start run of the TLU. 
         """
+        
         self.start_run()
         run_active = True
         start_time = self.get_timestamp()
+        event_array = np.zeros(7) #TODO Could be a place for run headers.
         while run_active:
             try:
                 last_time = self.get_timestamp()
-                current_time = (last_time-start_time)   #TODO these are nonsense numbers for now
-                current_event = self.pull_fifo_event()  #TODO same here just an array of nonsense
+                current_time = (last_time-start_time) 
+                current_event = self.pull_fifo_event()
+                for event_vec in np.split(current_event,len(current_event)/6): #This additional loop is needed because the event fifo can have multiple events in dependence of the trigger rate.
+                    event_array = np.vstack((event_array, np.append(event_vec, current_time)))
+                    #TODO write here the raw data in h5 file chekc how this is done with the pytlu rep.
             except:
                 KeyboardInterrupt
                 run_active = False
         self.stop_run()
+
+        np.savetxt('tlu_run_data.txt', self.event_handler(event_array)) #TODO this should be a data handler thath converts the raw data to more useful fomrat
+        #TODO most likely one file for each DUT
 
 if __name__ == "__main__":
 
