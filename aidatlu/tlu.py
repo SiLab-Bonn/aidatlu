@@ -2,6 +2,8 @@ import logging
 import uhal
 import logger
 import numpy as np
+import tables as tb
+import time
 
 from i2c import I2CCore, i2c_addr
 
@@ -49,6 +51,7 @@ class AidaTLU(object):
         self.trigger_logic.set_trigger_veto(True)
         self.reset_fifo()
         self.reset_timestamp()
+        self.run_number = 0
 
     def get_device_id(self) -> int:
         """Read back board id. Consists of six blocks of hex data
@@ -194,6 +197,7 @@ class AidaTLU(object):
         """
         self.trigger_logic.set_trigger_veto(True)
         self.set_run_active(False)
+        self.run_number += 1
 
     def status(self) -> None:
         #TODO just bugfixing for now
@@ -254,33 +258,15 @@ class AidaTLU(object):
         if event_numb:
             fifo_content = self.i2c_hw.getNode("eventBuffer.EventFifoData").readBlock(event_numb & 0xFF) #TODO check 0xFF
             self.i2c_hw.dispatch()
-            # print(fifo_content)
             return np.array(fifo_content)
         else:
-            return np.zeros(6)            
+            return None           
 
-    def event_handler(self, raw_data: list) -> list:
-        """ #TODO data format for now array with size 7 first 6 entries are from fifo and last is timestamp.
-            #TODO Except for status updates during run all calculations should be after the run to minimize calculation time in while true loop.
-            but pob. not so important I dont have huge np arrays.
-        Args:
-            raw_data (list): _description_
-
-        Returns:
-            list: _description_
-        """
-        self.log.info("Event handler")
-        
-        #loop/slice through data
-
-        raw_data[:,6] = raw_data[:,6]*25/1000000000 # Transform timestamp to seconds.
-        self.log.success("Done")
-        return raw_data
-
-    def run_header(self, stuff) -> list:
-        #creates makro list of run number.. 
-        #timestamp
-        pass
+    def init_raw_data_table(self):
+        self.data = np.dtype([('w0',int),('w1',int),('w2',int),('w3',int),('w4',int),('w5',int)])
+        self.filter_data = tb.Filters(complib='blosc', complevel=5)
+        self.h5_file = tb.open_file('data/raw_data_run%s.h5' %self.run_number, mode='w', title='TLU')
+        self.data_table = self.h5_file.create_table(self.h5_file.root, name='raw_data', description=self.data , title='data', filters=self.filter_data)
 
     def run(self) -> None:
         """ Start run of the TLU. 
@@ -289,22 +275,22 @@ class AidaTLU(object):
         self.start_run()
         run_active = True
         start_time = self.get_timestamp()
-        event_array = np.zeros(7) #TODO Could be a place for run headers.
+        self.init_raw_data_table()
         while run_active:
             try:
                 last_time = self.get_timestamp()
                 current_time = (last_time-start_time) 
                 current_event = self.pull_fifo_event()
-                for event_vec in np.split(current_event,len(current_event)/6): #This additional loop is needed because the event fifo can have multiple events in dependence of the trigger rate.
-                    event_array = np.vstack((event_array, np.append(event_vec, current_time)))
-                    #TODO write here the raw data in h5 file chekc how this is done with the pytlu rep.
+                # self.status()
+                # time.sleep(1)
+                if current_event != None:
+                    for event_vec in np.split(current_event,len(current_event)/6): #This additional loop is needed because the event fifo can have multiple events in dependence of the trigger rate.
+                        self.data_table.append(event_vec)
             except:
                 KeyboardInterrupt
                 run_active = False
         self.stop_run()
-
-        np.savetxt('tlu_run_data.txt', self.event_handler(event_array)) #TODO this should be a data handler thath converts the raw data to more useful fomrat
-        #TODO most likely one file for each DUT
+        self.h5_file.close()
 
 if __name__ == "__main__":
 
