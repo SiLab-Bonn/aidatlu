@@ -3,7 +3,6 @@ import uhal
 import logger
 import numpy as np
 import tables as tb
-import time
 
 from i2c import I2CCore, i2c_addr
 
@@ -42,7 +41,7 @@ class AidaTLU(object):
         self.io_controller.clock_lemo_output(False)
         for i in range(4): self.io_controller.configure_hdmi(i+1, False)
         self.voltage_controller.set_all_voltage(0)
-        #set all thresholds to 1.2 V
+        #sets all thresholds to 1.2 V
         for i in range(6): self.voltage_controller.set_threshold(i+1, 1.2)
         #Resets all internal counters and raise the trigger veto.
         self.set_run_active(False)
@@ -175,7 +174,7 @@ class AidaTLU(object):
         self.voltage_controller.set_threshold(6, -0.2)
         self.trigger_logic.set_pulse_stretch_pack(test_stretch)
         self.trigger_logic.set_pulse_delay_pack(test_delay)
-        self.trigger_logic.set_trigger_mask(mask_high=0x00000000, mask_low=0x00000002)
+        self.trigger_logic.set_trigger_mask(mask_high=0, mask_low=2)
         self.trigger_logic.set_trigger_polarity(1)
         self.dut_logic.set_dut_mask('0001') #TODO the mask does not work with multiple DUTs only with single
         self.dut_logic.set_dut_mask_mode('00000000')
@@ -199,12 +198,12 @@ class AidaTLU(object):
         self.set_run_active(False)
         self.run_number += 1
 
-    def status(self) -> None:
-        #TODO just bugfixing for now
-        self.log.info("fifo csr: %s fifo fill level: %s" %(self.get_event_fifo_csr(),self.get_event_fifo_csr()))
-        self.log.info("post: %s pre: %s" %(self.trigger_logic.get_post_veto_trigger(),self.trigger_logic.get_pre_veto_trigger()))
-        self.log.info("time stamp: %s" %(self.get_timestamp()))
-        #self.log.info(self.trigger_logic.get_post_veto_trigger()/current_time) #TODO mean trigger rate over whole run.
+    def status(self, time) -> None:
+        run_time = time*25/1000000000
+        self.log.info("Run time: %.3f s, Total trigger number: %s, Trigger frequency: %.2f Hz" %(run_time, self.trigger_logic.get_pre_veto_trigger(),self.trigger_logic.get_post_veto_trigger()/run_time))
+        # self.log.info("fifo csr: %s fifo fill level: %s" %(self.get_event_fifo_csr(),self.get_event_fifo_csr()))
+        # self.log.info("post: %s pre: %s" %(self.trigger_logic.get_post_veto_trigger(),self.trigger_logic.get_pre_veto_trigger()))
+        # self.log.info("time stamp: %s" %(self.get_timestamp()))
 
     def set_enable_record_data(self, value: int) -> None:
         """ #TODO not sure what this does. Looks like a seperate internal event buffer to the FIFO.
@@ -259,33 +258,34 @@ class AidaTLU(object):
             fifo_content = self.i2c_hw.getNode("eventBuffer.EventFifoData").readBlock(event_numb & 0xFF) #TODO check 0xFF
             self.i2c_hw.dispatch()
             return np.array(fifo_content)
-        else:
-            return None           
+        pass            
 
     def init_raw_data_table(self):
-        self.data = np.dtype([('w0',int),('w1',int),('w2',int),('w3',int),('w4',int),('w5',int)])
+        self.data = np.dtype([('w0', 'u4'), ('w1', 'u4'), ('w2', 'u4'), ('w3', 'u4'), ('w4', 'u4'), ('w5', 'u4')])
         self.filter_data = tb.Filters(complib='blosc', complevel=5)
         self.h5_file = tb.open_file('data/raw_data_run%s.h5' %self.run_number, mode='w', title='TLU')
         self.data_table = self.h5_file.create_table(self.h5_file.root, name='raw_data', description=self.data , title='data', filters=self.filter_data)
 
+
     def run(self) -> None:
         """ Start run of the TLU. 
         """
-        
         self.start_run()
+        loop_number = 0
         run_active = True
         start_time = self.get_timestamp()
         self.init_raw_data_table()
         while run_active:
             try:
                 last_time = self.get_timestamp()
-                current_time = (last_time-start_time) 
-                current_event = self.pull_fifo_event()
-                # self.status()
-                # time.sleep(1)
-                if current_event != None:
+                current_time = (last_time-start_time)
+                current_event = self.pull_fifo_event() 
+                if np.size(current_event) > 1:
                     for event_vec in np.split(current_event,len(current_event)/6): #This additional loop is needed because the event fifo can have multiple events in dependence of the trigger rate.
                         self.data_table.append(event_vec)
+                if loop_number %10000 == 0:
+                    self.status(current_time)
+                loop_number += 1
             except:
                 KeyboardInterrupt
                 run_active = False
@@ -299,3 +299,6 @@ if __name__ == "__main__":
     hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
 
     tlu = AidaTLU(hw)
+
+    tlu.default_configuration()
+    tlu.run()
