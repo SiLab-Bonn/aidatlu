@@ -1,0 +1,33 @@
+internal_trigger:
+  internal_trigger_rate: 0 #Generate TLU internal trigger with given rate in Hz
+
+dut_module:
+  dut_1:
+    mode: 'eudet' # 'aida', 'eudet', 'any'
+  dut_2:
+    mode: 'off' # 'aida', 'eudet', 'any'
+  dut_3:
+    mode: 'off' # 'aida', 'eudet', 'any'
+  dut_4:
+    mode: 'off' # 'aida', 'eudet', 'any'    
+
+trigger_inputs:
+  #threshold voltages for the trigger inputs in V.
+  threshold:
+    threshold_1: -0.04
+    threshold_2: -0.04
+    threshold_3: -0.04
+    threshold_4: -0.04
+    threshold_5: -0.2
+    threshold_6: -0.2
+
+  trigger_inputs_logic:
+    mask_high: 0
+    mask_low: 2
+
+  trigger_polarity:
+    #TLU triggers on rising (0) or falling (1) edge
+    polarity: 0
+
+clock_lemo:
+  enable_clock_lemo_output: False

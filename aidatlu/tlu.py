@@ -4,13 +4,14 @@ import logger
 import numpy as np
 import tables as tb
 
-from i2c import I2CCore, i2c_addr
+from i2c import I2CCore
 
 from clock_controller import ClockControl
 from ioexpander_controller import IOControl
 from voltage_controller import VoltageControl
 from trigger_controller import TriggerLogic
 from dut_controller import DUTLogic
+from config_parser import TLUConfigure
 
 
 class AidaTLU(object):
@@ -23,6 +24,7 @@ class AidaTLU(object):
         if self.i2c.modules["eeprom"]:
             self.log.info("Found device with ID %s" % hex(self.get_device_id()))
 
+        #TODO some configuration also sends out ~70 triggers.
         self.clock_controller = ClockControl(self.i2c)
         self.io_controller = IOControl(self.i2c)
         self.voltage_controller = VoltageControl(self.i2c)
@@ -31,8 +33,11 @@ class AidaTLU(object):
 
         self.reset_configuration()
 
-        self.log.success("Done")
+        self.log.success("TLU initialized")
         # if present, init display
+
+    def configure(self) -> None:
+        TLUConfigure(self)
 
     def reset_configuration(self) -> None:
         """Switch off all outputs, reset all counters and set threshold to 1.2V
@@ -51,6 +56,10 @@ class AidaTLU(object):
         self.reset_fifo()
         self.reset_timestamp()
         self.run_number = 0
+        try:
+            self.h5_file.close()
+        except:
+            pass
 
     def get_device_id(self) -> int:
         """Read back board id. Consists of six blocks of hex data
@@ -279,10 +288,16 @@ class AidaTLU(object):
             try:
                 last_time = self.get_timestamp()
                 current_time = (last_time-start_time)
-                current_event = self.pull_fifo_event() 
-                if np.size(current_event) > 1:
-                    for event_vec in np.split(current_event,len(current_event)/6): #This additional loop is needed because the event fifo can have multiple events in dependence of the trigger rate.
-                        self.data_table.append(event_vec)
+                current_event = self.pull_fifo_event()
+                
+                try: #TODO  Sometimes current events consists of incomplete arrays. This needs some fixing. 
+                     #      It is prob. a timing issue with the FIFO.
+                    if np.size(current_event) > 1:
+                        for event_vec in np.split(current_event,len(current_event)/6): #This additional loop is needed because the event fifo can have multiple events in dependence of the trigger rate.
+                            self.data_table.append(event_vec)
+                except:
+                    #self.log.warning('Recieved incomplete event')
+                    pass
                 if loop_number %10000 == 0:
                     self.status(current_time)
                 loop_number += 1
