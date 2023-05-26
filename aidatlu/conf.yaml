@@ -1,15 +1,15 @@
 internal_trigger:
-  internal_trigger_rate: 0 #Generate TLU internal trigger with given rate in Hz
+  internal_trigger_rate: 400 #Generate TLU internal trigger with given rate in Hz
 
 dut_module:
   dut_1:
     mode: 'eudet' # 'aida', 'eudet', 'any'
   dut_2:
-    mode: 'off' # 'aida', 'eudet', 'any'
+    mode: 'off'   # 'aida', 'eudet', 'any'
   dut_3:
-    mode: 'off' # 'aida', 'eudet', 'any'
+    mode: 'off'   # 'aida', 'eudet', 'any'
   dut_4:
-    mode: 'off' # 'aida', 'eudet', 'any'    
+    mode: 'off'   # 'aida', 'eudet', 'any'    
 
 trigger_inputs:
   #threshold voltages for the trigger inputs in V.
@@ -22,8 +22,27 @@ trigger_inputs:
     threshold_6: -0.2
 
   trigger_inputs_logic:
-    mask_high: 0
-    mask_low: 2
+    #Enable Trigger logic. A 1 in a trigger input means the trigger has to be HIGH.
+    #A 0 corresponds to a VETO and a -1 to DO NOT CARE.
+    #TODO the way I understood this. The elements in words e.q trig_1 and trig_2
+    #     have a AND between them. Different words e.q. trigger_logic_1 and trigger_logic_1 have OR between them.
+    #TODO this is not tested.
+    #TODO Also my code will most prob. have edge cases where it will break.
+    trigger_logic_1:
+      trig_1: 1
+      trig_2: 0
+      trig_3: 0
+      trig_4: 0
+      trig_5: 0
+      trig_6: 0
+
+    # trigger_logic_2:
+    #   trig_1: 1
+    #   trig_2: 0
+    #   trig_3: 0
+    #   trig_4: 0
+    #   trig_5: 1
+    #   trig_6: 0
 
   trigger_polarity:
     #TLU triggers on rising (0) or falling (1) edge

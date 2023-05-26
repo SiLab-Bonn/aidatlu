@@ -97,11 +97,40 @@ class TLUConfigure(object):
 
 
     def conf_trigger_inputs(self)-> None:
-        self.tlu.trigger_logic.set_trigger_mask(mask_high=self.conf['trigger_inputs']['trigger_inputs_logic']['mask_high'], mask_low=self.conf['trigger_inputs']['trigger_inputs_logic']['mask_low'],)
-
+        
         self.tlu.voltage_controller.set_threshold(1, self.conf['trigger_inputs']['threshold']['threshold_1'])
         self.tlu.voltage_controller.set_threshold(2, self.conf['trigger_inputs']['threshold']['threshold_2'])
         self.tlu.voltage_controller.set_threshold(3, self.conf['trigger_inputs']['threshold']['threshold_3'])
         self.tlu.voltage_controller.set_threshold(4, self.conf['trigger_inputs']['threshold']['threshold_4'])
         self.tlu.voltage_controller.set_threshold(5, self.conf['trigger_inputs']['threshold']['threshold_5'])
         self.tlu.voltage_controller.set_threshold(6, self.conf['trigger_inputs']['threshold']['threshold_6'])
+
+        #TODO Test this logc magic with the function generator
+        trigger_word = 0
+        for i in (self.conf['trigger_inputs']['trigger_inputs_logic']):
+             logic_array = []
+             for j in self.conf['trigger_inputs']['trigger_inputs_logic'][i]:
+                logic_array.append(self.conf['trigger_inputs']['trigger_inputs_logic'][i][j])
+             trigger_word += self.find_mask_word(logic_array)
+
+        mask_low, mask_high = self.mask_words(trigger_word)
+
+        self.log.info('mask high: %s, mask low: %s' %(hex(mask_high),hex(mask_low)))
+
+        self.tlu.trigger_logic.set_trigger_mask(mask_high, mask_low)
+
+
+    def find_mask_word(self, logic_array: list) -> int:
+        long_word = 0x0
+        for combination in range(64):
+                pattern_list = [(combination >> element) & 0x1 for element in range(6)] #Transform a given integer in binary in reverse order to a list.
+                logic_array = [pattern_list[i] if logic_array[i] == -1 else logic_array[i] for i in range(len(logic_array))]
+                valid = (logic_array == pattern_list)
+                long_word = (valid << combination) | long_word
+        return long_word
+
+
+    def mask_words(self, word: int) -> tuple:
+        mask_low = 0xFFFFFFFF & word
+        mask_high = word >> 32
+        return (mask_low, mask_high)
