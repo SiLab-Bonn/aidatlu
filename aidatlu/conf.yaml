@@ -25,7 +25,8 @@ trigger_inputs:
     #Enable Trigger logic. A 1 in a trigger input means the trigger has to be HIGH.
     #A 0 corresponds to a VETO and a -1 to DO NOT CARE.
     #TODO the way I understood this. The elements in words e.q trig_1 and trig_2
-    #     have a AND between them. Different words e.q. trigger_logic_1 and trigger_logic_1 have OR between them.
+    #     have a AND between them. Different words e.q. trigger_logic_1 and trigger_logic_2 have OR between them.
+    #     So element-wise AND and dictionary-wise OR.
     #TODO this is not tested.
     #TODO Also my code will most prob. have edge cases where it will break.
     trigger_logic_1:

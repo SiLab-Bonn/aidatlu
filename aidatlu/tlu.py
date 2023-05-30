@@ -272,7 +272,7 @@ class AidaTLU(object):
     def init_raw_data_table(self):
         self.data = np.dtype([('w0', 'u4'), ('w1', 'u4'), ('w2', 'u4'), ('w3', 'u4'), ('w4', 'u4'), ('w5', 'u4')])
         self.filter_data = tb.Filters(complib='blosc', complevel=5)
-        self.h5_file = tb.open_file('data/raw_data_run%s.h5' %self.run_number, mode='w', title='TLU')
+        self.h5_file = tb.open_file('data/raw_data_run%s.h5' %(self.run_number), mode='w', title='TLU')
         self.data_table = self.h5_file.create_table(self.h5_file.root, name='raw_data', description=self.data , title='data', filters=self.filter_data)
 
 
@@ -315,5 +315,6 @@ if __name__ == "__main__":
 
     tlu = AidaTLU(hw)
 
-    tlu.default_configuration()
+    tlu.configure()
+    
     tlu.run()
