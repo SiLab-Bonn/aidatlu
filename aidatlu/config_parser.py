@@ -80,11 +80,11 @@ class TLUConfigure(object):
                 dut_1 = 0b1000
                 dut_mode_1 = 0b11000000
 
-        self.tlu.dut_logic.set_dut_mask(dut_1 + dut_2 + dut_3 + dut_4)
-        self.tlu.dut_logic.set_dut_mask_mode(dut_mode_1 + dut_mode_2 + dut_mode_3 + dut_mode_4)
+        self.tlu.dut_logic.set_dut_mask(dut_1 | dut_2 | dut_3 | dut_4) 
+        self.tlu.dut_logic.set_dut_mask_mode(dut_mode_1 | dut_mode_2 | dut_mode_3 | dut_mode_4)
         #special configs
         self.tlu.dut_logic.set_dut_mask_mode_modifier(0) #TODO Does this have to change for AIDA mode??
-        self.tlu.dut_logic.set_dut_ignore_busy(0)
+        self.tlu.dut_logic.set_dut_ignore_busy(0) #TODO this seems interesting check with the documentation
         self.tlu.dut_logic.set_dut_ignore_shutter(0x1)
 
     def conf_trigger_logic(self) -> None:
@@ -93,25 +93,17 @@ class TLUConfigure(object):
 
         self.tlu.trigger_logic.set_trigger_polarity(self.conf['trigger_inputs']['trigger_polarity']['polarity'])
 
-        test_stretch = [1,1,1,1,1,1]
-        test_delay = [0,0,0,0,0,0] 
-
-        self.tlu.trigger_logic.set_pulse_stretch_pack(test_stretch)
-        self.tlu.trigger_logic.set_pulse_delay_pack(test_delay)
-
+        self.tlu.trigger_logic.set_pulse_stretch_pack(self.conf['trigger_inputs']['trigger_signal_shape']['stretch'])
+        self.tlu.trigger_logic.set_pulse_delay_pack(self.conf['trigger_inputs']['trigger_signal_shape']['delay'])
+        self.tlu.trigger_logic.set_internal_trigger_frequency(self.conf['internal_trigger']['internal_trigger_rate'])
 
     def conf_trigger_inputs(self)-> None:
         """Configures the trigger inputs. Each input can have a different threshold.
            The two trigger words mask_low and mask_high are generated with the use of two support functions. 
         """
-        self.tlu.voltage_controller.set_threshold(1, self.conf['trigger_inputs']['threshold']['threshold_1'])
-        self.tlu.voltage_controller.set_threshold(2, self.conf['trigger_inputs']['threshold']['threshold_2'])
-        self.tlu.voltage_controller.set_threshold(3, self.conf['trigger_inputs']['threshold']['threshold_3'])
-        self.tlu.voltage_controller.set_threshold(4, self.conf['trigger_inputs']['threshold']['threshold_4'])
-        self.tlu.voltage_controller.set_threshold(5, self.conf['trigger_inputs']['threshold']['threshold_5'])
-        self.tlu.voltage_controller.set_threshold(6, self.conf['trigger_inputs']['threshold']['threshold_6'])
 
-        #TODO Test this logc magic with the function generator
+        [self.tlu.voltage_controller.set_threshold(i+1, self.conf['trigger_inputs']['threshold']['threshold_%s' %(i+1)]) for i in range(6)]
+
         trigger_word = 0
         for i in (self.conf['trigger_inputs']['trigger_inputs_logic']):
              logic_array = []
@@ -124,7 +116,6 @@ class TLUConfigure(object):
         self.log.info('mask high: %s, mask low: %s' %(hex(mask_high),hex(mask_low)))
 
         self.tlu.trigger_logic.set_trigger_mask(mask_high, mask_low)
-
 
     def _find_mask_word(self, logic_array: list) -> int:
         """This function creates all combination of trigger words and compares them to the one from the configuration file.

@@ -1,5 +1,5 @@
 import logger
-from i2c import I2CCore
+from hardware.i2c import I2CCore
 
 class DUTLogic(object):
     def __init__(self, i2c: I2CCore):
@@ -105,3 +105,7 @@ class DUTLogic(object):
 
     def set_dut_ignore_shutter(self, value: int) -> None:
         self.i2c.write_register("DUTInterfaces.IgnoreShutterVetoW", value)
+        self.log.info('DUT ignore shutter set to %s' %self.get_dut_ignore_shutter())
+
+    def get_dut_ignore_shutter(self):
+        return self.i2c.read_register("DUTInterfaces.IgnoreShutterVetoR")

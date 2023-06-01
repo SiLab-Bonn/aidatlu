@@ -1,4 +1,4 @@
-from i2c import I2CCore
+from hardware.i2c import I2CCore
 import logger
 
 """ 
@@ -47,13 +47,12 @@ class VoltageControl(object):
         if channel == 6:
             self._set_dac_value(channel+1, dac_value, 1)
             self._set_dac_value(channel+1, dac_value, 2)
-            # print("channel = 6")
+        #The DAC channels are connected in reverse order. The first two channels sit on DAC 1 in reverse order.   
         if channel < 2:
-            self._set_dac_value(1-channel, dac_value, 1) #The ADC channels are connected in reverse order
-            # print("channel < 2")
+            self._set_dac_value(1-channel, dac_value, 1) 
+        #The last 4 channels sit on DAC 2 in reverse order.
         if channel > 1 and channel < 7:
-            self._set_dac_value(3-(channel-2), dac_value, 2) #No Idea what happend to these channels
-            # print("1 < channel < 7")
+            self._set_dac_value(3-(channel-2), dac_value, 2) 
         self.log.info("Threshold of input %s set to %s V" %(trigger_input,threshold_voltage))
 
     def set_all_voltage(self, voltage: float) -> None:

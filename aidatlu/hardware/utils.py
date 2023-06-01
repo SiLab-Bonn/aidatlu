@@ -1,6 +1,3 @@
-
-
-
 def _set_bit(value: int, index: int, set: bool=True) -> int:
     """sets bit at given index of given value to bool set
 

@@ -1,4 +1,4 @@
-from i2c import I2CCore
+from hardware.i2c import I2CCore
 import logger
 
 """
@@ -19,7 +19,7 @@ class ClockControl(object):
         """Get Chip information.
 
         Returns:
-            int: The Chip ID. #TODO what is this chip id what format should this be??
+            int: The Chip ID.
         """
         my_adress = 0x02
         chip_id = 0x0

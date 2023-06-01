@@ -4,13 +4,13 @@ import logger
 import numpy as np
 import tables as tb
 
-from i2c import I2CCore
+from hardware.i2c import I2CCore
 
-from clock_controller import ClockControl
-from ioexpander_controller import IOControl
-from voltage_controller import VoltageControl
-from trigger_controller import TriggerLogic
-from dut_controller import DUTLogic
+from hardware.clock_controller import ClockControl
+from hardware.ioexpander_controller import IOControl
+from hardware.voltage_controller import VoltageControl
+from hardware.trigger_controller import TriggerLogic
+from hardware.dut_controller import DUTLogic
 from config_parser import TLUConfigure
 
 
@@ -76,7 +76,7 @@ class AidaTLU(object):
         return self.i2c.read_register("version")
 
     # def reset_board(self) -> None:
-    #     #TODO THIS FUNCTION CRASHES THE TLU. This does not work at all...
+    #     #THIS FUNCTION CRASHES THE TLU. TLU needs a power cycle afterwards. This does not work at all...
     #     self.i2c.write_register("logic_clocks.LogicRst", 1)
 
     def reset_timestamp(self) -> None:
@@ -91,7 +91,7 @@ class AidaTLU(object):
         self.write_status(0x0)
 
     def reset_status(self) -> None:
-        """ Resets the complete status and all counters #TODO I think.
+        """ Resets the complete status and all counters.
         """
         self.write_status(0x3)
         self.write_status(0x0)
@@ -142,6 +142,7 @@ class AidaTLU(object):
     def test_configuration(self) -> None:
         """ Configure DUT 1 to run in a default test configuration. 
             Runs in EUDET mode with internal generated triggers.
+            This is just for testing and bugfixing.
         """
         self.log.info("Configure DUT 1 in EUDET test mode")
         
@@ -160,8 +161,7 @@ class AidaTLU(object):
 
     def default_configuration(self) -> None:
         """Default configuration. Configures DUT 1 to run in EUDET mode.
-            #TODO set dut mask does not work with multiple DUTS
-            #TODO this needs a better solution, some kind of config file. But its now useful for bugfixing.
+           This is just for testing and bugfixing.
         """
         test_stretch = [1,1,1,1,1,1]
         test_delay = [0,0,0,0,0,0] 
@@ -185,7 +185,7 @@ class AidaTLU(object):
         self.trigger_logic.set_pulse_delay_pack(test_delay)
         self.trigger_logic.set_trigger_mask(mask_high=0, mask_low=2)
         self.trigger_logic.set_trigger_polarity(1)
-        self.dut_logic.set_dut_mask('0001') #TODO the mask does not work with multiple DUTs only with single
+        self.dut_logic.set_dut_mask('0001')
         self.dut_logic.set_dut_mask_mode('00000000')
         self.dut_logic.set_dut_mask_mode_modifier(0)
         self.dut_logic.set_dut_ignore_busy(0)
@@ -207,9 +207,17 @@ class AidaTLU(object):
         self.set_run_active(False)
         self.run_number += 1
 
-    def status(self, time) -> None:
+    def status(self, time: int) -> None:
+        """Returns the status of the TLU run with trigger number, runtime usw.
+
+        Args:
+            time (int): current runtime of the TLU
+        """
         run_time = time*25/1000000000
-        self.log.info("Run time: %.3f s, Total trigger number: %s, Trigger frequency: %.2f Hz" %(run_time, self.trigger_logic.get_pre_veto_trigger(),self.trigger_logic.get_post_veto_trigger()/run_time))
+        self.log.info("Run time: %.3f s, Event numb.: %s, Total trigger numb.: %s, Mean trigger freq.: %.f Hz" 
+                      %(run_time, self.trigger_logic.get_post_veto_trigger(), self.trigger_logic.get_pre_veto_trigger(),self.trigger_logic.get_post_veto_trigger()/run_time))
+        # self.log.warning('FIFO level: %s' %self.log.warning(self.get_event_fifo_fill_level()))
+        # self.log.warning('FIFO level 2: %s' %self.log.warning(self.get_event_fifo_csr()))
         # self.log.info("fifo csr: %s fifo fill level: %s" %(self.get_event_fifo_csr(),self.get_event_fifo_csr()))
         # self.log.info("post: %s pre: %s" %(self.trigger_logic.get_post_veto_trigger(),self.trigger_logic.get_pre_veto_trigger()))
         # self.log.info("time stamp: %s" %(self.get_timestamp()))
@@ -263,8 +271,10 @@ class AidaTLU(object):
             list: _description_#TODO this is nonsense for now.
         """
         event_numb = self.get_event_fifo_fill_level()
-        if event_numb:
-            fifo_content = self.i2c_hw.getNode("eventBuffer.EventFifoData").readBlock(event_numb & 0xFF) #TODO check 0xFF
+        if event_numb*6 == 0xFEA:
+            self.log.warning('FIFO is full')
+        if event_numb and event_numb % 6 == 0:
+            fifo_content = self.i2c_hw.getNode("eventBuffer.EventFifoData").readBlock(event_numb)
             self.i2c_hw.dispatch()
             return np.array(fifo_content)
         pass            
@@ -290,13 +300,12 @@ class AidaTLU(object):
                 current_time = (last_time-start_time)
                 current_event = self.pull_fifo_event()
                 
-                try: #TODO  Sometimes current events consists of incomplete arrays. This needs some fixing. 
-                     #      It is prob. a timing issue with the FIFO.
+                try: 
                     if np.size(current_event) > 1:
                         for event_vec in np.split(current_event,len(current_event)/6): #This additional loop is needed because the event fifo can have multiple events in dependence of the trigger rate.
                             self.data_table.append(event_vec)
                 except:
-                    #self.log.warning('Recieved incomplete event')
+                    self.log.warning('Recieved incomplete event')
                     pass
                 if loop_number %10000 == 0:
                     self.status(current_time)

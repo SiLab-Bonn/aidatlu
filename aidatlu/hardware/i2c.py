@@ -18,7 +18,6 @@ i2c_addr = {
     "display": 0x3A,  # Display
 }
 
-
 class I2CCore(object):
     def __init__(self, hw_int):
         """hw_int: IPBus HwInterface instance"""

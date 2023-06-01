@@ -1,7 +1,7 @@
 import logger
-from i2c import I2CCore
+from hardware.i2c import I2CCore
 import time
-from utils import _set_bit
+from hardware.utils import _set_bit
 
 """ 
 

@@ -1,5 +1,5 @@
 internal_trigger:
-  internal_trigger_rate: 400 #Generate TLU internal trigger with given rate in Hz
+  internal_trigger_rate: 0 #Generate TLU internal trigger with given rate in Hz
 
 dut_module:
   dut_1:
@@ -22,13 +22,14 @@ trigger_inputs:
     threshold_6: -0.2
 
   trigger_inputs_logic:
-    #Enable Trigger logic. A 1 in a trigger input means the trigger has to be HIGH.
-    #A 0 corresponds to a VETO and a -1 to DO NOT CARE.
-    #TODO the way I understood this. The elements in words e.q trig_1 and trig_2
-    #     have a AND between them. Different words e.q. trigger_logic_1 and trigger_logic_2 have OR between them.
-    #     So element-wise AND and dictionary-wise OR.
-    #TODO this is not tested.
-    #TODO Also my code will most prob. have edge cases where it will break.
+    #Enable Trigger logic. A 1 in a trigger input means the trigger has to be HIGH,
+    #a 0 corresponds to a VETO and a -1 to DO NOT CARE.
+    #The elements in words e.q trig_1 and trig_2 have a AND between them. 
+    #Different words e.q. trigger_logic_1 and trigger_logic_2 have OR between them.
+    #So element-wise AND and dictionary-wise OR.
+    #TODO The signal length of the trigger inputs should be analyzed
+    #     with the osziloscope. For mor complicated OR and VETO trigger words this seems to have an effect.
+    #TODO the code will most prob. have edge cases where it will break.
     trigger_logic_1:
       trig_1: 1
       trig_2: 0
@@ -38,16 +39,23 @@ trigger_inputs:
       trig_6: 0
 
     # trigger_logic_2:
-    #   trig_1: 1
+    #   trig_1: 0
     #   trig_2: 0
-    #   trig_3: 0
+    #   trig_3: 1
     #   trig_4: 0
-    #   trig_5: 1
+    #   trig_5: 0
     #   trig_6: 0
 
   trigger_polarity:
     #TLU triggers on rising (0) or falling (1) edge
     polarity: 0
 
+  trigger_signal_shape:
+    #Stretches and delays each trigger input signal for an number of clock cycles,
+    #this could be important depending on your hardware trigger setup.
+    stretch: [1, 1, 1, 1, 1, 1]
+    delay:   [0, 0, 0, 0, 0, 0]
+
 clock_lemo:
   enable_clock_lemo_output: False
+

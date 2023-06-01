@@ -1,6 +1,6 @@
-from i2c import I2CCore
+from hardware.i2c import I2CCore
 import logger
-import utils
+from hardware.utils import _pack_bits
 
 class TriggerLogic(object):
     def __init__(self, i2c: I2CCore) -> None:
@@ -15,26 +15,26 @@ class TriggerLogic(object):
 
     def set_internal_trigger_frequency(self, frequency: int) -> None:
         """ Sets the internal trigger frequency.
-        The maximum allowed Frequency is 160 MHz. #TODO This should generate internal triggers with frequency > 0
+        The maximum allowed Frequency is 160 MHz. 
 
         Args:
-            frequency (int): Frequency in Hz #TODO is this Hz?
+            frequency (int): Frequency in Hz 
         """
         self.log.info("Set internal trigger frequency to: %i Hz" %frequency)
         max_freq = 160000000
         
         if frequency < 0:
-            raise ValueError("Frequency smaller than 0 does not work")
+            raise ValueError("Frequency smaller 0 does not work")
         if frequency > max_freq:
-            raise ValueError("Frequency larger than 160MHz does not work")
+            raise ValueError("Frequency larger 160MHz not allowed")
         if frequency == 0:
             interval = frequency
         else:
-            interval = int(160000000/frequency) #TODO here is prob. a rounding error I should use a round function this would prob. prevent the warning at ~10kHz.
+            interval = int(160000000/frequency) #TODO here is a rounding error that comes from the interval calculations at ~10kHz.
         self._set_internal_trigger_interval(interval)
         new_freq = self.get_internal_trigger_frequency()
         if new_freq != frequency:
-            self.log.warn("Frequency is set to different value. Internal Trigger frequency is %i Hz" %self.get_internal_trigger_frequency())
+            self.log.warn("Frequency set to different value. Internal Trigger frequency: %i Hz" %self.get_internal_trigger_frequency())
 
     def get_internal_trigger_frequency(self) -> int:
         """Reads the internal trigger frequency from the register.
@@ -66,7 +66,6 @@ class TriggerLogic(object):
 
     def set_trigger_veto(self, veto: bool) -> None:
         """ Enables or disables new trigger. This can be used to reset the procession of new triggers.
-            #TODO there seems to be a bug here. After repatedly setting this to False it changes sometimes to True
         Args:
             veto (bool): Sets a veto to the trigger logic of the tlu.
         """
@@ -88,14 +87,12 @@ class TriggerLogic(object):
         self.log.info("Trigger on %s edge" %("falling" if value == 1 else "rising")) #TODO NOT TESTED 
 
 #    def set_trigger_mask(self, value: int) -> None:
-    def set_trigger_mask(self, mask_high: int, mask_low: int) -> None:  #TODO EUDAQ uses both functions with same name      
+    def set_trigger_mask(self, mask_high: int, mask_low: int) -> None:  
         """ Sets the trigger logic. Each of the 64 possible combination is divided into two 32-bit words mask high and mask low.
-            #TODO To set a specific trigger logic one must find right two words in the TLU. doc p. 30 
-            #TODO CAREFUL LOGIC TABLE IN DOC IS WRONG! The inputs are connected differently see DAC connections for threshold. 
-                    The trigger inputs are connected in the wrong way 
+
         Args:
-            mask_high (int): _description_ #TODO
-            mask_low (int): _description_ #TODO
+            mask_high (int): The most significant 32-bit word generated from the trigger configuration.
+            mask_low (int): The least significant 32-bit word generated from the trigger configuration.
         """
         #mask_high = (value >> 32) & 0xFF
         #mask_low = value & 0xFF
@@ -133,7 +130,7 @@ class TriggerLogic(object):
 
     """ 
     
-    Trigger Pulse Length and Delay #TODO prob. to account for cable length and so on 
+    Trigger Pulse Length and Delay 
     
     """
 
@@ -143,9 +140,9 @@ class TriggerLogic(object):
             The vector is packed into a single word.
             
         Args:
-            vector (list): _description_ #TODO
+            vector (list): A vector containing six integers. Each trigger input is stretched by the integer number of clock cycles.
         """
-        packed = utils._pack_bits(vector)
+        packed = _pack_bits(vector)
         self._set_pulse_stretch(packed)
         self.log.info("Pulse stretch is set to %s" %self.get_pulse_stretch_pack())
     
@@ -154,20 +151,20 @@ class TriggerLogic(object):
             The vector is packed into a single word.
         
         Args:
-            vector (list): _description_
+            vector (list): A vector containing six integers. Each trigger input is delayed by the integer number of clock cycles.
         """
-        packed = utils._pack_bits(vector)
+        packed = _pack_bits(vector)
         self._set_pulse_delay(packed)
         self.log.info("Pulse Delay is set to %s" %self.get_pulse_delay_pack())
     
     def get_pulse_stretch_pack(self) -> int:
-        """ Get packed word describing the input pulse stretch. #TODO a unpack function could be usefull.
+        """ Get packed word describing the input pulse stretch. 
 
         """
         return self.i2c.read_register("triggerLogic.PulseStretchR")
     
     def get_pulse_delay_pack(self) -> int:
-        """ Get packed word describing the input pulse stretch. #TODO a unpack function could be usefull.
+        """ Get packed word describing the input pulse stretch. 
 
         """
         return self.i2c.read_register("triggerLogic.PulseDelayR")
@@ -176,7 +173,7 @@ class TriggerLogic(object):
         """ Writes the packed word into the pulse stretch register.
 
         Args:
-            value (int): _description_
+            value (int): The input vector packed to a single integer.
         """
         self.i2c.write_register("triggerLogic.PulseStretchW", value)
 
@@ -184,6 +181,6 @@ class TriggerLogic(object):
         """ Writes the packed word into the pulse delay register.
 
         Args:
-            value (int): _description_
+            value (int): The input vector packed to a single integer.
         """
         self.i2c.write_register("triggerLogic.PulseDelayW", value)
