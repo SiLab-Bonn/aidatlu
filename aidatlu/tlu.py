@@ -25,8 +25,9 @@ class AidaTLU(object):
             self.log.info("Found device with ID %s" % hex(self.get_device_id()))
 
         #TODO some configuration also sends out ~70 triggers.
-        self.clock_controller = ClockControl(self.i2c)
+        
         self.io_controller = IOControl(self.i2c)
+        self.clock_controller = ClockControl(self.i2c, self.io_controller)
         self.voltage_controller = VoltageControl(self.i2c)
         self.trigger_logic = TriggerLogic(self.i2c)
         self.dut_logic = DUTLogic(self.i2c)

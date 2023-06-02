@@ -1,15 +1,16 @@
 internal_trigger:
-  internal_trigger_rate: 0 #Generate TLU internal trigger with given rate in Hz
+#Generate TLU internal trigger with given rate in Hz
+  internal_trigger_rate: 400 
 
 dut_module:
   dut_1:
-    mode: 'eudet' # 'aida', 'eudet', 'any'
+    mode: 'eudet' # 'aida', 'aidatrig', 'eudet', 'any'
   dut_2:
-    mode: 'off'   # 'aida', 'eudet', 'any'
+    mode: 'off'   # 'aida', 'aidatrig', 'eudet', 'any'
   dut_3:
-    mode: 'off'   # 'aida', 'eudet', 'any'
+    mode: 'off'   # 'aida', 'aidatrig', 'eudet', 'any'
   dut_4:
-    mode: 'off'   # 'aida', 'eudet', 'any'    
+    mode: 'off'   # 'aida', 'aidatrig', 'eudet', 'any'    
 
 trigger_inputs:
   #threshold voltages for the trigger inputs in V.
@@ -52,10 +53,16 @@ trigger_inputs:
 
   trigger_signal_shape:
     #Stretches and delays each trigger input signal for an number of clock cycles,
-    #this could be important depending on your hardware trigger setup.
+    #this could be important depending on the hardware trigger setup.
     stretch: [1, 1, 1, 1, 1, 1]
     delay:   [0, 0, 0, 0, 0, 0]
 
 clock_lemo:
   enable_clock_lemo_output: False
 
+pmt_control:
+#PMT control voltages in V
+  pmt_1: 0
+  pmt_2: 0
+  pmt_3: 0
+  pmt_4: 0

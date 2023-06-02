@@ -1,4 +1,5 @@
 from hardware.i2c import I2CCore
+from hardware.ioexpander_controller import IOControl
 import logger
 
 """
@@ -8,11 +9,11 @@ Si5344
 """
 
 class ClockControl(object):
-    def __init__(self, i2c: I2CCore) -> None:
+    def __init__(self, i2c: I2CCore, io_control: IOControl) -> None:
         self.log = logger.setup_derived_logger("Clock Controller")
         self.log.info("Initializing Clock Chip")
         self.i2c = i2c
-        
+        self.io_control = io_control
         self.write_clock_conf("misc/aida_tlu_clk_config.txt")
 
     def get_device_version(self) -> int:
@@ -102,9 +103,15 @@ class ClockControl(object):
         """
         clock_conf = self.parse_clock_conf(file_path)
         self.log.info("Writing clock configuration")
-        for row in clock_conf:
+        self.io_control.all_on('r')
+        for index,row in enumerate(clock_conf):
             self.write_clock_register(int(row[0], 16), int(row[1], 16))
+            #This is just fancy, show progress of clock configuration with LEDs.
+            if index % 10 == 0 and int((index/len(clock_conf)*10+1)) != 5:
+                self.io_control.switch_led(int((index/len(clock_conf)*10+1)),'b')
+
         self.log.success("Done writing clock configuration ")
+        self.io_control.all_off()
 
     def _set_page(self, page: int) -> None:
         """Configures chip to perform operations on specific address page.

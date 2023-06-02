@@ -98,7 +98,8 @@ class VoltageControl(object):
             channel_map = 2 
 
         #0xFFFF is max DAC value
-        self._set_dac_value(channel_map,int(voltage*0xFFFF))
+        self._set_dac_value(channel_map, int(voltage*0xFFFF))
+        self.log.info('PMT channel %s set to %s V' %(pmt_channel, voltage))
 
     def _set_dac_reference(self, internal: bool = False, dac: int = 0) -> None:
         """Choose internal or external DAC reference

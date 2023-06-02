@@ -17,7 +17,7 @@ class TLUConfigure(object):
         self.conf_trigger_inputs()
         self.conf_trigger_logic()
         self.tlu.io_controller.clock_lemo_output(self.conf['clock_lemo']['enable_clock_lemo_output'])
-
+        [self.tlu.voltage_controller.set_voltage(i+1, self.conf['pmt_control']['pmt_%s'%(i+1)]) for i in range(len(self.conf['pmt_control']))]
         self.log.success("TLU configured")
 
     def conf_dut(self) -> None:
@@ -79,6 +79,33 @@ class TLUConfigure(object):
                 self.tlu.io_controller.clock_hdmi_output(4, 'off')
                 dut_1 = 0b1000
                 dut_mode_1 = 0b11000000
+        #AIDA mode with trigger number
+        if self.conf['dut_module']['dut_1']['mode'] == 'aidatrig':
+                self.tlu.log.info("Configure DUT 1 in AIDA mode with trigger number")
+                self.tlu.io_controller.configure_hdmi(1, '0111') #TODO what pin configuration is needed for AIDA mode??
+                self.tlu.io_controller.clock_hdmi_output(1, 'off')
+                dut_1 = 0b0001
+                dut_mode_1 = 0b00000001
+        if self.conf['dut_module']['dut_2']['mode'] == 'aidatrig':
+                self.tlu.log.info("Configure DUT 2 in AIDA mode with trigger number")
+                self.tlu.io_controller.configure_hdmi(2, '0111')
+                self.tlu.io_controller.clock_hdmi_output(2, 'off')
+                dut_2 = 0b0010
+                dut_mode_1 = 0b00000100
+        if self.conf['dut_module']['dut_3']['mode'] == 'aidatrig':
+                self.tlu.log.info("Configure DUT 3 in AIDA mode with trigger number")
+                self.tlu.io_controller.configure_hdmi(3, '0111')
+                self.tlu.io_controller.clock_hdmi_output(3, 'off')
+                dut_1 = 0b0100
+                dut_mode_1 = 0b00010000
+        if self.conf['dut_module']['dut_4']['mode'] == 'aidatrig':
+                self.tlu.log.info("Configure DUT 4 in AIDA mode with trigger number")
+                self.tlu.io_controller.configure_hdmi(4, '0111')
+                self.tlu.io_controller.clock_hdmi_output(4, 'off')
+                dut_1 = 0b1000
+                dut_mode_1 = 0b01000000
+
+
 
         self.tlu.dut_logic.set_dut_mask(dut_1 | dut_2 | dut_3 | dut_4) 
         self.tlu.dut_logic.set_dut_mask_mode(dut_mode_1 | dut_mode_2 | dut_mode_3 | dut_mode_4)
