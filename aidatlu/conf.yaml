@@ -4,7 +4,7 @@ internal_trigger:
 
 dut_module:
   dut_1:
-    mode: 'eudet' # 'aida', 'aidatrig', 'eudet', 'any'
+    mode: 'aida' # 'aida', 'aidatrig', 'eudet', 'any'
   dut_2:
     mode: 'off'   # 'aida', 'aidatrig', 'eudet', 'any'
   dut_3:
