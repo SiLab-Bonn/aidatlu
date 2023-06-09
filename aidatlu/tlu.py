@@ -14,6 +14,7 @@ from hardware.trigger_controller import TriggerLogic
 from hardware.dut_controller import DUTLogic
 from config_parser import TLUConfigure
 
+from data_parser import DataParser
 
 class AidaTLU(object):
     def __init__(self, hw) -> None:
@@ -26,7 +27,6 @@ class AidaTLU(object):
             self.log.info("Found device with ID %s" % hex(self.get_device_id()))
 
         #TODO some configuration also sends out ~70 triggers.
-        
         self.io_controller = IOControl(self.i2c)
         self.clock_controller = ClockControl(self.i2c, self.io_controller)
         self.voltage_controller = VoltageControl(self.i2c)
@@ -34,12 +34,16 @@ class AidaTLU(object):
         self.dut_logic = DUTLogic(self.i2c)
 
         self.reset_configuration()
+        self.config_parser = TLUConfigure(self)
+        self.data_parser = DataParser()
 
         self.log.success("TLU initialized")
         # if present, init display
 
     def configure(self) -> None:
-        TLUConfigure(self)
+        """loads the conf.yaml and configures the TLU accordingly.
+        """
+        self.config_parser.configure()
 
     def reset_configuration(self) -> None:
         """Switch off all outputs, reset all counters and set threshold to 1.2V
@@ -282,11 +286,13 @@ class AidaTLU(object):
         pass            
 
     def init_raw_data_table(self):
+        """ Initializes the raw data table, where the raw FIFO data is found.
+        """
         self.data = np.dtype([('w0', 'u4'), ('w1', 'u4'), ('w2', 'u4'), ('w3', 'u4'), ('w4', 'u4'), ('w5', 'u4')])
         self.filter_data = tb.Filters(complib='blosc', complevel=5)
-        self.h5_file = tb.open_file('data/raw_data_run%s_%s.h5' %(self.run_number, datetime.now().strftime('%Y_%m_%d_%H_%M_%S')), mode='w', title='TLU')
+        self.h5_file = tb.open_file(self.raw_data_path, mode='w', title='TLU')
         self.data_table = self.h5_file.create_table(self.h5_file.root, name='raw_data', description=self.data , title='data', filters=self.filter_data)
-
+        self.h5_file.create_group(self.h5_file.root , 'configuration', self.config_parser.conf)
 
     def run(self) -> None:
         """ Start run of the TLU. 
@@ -295,7 +301,10 @@ class AidaTLU(object):
         loop_number = 0
         run_active = True
         start_time = self.get_timestamp()
+        self.raw_data_path = 'data/raw_data_run%s_%s.h5' %(self.run_number, datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
+        self.interpreted_data_path = 'data/interpreted_data_run%s_%s.h5' %(self.run_number, datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
         self.init_raw_data_table()
+
         while run_active:
             try:
                 last_time = self.get_timestamp()
@@ -317,6 +326,8 @@ class AidaTLU(object):
                 run_active = False
         self.stop_run()
         self.h5_file.close()
+        self.data_parser.parse(self.raw_data_path, self.interpreted_data_path)
+        self.log.success('Run finished')
 
 if __name__ == "__main__":
 

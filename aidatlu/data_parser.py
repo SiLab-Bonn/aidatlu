@@ -7,6 +7,7 @@ class DataParser(object):
     
     def __init__(self) -> None:
         self.log = logger.setup_main_logger(__class__.__name__, logging.DEBUG)
+
         
     def parse(self, filepath_in: str,  filepath_out: str) -> None:
         """ Parse the data from filepath in readable form to filepath out
@@ -16,7 +17,12 @@ class DataParser(object):
             filepath_out (str): New interpreted data file.
         """
         table = self.read_file(filepath_in)
-        self.write_data(filepath_out, table)
+        features = np.dtype([('eventnumber', 'u4'), ('timestamp', 'u4'), ('eventtype', 'u4'), ('input1', 'u4'), ('input2', 'u4'), ('input3', 'u4'), 
+        ('input4', 'u4'), ('inpu5', 'u4'), ('input6', 'u4'), ('sc1', 'u4'), ('sc2', 'u4'), ('sc3', 'u4'), ('sc4', 'u4'), ('sc5', 'u4'), ('sc6', 'u4')])
+        data = np.rec.fromarrays(self.transform_data(table['w0'], table['w1'], table['w2'], table['w3'], table['w4'], table['w5']), dtype=features)
+        self.write_data(filepath_out, data, features)
+
+        self.log.info('Data parsed from "%s" to "%s"' %(filepath_in, filepath_out))
 
     def read_file(self, filepath: str) -> tb:
         """Reads raw data file of the TLU
@@ -31,6 +37,7 @@ class DataParser(object):
         with tb.open_file(filepath, 'r') as file:
             table = file.root.raw_data
             raw_data = np.array(table[:], dtype=data)
+            self.config = str(file.root.configuration).split(' ', 2)[2]
         return raw_data
     
     def transform_data(self, w0: np.array, w1: np.array, w2: np.array, w3: np.array, w4: np.array, w5: np.array) -> np.array:
@@ -47,9 +54,6 @@ class DataParser(object):
         Returns:
             np.array: array with coloumns 
         """
-        features = np.dtype([('eventnumber', 'u4'), ('timestamp', 'u4'), ('eventtype', 'u4'), ('input1', 'u4'), ('input2', 'u4'), ('input3', 'u4'), 
-        ('input4', 'u4'), ('inpu5', 'u4'), ('input6', 'u4'), ('sc1', 'u4'), ('sc2', 'u4'), ('sc3', 'u4'), ('sc4', 'u4'), ('sc5', 'u4')])
-
         event_number = w3
         timestamp = ((w0 & 0x0000FFFF << 32) + w1)
         #TODO not sure what this is per. mode?
@@ -70,20 +74,16 @@ class DataParser(object):
         sc_6 = (w4 >> 16) & 0xFF
         return np.array([event_number, timestamp, event_type, input_1, input_2, input_3, input_4, input_5, input_6, sc_1, sc_2, sc_3, sc_4, sc_5, sc_6])
 
-    def write_data(self, filepath: str, raw_data: tb) -> None:
+    def write_data(self, filepath: str, data: np.array, features: np.dtype) -> None:
         """Analyzes the raw data table and writes it into a new .h5 file
 
         Args:
             filepath (str): Path to the new .h5 file.
-            raw_data (table): raw data table
+            data (table): raw data 
         """
-        features = np.dtype([('eventnumber', 'u4'), ('timestamp', 'u4'), ('eventtype', 'u4'), ('input1', 'u4'), ('input2', 'u4'), ('input3', 'u4'), 
-        ('input4', 'u4'), ('inpu5', 'u4'), ('input6', 'u4'), ('sc1', 'u4'), ('sc2', 'u4'), ('sc3', 'u4'), ('sc4', 'u4'), ('sc5', 'u4'), ('sc6', 'u4')])
-
         filter_data = tb.Filters(complib='blosc', complevel=5)
-
-        data = np.rec.fromarrays(self.transform_data(raw_data['w0'], raw_data['w1'], raw_data['w2'], raw_data['w3'], raw_data['w4'], raw_data['w5']), dtype=features)
 
         with tb.open_file(filepath,  mode='w', title='TLU_interpreted') as h5_file:
             data_table = h5_file.create_table(h5_file.root, name='interpreted_data', description=features , title='data', filters=filter_data)
             data_table.append(data)
+            h5_file.create_group(h5_file.root, 'configuration', self.config)

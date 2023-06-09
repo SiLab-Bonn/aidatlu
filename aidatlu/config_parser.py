@@ -13,12 +13,15 @@ class TLUConfigure(object):
         with open(config_path, 'r') as file:
             self.conf = yaml.full_load(file)
 
+
+    def configure(self) -> None:
         self.conf_dut()
         self.conf_trigger_inputs()
         self.conf_trigger_logic()
         self.tlu.io_controller.clock_lemo_output(self.conf['clock_lemo']['enable_clock_lemo_output'])
         [self.tlu.voltage_controller.set_voltage(i+1, self.conf['pmt_control']['pmt_%s'%(i+1)]) for i in range(len(self.conf['pmt_control']))]
         self.log.success("TLU configured")
+   
 
     def conf_dut(self) -> None:
         """ Parse the configuration for the DUT interface to the AIDATLU. 
