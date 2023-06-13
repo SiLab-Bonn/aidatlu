@@ -41,15 +41,15 @@ class DataParser(object):
         return raw_data
     
     def transform_data(self, w0: np.array, w1: np.array, w2: np.array, w3: np.array, w4: np.array, w5: np.array) -> np.array:
-        """Transforms raw data to a readable dataformat
+        """Transforms raw data from the FIFO to a readable dataformat
 
         Args:
-            w0 (np.array): raw data from FIFO
-            w1 (np.array): raw data from FIFO
-            w2 (np.array): raw data from FIFO
-            w3 (np.array): raw data from FIFO
-            w4 (np.array): raw data from FIFO
-            w5 (np.array): raw data from FIFO
+            w0 (np.array): contains information which trigger input fired
+            w1 (np.array): contains timestamp information
+            w2 (np.array): trigger input information
+            w3 (np.array): eventnumber
+            w4 (np.array): trigger input information 
+            w5 (np.array): this should always be 0.
 
         Returns:
             np.array: array with coloumns 

@@ -34,7 +34,7 @@ class AidaTLU(object):
         self.dut_logic = DUTLogic(self.i2c)
 
         self.reset_configuration()
-        self.config_parser = TLUConfigure(self)
+        self.config_parser = TLUConfigure(self, self.io_controller)
         self.data_parser = DataParser()
 
         self.log.success("TLU initialized")
@@ -50,8 +50,9 @@ class AidaTLU(object):
         """
         #Disable all outputs
         self.io_controller.clock_lemo_output(False)
-        for i in range(4): self.io_controller.configure_hdmi(i+1, False)
+        for i in range(4): self.io_controller.configure_hdmi(i+1, 0)
         self.voltage_controller.set_all_voltage(0)
+        self.io_controller.all_off()
         #sets all thresholds to 1.2 V
         for i in range(6): self.voltage_controller.set_threshold(i+1, 1.2)
         #Resets all internal counters and raise the trigger veto.
@@ -301,32 +302,40 @@ class AidaTLU(object):
         loop_number = 0
         run_active = True
         start_time = self.get_timestamp()
-        self.raw_data_path = 'data/raw_data_run%s_%s.h5' %(self.run_number, datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
-        self.interpreted_data_path = 'data/interpreted_data_run%s_%s.h5' %(self.run_number, datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
-        self.init_raw_data_table()
-
+        save_data, interpret_data = self.config_parser.get_data_handling()
+        if save_data:
+            self.raw_data_path = 'data/raw_data_run%s_%s.h5' %(self.run_number, datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
+            self.interpreted_data_path = 'data/interpreted_data_run%s_%s.h5' %(self.run_number, datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
+            self.init_raw_data_table()
+        
         while run_active:
             try:
                 last_time = self.get_timestamp()
                 current_time = (last_time-start_time)
                 current_event = self.pull_fifo_event()
-                
-                try: 
-                    if np.size(current_event) > 1:
-                        for event_vec in np.split(current_event,len(current_event)/6): #This additional loop is needed because the event fifo can have multiple events in dependence of the trigger rate.
-                            self.data_table.append(event_vec)
-                except:
-                    self.log.warning('Recieved incomplete event')
-                    pass
-                if loop_number %10000 == 0:
+                if save_data:
+                    try: 
+                        if np.size(current_event) > 1:
+                            #This additional loop is needed because the event fifo can have multiple events in dependence of the trigger rate.
+                            for event_vec in np.split(current_event,len(current_event)/6): 
+                                self.data_table.append(event_vec)
+                    except:
+                        self.log.warning('Recieved incomplete event')
+                        pass
+                if loop_number%10000 == 0:
                     self.status(current_time)
                 loop_number += 1
             except:
                 KeyboardInterrupt
                 run_active = False
         self.stop_run()
-        self.h5_file.close()
-        self.data_parser.parse(self.raw_data_path, self.interpreted_data_path)
+        if save_data:
+            self.h5_file.close()
+        if interpret_data:
+            try:
+                self.data_parser.parse(self.raw_data_path, self.interpreted_data_path)
+            except:
+                self.log.warning("Cannot interpret data.")
         self.log.success('Run finished')
 
 if __name__ == "__main__":

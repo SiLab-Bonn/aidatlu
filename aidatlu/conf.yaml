@@ -1,6 +1,6 @@
 internal_trigger:
 #Generate TLU internal trigger with given rate in Hz
-  internal_trigger_rate: 400 
+  internal_trigger_rate: 40
 
 dut_module:
   dut_1:
@@ -49,7 +49,7 @@ trigger_inputs:
 
   trigger_polarity:
     #TLU triggers on rising (0) or falling (1) edge
-    polarity: 0
+    polarity: 1
 
   trigger_signal_shape:
     #Stretches and delays each trigger input signal for an number of clock cycles,
@@ -58,7 +58,7 @@ trigger_inputs:
     delay:   [0, 0, 0, 0, 0, 0]
 
 clock_lemo:
-  enable_clock_lemo_output: False
+  enable_clock_lemo_output: True
 
 pmt_control:
 #PMT control voltages in V
@@ -66,3 +66,7 @@ pmt_control:
   pmt_2: 0
   pmt_3: 0
   pmt_4: 0
+
+#Save data and generate an interpreted .h5 file. Set to 'True' or 'False'.
+save_raw_data: True
+interpret_data: True

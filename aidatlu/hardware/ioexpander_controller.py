@@ -274,11 +274,7 @@ class IOControl(object):
         new_status = (old_status & (~mask)) | (new_nibble & mask)
 
         self._set_ioexpander_output(2, expander_id, bank, new_status)
-        if enable: #TODO move these LEDS to DUT mode blue AIDA and green EUDET or so?
-            self.switch_led(hdmi_channel+1, "g")
-        else:
-            self.switch_led(hdmi_channel+1, "off")
-        self.log.info("HDMI Channel %i %s" %(hdmi_channel+1, ("enabled" if enable else "disabled")))
+        self.log.info("HDMI Channel %i set to %s" %(hdmi_channel+1, str(enable)))
 
     def clock_hdmi_output(self, hdmi_channel: int, clock_source: str) -> None:
         """Enables the Clock output for one HDMI channel. 

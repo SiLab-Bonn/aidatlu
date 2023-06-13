@@ -4,118 +4,65 @@ import logging
 import logger
 
 class TLUConfigure(object):
-    def __init__(self, TLU) -> None:
+    def __init__(self, TLU, io_control) -> None:
         self.log = logger.setup_main_logger(__class__.__name__, logging.DEBUG)
 
         self.tlu = TLU
+        self.io_control = io_control
 
         config_path = 'conf.yaml'
         with open(config_path, 'r') as file:
             self.conf = yaml.full_load(file)
 
-
     def configure(self) -> None:
+        """Loads configuration file and configures the TLU accordingly.
+            """
         self.conf_dut()
         self.conf_trigger_inputs()
         self.conf_trigger_logic()
         self.tlu.io_controller.clock_lemo_output(self.conf['clock_lemo']['enable_clock_lemo_output'])
         [self.tlu.voltage_controller.set_voltage(i+1, self.conf['pmt_control']['pmt_%s'%(i+1)]) for i in range(len(self.conf['pmt_control']))]
+        self.tlu.set_enable_record_data(1)
         self.log.success("TLU configured")
    
+    def get_data_handling(self) -> tuple:
+        """ Information about data handling.
+
+            Returns:
+                tuple: two bools, save and interpret data.
+        """
+        return self.conf['save_raw_data'], self.conf['interpret_data']
 
     def conf_dut(self) -> None:
         """ Parse the configuration for the DUT interface to the AIDATLU. 
-            Each DUT interface can run in EUDET or AIDA mode. The function takes are of the required pin configurations.
         """
-        dut_1 = 0
-        dut_2 = 0
-        dut_3 = 0
-        dut_4 = 0
+        dut = [0, 0, 0, 0]
+        dut_mode = [0, 0, 0, 0]
+        for i in range(4):
+                if self.tlu.config_parser.conf['dut_module']['dut_%s'%(i+1)]['mode'] == 'eudet':
+                        self.tlu.io_controller.switch_led(i+1, 'g')
+                        dut[i] = 2**i
+                if self.tlu.config_parser.conf['dut_module']['dut_%s'%(i+1)]['mode'] == 'aidatrig':
+                        self.tlu.io_controller.switch_led(i+1, 'w')
+                        dut[i] = 2**i
+                        dut_mode[i] = 2**(2*i)    
+                if self.tlu.config_parser.conf['dut_module']['dut_%s'%(i+1)]['mode'] == 'aida':
+                        self.tlu.io_controller.switch_led(i+1, 'b')
+                        dut[i] = 2**i
+                        dut_mode[i] = 3*(2)**(2*i)
+                self.tlu.io_controller.configure_hdmi(i+1, '0111')
+                #The clock output needs to be enabled. If not the trigger number is not sent out in EUDET Mode with trigger number.
+                self.tlu.io_controller.clock_hdmi_output(i+1, 'chip')
 
-        dut_mode_1 = 0
-        dut_mode_2 = 0
-        dut_mode_3 = 0
-        dut_mode_4 = 0
-        # EUDET mode
-        if self.conf['dut_module']['dut_1']['mode'] == 'eudet':
-                self.tlu.log.info("Configure DUT 1 in EUDET mode")
-                self.tlu.io_controller.configure_hdmi(1, '0111')
-                self.tlu.io_controller.clock_hdmi_output(1, 'off')
-                dut_1 = 0b0001
-        if self.conf['dut_module']['dut_2']['mode'] == 'eudet':
-                self.tlu.log.info("Configure DUT 2 in EUDET mode")
-                self.tlu.io_controller.configure_hdmi(2, '0111')
-                self.tlu.io_controller.clock_hdmi_output(2, 'off')
-                dut_2 = 0b0010
-        if self.conf['dut_module']['dut_3']['mode'] == 'eudet':
-                self.tlu.log.info("Configure DUT 3 in EUDET mode")
-                self.tlu.io_controller.configure_hdmi(3, '0111')
-                self.tlu.io_controller.clock_hdmi_output(3, 'off')
-                dut_1 = 0b0100
-        if self.conf['dut_module']['dut_4']['mode'] == 'eudet':
-                self.tlu.log.info("Configure DUT 4 in EUDET mode")
-                self.tlu.io_controller.configure_hdmi(4, '0111')
-                self.tlu.io_controller.clock_hdmi_output(4, 'off')
-                dut_1 = 0b1000
-        # AIDA mode
-        if self.conf['dut_module']['dut_1']['mode'] == 'aida':
-                self.tlu.log.info("Configure DUT 1 in AIDA mode")
-                self.tlu.io_controller.configure_hdmi(1, '0111') #TODO what pin configuration is needed for AIDA mode??
-                self.tlu.io_controller.clock_hdmi_output(1, 'off')
-                dut_1 = 0b0001
-                dut_mode_1 = 0b00000011
-        if self.conf['dut_module']['dut_2']['mode'] == 'aida':
-                self.tlu.log.info("Configure DUT 2 in AIDA mode")
-                self.tlu.io_controller.configure_hdmi(2, '0111')
-                self.tlu.io_controller.clock_hdmi_output(2, 'off')
-                dut_2 = 0b0010
-                dut_mode_1 = 0b00001100
-        if self.conf['dut_module']['dut_3']['mode'] == 'aida':
-                self.tlu.log.info("Configure DUT 3 in AIDA mode")
-                self.tlu.io_controller.configure_hdmi(3, '0111')
-                self.tlu.io_controller.clock_hdmi_output(3, 'off')
-                dut_1 = 0b0100
-                dut_mode_1 = 0b00110000
-        if self.conf['dut_module']['dut_4']['mode'] == 'aida':
-                self.tlu.log.info("Configure DUT 4 in AIDA mode")
-                self.tlu.io_controller.configure_hdmi(4, '0111')
-                self.tlu.io_controller.clock_hdmi_output(4, 'off')
-                dut_1 = 0b1000
-                dut_mode_1 = 0b11000000
-        #AIDA mode with trigger number
-        if self.conf['dut_module']['dut_1']['mode'] == 'aidatrig':
-                self.tlu.log.info("Configure DUT 1 in AIDA mode with trigger number")
-                self.tlu.io_controller.configure_hdmi(1, '0111') #TODO what pin configuration is needed for AIDA mode??
-                self.tlu.io_controller.clock_hdmi_output(1, 'off')
-                dut_1 = 0b0001
-                dut_mode_1 = 0b00000001
-        if self.conf['dut_module']['dut_2']['mode'] == 'aidatrig':
-                self.tlu.log.info("Configure DUT 2 in AIDA mode with trigger number")
-                self.tlu.io_controller.configure_hdmi(2, '0111')
-                self.tlu.io_controller.clock_hdmi_output(2, 'off')
-                dut_2 = 0b0010
-                dut_mode_1 = 0b00000100
-        if self.conf['dut_module']['dut_3']['mode'] == 'aidatrig':
-                self.tlu.log.info("Configure DUT 3 in AIDA mode with trigger number")
-                self.tlu.io_controller.configure_hdmi(3, '0111')
-                self.tlu.io_controller.clock_hdmi_output(3, 'off')
-                dut_1 = 0b0100
-                dut_mode_1 = 0b00010000
-        if self.conf['dut_module']['dut_4']['mode'] == 'aidatrig':
-                self.tlu.log.info("Configure DUT 4 in AIDA mode with trigger number")
-                self.tlu.io_controller.configure_hdmi(4, '0111')
-                self.tlu.io_controller.clock_hdmi_output(4, 'off')
-                dut_1 = 0b1000
-                dut_mode_1 = 0b01000000
+        #This sets the right bits to the set dut mask registers according to the configuration parameter.
+        self.tlu.dut_logic.set_dut_mask(dut[0] | dut[1]  | dut[2]  | dut[3]) 
+        self.tlu.dut_logic.set_dut_mask_mode(dut_mode[0]  | dut_mode[1]  | dut_mode[2]  | dut_mode[3] )
 
-
-
-        self.tlu.dut_logic.set_dut_mask(dut_1 | dut_2 | dut_3 | dut_4) 
-        self.tlu.dut_logic.set_dut_mask_mode(dut_mode_1 | dut_mode_2 | dut_mode_3 | dut_mode_4)
-        #special configs
-        self.tlu.dut_logic.set_dut_mask_mode_modifier(0) #TODO Does this have to change for AIDA mode??
-        self.tlu.dut_logic.set_dut_ignore_busy(0) #TODO this seems interesting check with the documentation
+        #Special configs
+        self.tlu.dut_logic.set_dut_mask_mode_modifier(0)
+        self.tlu.dut_logic.set_dut_ignore_busy(0) 
         self.tlu.dut_logic.set_dut_ignore_shutter(0x1)
+
 
     def conf_trigger_logic(self) -> None:
         """ Configures the trigger logic. So the trigger polarity and the trigger pulse length and stretch.
@@ -137,8 +84,12 @@ class TLUConfigure(object):
         trigger_word = 0
         for i in (self.conf['trigger_inputs']['trigger_inputs_logic']):
              logic_array = []
-             for j in self.conf['trigger_inputs']['trigger_inputs_logic'][i]:
+             for index,j in enumerate(self.conf['trigger_inputs']['trigger_inputs_logic'][i]):
                 logic_array.append(self.conf['trigger_inputs']['trigger_inputs_logic'][i][j])
+                if self.conf['trigger_inputs']['trigger_inputs_logic'][i][j] == 1:
+                      self.io_control.switch_led(index+6, 'g')
+                if self.conf['trigger_inputs']['trigger_inputs_logic'][i][j] == 0:
+                      self.io_control.switch_led(index+6, 'r')
              trigger_word += self._find_mask_word(logic_array)
 
         mask_low, mask_high = self._mask_words(trigger_word)

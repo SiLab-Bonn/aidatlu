@@ -111,7 +111,6 @@ class VoltageControl(object):
         #There is a factor 2 in the output voltage between internal and external DAC reference. In general internal reference is a factor of 2 larger!!
         if internal:
             chr = [0x00, 0x01]
-
         else:
             chr = [0x00, 0x00]
 
@@ -123,8 +122,7 @@ class VoltageControl(object):
             self.i2c.write_array(self.i2c.modules["dac_2"], 0x38, chr)        
         #self.i2c.write_array(self.i2c.modules["pwr_dac"], 0x38, chr)
         self.log.info(
-            "Set %s DAC reference" % ("internal" if internal else "external")
-        )
+            "Set %s DAC reference of DAC %s" %(("internal" if internal else "external"), dac))
 
     def _set_dac_value(self, channel: int, value: int, dac: int = 0) -> None:
         """Set the output value of the power DAC 
