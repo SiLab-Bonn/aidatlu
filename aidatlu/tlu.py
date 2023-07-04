@@ -214,15 +214,19 @@ class AidaTLU(object):
         self.set_run_active(False)
         self.run_number += 1
 
-    def status(self, time: int) -> None:
-        """Returns the status of the TLU run with trigger number, runtime usw.
+    def log_status(self, time: int) -> None:
+        """Logs the status of the TLU run with trigger number, runtime usw.
+           Also calculates the mean trigger frequency between function calls.
 
         Args:
             time (int): current runtime of the TLU
         """
-        run_time = time*25/1000000000
-        self.log.info("Run time: %.3f s, Event numb.: %s, Total trigger numb.: %s, Mean trigger freq.: %.f Hz" 
-                      %(run_time, self.trigger_logic.get_post_veto_trigger(), self.trigger_logic.get_pre_veto_trigger(),self.trigger_logic.get_post_veto_trigger()/run_time))
+        self.run_time = time*25/1000000000
+        self.log.info("Run time: %.3f s, Event numb.: %s, Total trigger numb.: %s, Trigger freq.: %.f Hz" 
+                      %(self.run_time, self.trigger_logic.get_post_veto_trigger(), self.trigger_logic.get_pre_veto_trigger(),(self.trigger_logic.get_post_veto_trigger()-self.last_triggers_freq)/(self.run_time-self.time)))
+        self.time = self.run_time
+        self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
+        
         # self.log.warning('FIFO level: %s' %self.log.warning(self.get_event_fifo_fill_level()))
         # self.log.warning('FIFO level 2: %s' %self.log.warning(self.get_event_fifo_csr()))
         # self.log.info("fifo csr: %s fifo fill level: %s" %(self.get_event_fifo_csr(),self.get_event_fifo_csr()))
@@ -295,17 +299,39 @@ class AidaTLU(object):
         self.data_table = self.h5_file.create_table(self.h5_file.root, name='raw_data', description=self.data , title='data', filters=self.filter_data)
         self.h5_file.create_group(self.h5_file.root , 'configuration', self.config_parser.conf)
 
+    def log_trigger_inputs(self, event_vector: list) -> None:
+        """Logs which inputs triggered the event corresponding to the event vector.
+
+        Args:
+            event_vector (list): 6 data long event vector from the FIFO.
+        """
+        w0 = event_vector[0]
+        input_1 = (w0 >> 16) & 0x1
+        input_2 = (w0 >> 17) & 0x1
+        input_3 = (w0 >> 18) & 0x1
+        input_4 = (w0 >> 19) & 0x1
+        input_5 = (w0 >> 20) & 0x1
+        input_6 = (w0 >> 21) & 0x1
+        self.log.info('Event triggered:')
+        self.log.info('Input 1: %s, Input 2: %s, Input 3: %s, Input 4: %s, Input 5: %s, Input 6: %s' %(input_1, input_2, input_3, input_4, input_5, input_6))
+         
+
     def run(self) -> None:
         """ Start run of the TLU. 
         """
         self.start_run()
-        loop_number = 0
         run_active = True
+        #reset starting parameter
+        loop_number = 0
         start_time = self.get_timestamp()
+        self.time = 0
+        self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
+        first_event = True
+        #prepare data handling
         save_data, interpret_data = self.config_parser.get_data_handling()
         if save_data:
-            self.raw_data_path = 'data/raw_data_run%s_%s.h5' %(self.run_number, datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
-            self.interpreted_data_path = 'data/interpreted_data_run%s_%s.h5' %(self.run_number, datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
+            self.raw_data_path = 'tlu_data/tlu_raw_run%s_%s.h5' %(self.run_number, datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
+            self.interpreted_data_path = 'tlu_data/tlu_interpreted_run%s_%s.h5' %(self.run_number, datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
             self.init_raw_data_table()
         
         while run_active:
@@ -322,13 +348,31 @@ class AidaTLU(object):
                     except:
                         self.log.warning('Recieved incomplete event')
                         pass
+                #TODO this should be in second not in loop numbers. At high hitrate (~10k) the loop gets slower and status logs are rare.
                 if loop_number%10000 == 0:
-                    self.status(current_time)
+                    if loop_number > 0:
+                        self.log_status(current_time)
+                #This loop sents which inputs produced the trigger signal of the first event.
+                if (np.size(current_event)  > 1) and first_event: #TODO only first event?
+                    self.log_trigger_inputs(current_event)
+                    first_event = False
                 loop_number += 1
+                #Stops the TLU after some time in seconds.
+                #if current_time*25/1000000000 > 600:
+                #    run_active = False
             except:
                 KeyboardInterrupt
                 run_active = False
+        
         self.stop_run()
+        #Cleanup of FIFO
+        try:
+            while np.size(current_event) > 1:      
+                current_event = self.pull_fifo_event()
+        except:
+            KeyboardInterrupt 
+            self.log.warning('Interupted FIFO cleanup')   
+        
         if save_data:
             self.h5_file.close()
         if interpret_data:
