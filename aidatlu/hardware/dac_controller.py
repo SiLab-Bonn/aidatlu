@@ -7,7 +7,7 @@ AD5665R
 
 """
 
-class VoltageControl(object):
+class DacControl(object):
     def __init__(self, i2c: I2CCore, int_ref: bool = False) -> None:
         self.log = logger.setup_derived_logger("Voltage Controller")
 
@@ -17,7 +17,6 @@ class VoltageControl(object):
         self._set_dac_reference(int_ref, 0)
         self._set_dac_reference(int_ref, 1)
         self._set_dac_reference(int_ref, 2)
-
 
     def set_threshold(self, trigger_input: int, threshold_voltage: float, ref_v: float = 1.3) -> None:
         """Sets the Threshold voltage for the trigger input channel. Use channel = 7 to set threshold for all channels.

@@ -21,7 +21,7 @@ class TLUConfigure(object):
         self.conf_trigger_inputs()
         self.conf_trigger_logic()
         self.tlu.io_controller.clock_lemo_output(self.conf['clock_lemo']['enable_clock_lemo_output'])
-        [self.tlu.voltage_controller.set_voltage(i+1, self.conf['pmt_control']['pmt_%s'%(i+1)]) for i in range(len(self.conf['pmt_control']))]
+        [self.tlu.dac_controller.set_voltage(i+1, self.conf['pmt_control']['pmt_%s'%(i+1)]) for i in range(len(self.conf['pmt_control']))]
         self.tlu.set_enable_record_data(1)
         self.log.success("TLU configured")
    
@@ -79,7 +79,7 @@ class TLUConfigure(object):
            The two trigger words mask_low and mask_high are generated with the use of two support functions. 
         """
 
-        [self.tlu.voltage_controller.set_threshold(i+1, self.conf['trigger_inputs']['threshold']['threshold_%s' %(i+1)]) for i in range(6)]
+        [self.tlu.dac_controller.set_threshold(i+1, self.conf['trigger_inputs']['threshold']['threshold_%s' %(i+1)]) for i in range(6)]
 
         trigger_word = 0
         for i in (self.conf['trigger_inputs']['trigger_inputs_logic']):

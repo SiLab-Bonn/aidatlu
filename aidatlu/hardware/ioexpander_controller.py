@@ -9,7 +9,6 @@ PCA9539PW
 
 """
 
-
 class IOControl(object):
     def __init__(self, i2c: I2CCore) -> None:
         self.log = logger.setup_derived_logger("IO Expander")

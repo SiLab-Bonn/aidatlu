@@ -9,7 +9,7 @@ from hardware.i2c import I2CCore
 
 from hardware.clock_controller import ClockControl
 from hardware.ioexpander_controller import IOControl
-from hardware.voltage_controller import VoltageControl
+from hardware.dac_controller import DacControl
 from hardware.trigger_controller import TriggerLogic
 from hardware.dut_controller import DUTLogic
 from config_parser import TLUConfigure
@@ -29,7 +29,7 @@ class AidaTLU(object):
         #TODO some configuration also sends out ~70 triggers.
         self.io_controller = IOControl(self.i2c)
         self.clock_controller = ClockControl(self.i2c, self.io_controller)
-        self.voltage_controller = VoltageControl(self.i2c)
+        self.dac_controller = DacControl(self.i2c)
         self.trigger_logic = TriggerLogic(self.i2c)
         self.dut_logic = DUTLogic(self.i2c)
 
@@ -51,10 +51,10 @@ class AidaTLU(object):
         #Disable all outputs
         self.io_controller.clock_lemo_output(False)
         for i in range(4): self.io_controller.configure_hdmi(i+1, 0)
-        self.voltage_controller.set_all_voltage(0)
+        self.dac_controller.set_all_voltage(0)
         self.io_controller.all_off()
         #sets all thresholds to 1.2 V
-        for i in range(6): self.voltage_controller.set_threshold(i+1, 1.2)
+        for i in range(6): self.dac_controller.set_threshold(i+1, 1.2)
         #Resets all internal counters and raise the trigger veto.
         self.set_run_active(False)
         self.reset_status()
@@ -182,12 +182,12 @@ class AidaTLU(object):
         self.io_controller.clock_hdmi_output(3, 'off')
         self.io_controller.clock_hdmi_output(4, 'off')
         self.io_controller.clock_lemo_output(False)
-        self.voltage_controller.set_threshold(1, -0.04)
-        self.voltage_controller.set_threshold(2, -0.04)
-        self.voltage_controller.set_threshold(3, -0.04)
-        self.voltage_controller.set_threshold(4, -0.04)
-        self.voltage_controller.set_threshold(5, -0.2)
-        self.voltage_controller.set_threshold(6, -0.2)
+        self.dac_controller.set_threshold(1, -0.04)
+        self.dac_controller.set_threshold(2, -0.04)
+        self.dac_controller.set_threshold(3, -0.04)
+        self.dac_controller.set_threshold(4, -0.04)
+        self.dac_controller.set_threshold(5, -0.2)
+        self.dac_controller.set_threshold(6, -0.2)
         self.trigger_logic.set_pulse_stretch_pack(test_stretch)
         self.trigger_logic.set_pulse_delay_pack(test_delay)
         self.trigger_logic.set_trigger_mask(mask_high=0, mask_low=2)
@@ -221,10 +221,9 @@ class AidaTLU(object):
         Args:
             time (int): current runtime of the TLU
         """
-        self.run_time = time*25/1000000000
         self.log.info("Run time: %.3f s, Event numb.: %s, Total trigger numb.: %s, Trigger freq.: %.f Hz" 
-                      %(self.run_time, self.trigger_logic.get_post_veto_trigger(), self.trigger_logic.get_pre_veto_trigger(),(self.trigger_logic.get_post_veto_trigger()-self.last_triggers_freq)/(self.run_time-self.time)))
-        self.time = self.run_time
+                      %(time, self.trigger_logic.get_post_veto_trigger(), self.trigger_logic.get_pre_veto_trigger(),(self.trigger_logic.get_post_veto_trigger()-self.last_triggers_freq)/(time-self.last_time)))
+        self.last_time = time
         self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
         
         # self.log.warning('FIFO level: %s' %self.log.warning(self.get_event_fifo_fill_level()))
@@ -237,7 +236,7 @@ class AidaTLU(object):
         """ #TODO not sure what this does. Looks like a seperate internal event buffer to the FIFO.
 
         Args:
-            value (int): _description_
+            value (int): #TODO I think this does not work
         """
         self.i2c.write_register("Event_Formatter.Enable_Record_Data", value)
 
@@ -245,7 +244,7 @@ class AidaTLU(object):
         """ Reads value from 'EventFifoCSR'
 
         Returns:
-            int: _description_#TODO
+            int: number of events
         """
         return self.i2c.read_register("eventBuffer.EventFifoCSR")
 
@@ -253,7 +252,7 @@ class AidaTLU(object):
         """Reads value from 'EventFifoFillLevel'
 
         Returns:
-            int: _description_ #TODO
+            int: buffer level of the fifi
         """
         return self.i2c.read_register("eventBuffer.EventFifoFillLevel")
 
@@ -279,7 +278,7 @@ class AidaTLU(object):
             #TODO check here if the FIFO is full and reset it if needed would prob. make sense.
 
         Returns:
-            list: _description_#TODO this is nonsense for now.
+            list: 6 element long vector containing bitwords of the data.
         """
         event_numb = self.get_event_fifo_fill_level()
         if event_numb*6 == 0xFEA:
@@ -322,9 +321,8 @@ class AidaTLU(object):
         self.start_run()
         run_active = True
         #reset starting parameter
-        loop_number = 0
         start_time = self.get_timestamp()
-        self.time = 0
+        self.last_time = 0
         self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
         first_event = True
         #prepare data handling
@@ -337,7 +335,7 @@ class AidaTLU(object):
         while run_active:
             try:
                 last_time = self.get_timestamp()
-                current_time = (last_time-start_time)
+                current_time = (last_time-start_time)*25/1000000000
                 current_event = self.pull_fifo_event()
                 if save_data:
                     try: 
@@ -348,17 +346,15 @@ class AidaTLU(object):
                     except:
                         self.log.warning('Recieved incomplete event')
                         pass
-                #TODO this should be in second not in loop numbers. At high hitrate (~10k) the loop gets slower and status logs are rare.
-                if loop_number%10000 == 0:
-                    if loop_number > 0:
-                        self.log_status(current_time)
+                #Logs status every 2s.
+                if current_time - self.last_time > 2:
+                    self.log_status(current_time)
                 #This loop sents which inputs produced the trigger signal of the first event.
                 if (np.size(current_event)  > 1) and first_event: #TODO only first event?
                     self.log_trigger_inputs(current_event)
                     first_event = False
-                loop_number += 1
                 #Stops the TLU after some time in seconds.
-                #if current_time*25/1000000000 > 600:
+                #if current_time* > 600:
                 #    run_active = False
             except:
                 KeyboardInterrupt
