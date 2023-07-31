@@ -29,6 +29,7 @@ class AidaTLU(object):
         #TODO some configuration also sends out ~70 triggers.
         self.io_controller = IOControl(self.i2c)
         self.clock_controller = ClockControl(self.i2c, self.io_controller)
+        self.clock_controller.write_clock_conf('misc/aida_tlu_clk_config.txt')
         self.dac_controller = DacControl(self.i2c)
         self.trigger_logic = TriggerLogic(self.i2c)
         self.dut_logic = DUTLogic(self.i2c)

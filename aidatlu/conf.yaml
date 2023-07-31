@@ -16,11 +16,11 @@ trigger_inputs:
   #threshold voltages for the trigger inputs in V.
   threshold:
     threshold_1: -0.04
-    threshold_2: -0.1
-    threshold_3: -0.04
-    threshold_4: -0.1
-    threshold_5: -0.1
-    threshold_6: -0.1
+    threshold_2: -0.04
+    threshold_3: -0.06
+    threshold_4: -0.04
+    threshold_5: -0.04
+    threshold_6: -0.04
 
   trigger_inputs_logic:
     #Enable Trigger logic. A 1 in a trigger input means the trigger has to be HIGH,
@@ -34,9 +34,9 @@ trigger_inputs:
     #  all veto seems to break an all do not care
 
     trigger_logic_1:
-      trig_1: 1
+      trig_1: -1
       trig_2: -1
-      trig_3: -1
+      trig_3: 1
       trig_4: -1
       trig_5: -1
       trig_6: -1

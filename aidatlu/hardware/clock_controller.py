@@ -14,7 +14,6 @@ class ClockControl(object):
         self.log.info("Initializing Clock Chip")
         self.i2c = i2c
         self.io_control = io_control
-        self.write_clock_conf("misc/aida_tlu_clk_config.txt")
 
     def get_device_version(self) -> int:
         """Get Chip information.

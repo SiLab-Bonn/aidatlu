@@ -50,7 +50,7 @@ class DacControl(object):
         if channel < 2:
             self._set_dac_value(1-channel, dac_value, 1) 
         #The last 4 channels sit on DAC 2 in reverse order.
-        if channel > 1 and channel < 7:
+        if channel > 1 and channel < 6:
             self._set_dac_value(3-(channel-2), dac_value, 2) 
         self.log.info("Threshold of input %s set to %s V" %(trigger_input,threshold_voltage))
 
@@ -67,7 +67,7 @@ class DacControl(object):
         """Sets given PMT DAC to given output voltage.
 
         Args:
-            pmt_channel (int): DAC channel for the PMT
+            pmt_channel (int): DAC channel for the PMT from 1 to 4.
             voltage (float): DAC output voltage
         """
         
