@@ -1,0 +1,22 @@
+# producer_sim :
+#     DAQ0 :
+#         kind : example_producer_sim
+#         delay : 0.02
+#         backend : tcp://127.0.0.1:5500
+        
+#     DAQ1 :
+#         kind : example_producer_sim
+#         delay : 0.02
+#         backend : tcp://127.0.0.1:5501
+
+converter :
+    AIDA_TLU_Converter :
+        kind : tlu_converter
+        frontend : tcp://127.0.0.1:6500
+        backend : tcp://127.0.0.1:7501
+        theshold: 10
+receiver :
+    AIDA_TLU :
+        kind : tlu_receiver
+        frontend : tcp://127.0.0.1:7501
+ 

@@ -4,6 +4,7 @@ import logger
 import numpy as np
 import tables as tb
 from datetime import datetime
+import zmq
 
 from hardware.i2c import I2CCore
 
@@ -215,24 +216,6 @@ class AidaTLU(object):
         self.set_run_active(False)
         self.run_number += 1
 
-    def log_status(self, time: int) -> None:
-        """Logs the status of the TLU run with trigger number, runtime usw.
-           Also calculates the mean trigger frequency between function calls.
-
-        Args:
-            time (int): current runtime of the TLU
-        """
-        self.log.info("Run time: %.3f s, Event numb.: %s, Total trigger numb.: %s, Trigger freq.: %.f Hz" 
-                      %(time, self.trigger_logic.get_post_veto_trigger(), self.trigger_logic.get_pre_veto_trigger(),(self.trigger_logic.get_post_veto_trigger()-self.last_triggers_freq)/(time-self.last_time)))
-        self.last_time = time
-        self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
-        
-        # self.log.warning('FIFO level: %s' %self.log.warning(self.get_event_fifo_fill_level()))
-        # self.log.warning('FIFO level 2: %s' %self.log.warning(self.get_event_fifo_csr()))
-        # self.log.info("fifo csr: %s fifo fill level: %s" %(self.get_event_fifo_csr(),self.get_event_fifo_csr()))
-        # self.log.info("post: %s pre: %s" %(self.trigger_logic.get_post_veto_trigger(),self.trigger_logic.get_pre_veto_trigger()))
-        # self.log.info("time stamp: %s" %(self.get_timestamp()))
-
     def set_enable_record_data(self, value: int) -> None:
         """ #TODO not sure what this does. Looks like a seperate internal event buffer to the FIFO.
 
@@ -299,6 +282,33 @@ class AidaTLU(object):
         self.data_table = self.h5_file.create_table(self.h5_file.root, name='raw_data', description=self.data , title='data', filters=self.filter_data)
         self.h5_file.create_group(self.h5_file.root , 'configuration', self.config_parser.conf)
 
+    def log_sent_status(self, time: int) -> None:
+        """Logs the status of the TLU run with trigger number, runtime usw.
+           Also calculates the mean trigger frequency between function calls.
+
+        Args:
+            time (int): current runtime of the TLU
+        """
+        self.hit_rate = (self.trigger_logic.get_post_veto_trigger()-self.last_triggers_freq)/(time-self.last_time)
+        self.run_time = time
+        self.event_number = self.trigger_logic.get_post_veto_trigger()
+        self.total_trigger_number = self.trigger_logic.get_pre_veto_trigger()
+
+        if self.zmq_address not in [None, 'off']:
+            self.socket.send_string(str([self.run_time, self.event_number, self.total_trigger_number,self.hit_rate]), flags=zmq.NOBLOCK)
+
+        self.last_time = time
+        self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
+
+        self.log.info("Run time: %.3f s, Event numb.: %s, Total trigger numb.: %s, Trigger freq.: %.f Hz" 
+                      %(self.run_time, self.event_number, self.total_trigger_number,self.hit_rate))
+
+        # self.log.warning('FIFO level: %s' %self.log.warning(self.get_event_fifo_fill_level()))
+        # self.log.warning('FIFO level 2: %s' %self.log.warning(self.get_event_fifo_csr()))
+        # self.log.info("fifo csr: %s fifo fill level: %s" %(self.get_event_fifo_csr(),self.get_event_fifo_csr()))
+        # self.log.info("post: %s pre: %s" %(self.trigger_logic.get_post_veto_trigger(),self.trigger_logic.get_pre_veto_trigger()))
+        # self.log.info("time stamp: %s" %(self.get_timestamp()))
+
     def log_trigger_inputs(self, event_vector: list) -> None:
         """Logs which inputs triggered the event corresponding to the event vector.
 
@@ -314,7 +324,12 @@ class AidaTLU(object):
         input_6 = (w0 >> 21) & 0x1
         self.log.info('Event triggered:')
         self.log.info('Input 1: %s, Input 2: %s, Input 3: %s, Input 4: %s, Input 5: %s, Input 6: %s' %(input_1, input_2, input_3, input_4, input_5, input_6))
-         
+
+    def setup_zmq(self) -> None:
+        self.context = zmq.Context()
+        self.socket = self.context.socket(zmq.PUB)
+        self.socket.bind(self.zmq_address)
+        self.log.info('Connected ZMQ socket with address: %s' %self.zmq_address)
 
     def run(self) -> None:
         """ Start run of the TLU. 
@@ -326,36 +341,44 @@ class AidaTLU(object):
         self.last_time = 0
         self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
         first_event = True
-        #prepare data handling
+        #prepare data handling and zmq connection
         save_data, interpret_data = self.config_parser.get_data_handling()
+        self.zmq_address = self.config_parser.get_zmq_connection()
+
         if save_data:
             self.raw_data_path = 'tlu_data/tlu_raw_run%s_%s.h5' %(self.run_number, datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
             self.interpreted_data_path = 'tlu_data/tlu_interpreted_run%s_%s.h5' %(self.run_number, datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
             self.init_raw_data_table()
         
+        if self.zmq_address not in [None, 'off']:
+            self.setup_zmq()
+
         while run_active:
             try:
                 last_time = self.get_timestamp()
                 current_time = (last_time-start_time)*25/1000000000
                 current_event = self.pull_fifo_event()
-                if save_data:
-                    try: 
-                        if np.size(current_event) > 1:
-                            #This additional loop is needed because the event fifo can have multiple events in dependence of the trigger rate.
-                            for event_vec in np.split(current_event,len(current_event)/6): 
+                try: 
+                    if np.size(current_event) > 1:
+                        #This additional loop is needed because the event fifo can have multiple events in dependence of the trigger rate.
+                        for event_vec in np.split(current_event,len(current_event)/6): 
+                            if save_data:
                                 self.data_table.append(event_vec)
-                    except:
-                        self.log.warning('Recieved incomplete event')
-                        pass
-                #Logs status every 2s.
-                if current_time - self.last_time > 2:
-                    self.log_status(current_time)
-                #This loop sents which inputs produced the trigger signal of the first event.
+                except:
+                    self.log.warning('Incomplete Event handling...')
+                    pass
+            
+                #Logs and poss. sends status every 1s.
+                if current_time - self.last_time > 1:
+                    self.log_sent_status(current_time)
+                   # self.log.warning(str(current_event))
+
+                #This loop sents which inputs produced the trigger signal for the first event.
                 if (np.size(current_event)  > 1) and first_event: #TODO only first event?
                     self.log_trigger_inputs(current_event)
                     first_event = False
                 #Stops the TLU after some time in seconds.
-                #if current_time* > 600:
+                #if current_time*25/1000000000 > 600:
                 #    run_active = False
             except:
                 KeyboardInterrupt
@@ -370,6 +393,9 @@ class AidaTLU(object):
             KeyboardInterrupt 
             self.log.warning('Interupted FIFO cleanup')   
         
+        if self.zmq_address not in [None, 'off']:
+            self.socket.close()
+
         if save_data:
             self.h5_file.close()
         if interpret_data:

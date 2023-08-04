@@ -15,12 +15,12 @@ dut_module:
 trigger_inputs:
   #threshold voltages for the trigger inputs in V.
   threshold:
-    threshold_1: -0.04
-    threshold_2: -0.04
+    threshold_1: -0.06
+    threshold_2: -0.06
     threshold_3: -0.06
-    threshold_4: -0.04
-    threshold_5: -0.04
-    threshold_6: -0.04
+    threshold_4: -0.06
+    threshold_5: -0.06
+    threshold_6: -0.06
 
   trigger_inputs_logic:
     #Enable Trigger logic. A 1 in a trigger input means the trigger has to be HIGH,
@@ -56,8 +56,8 @@ trigger_inputs:
   trigger_signal_shape:
     #Stretches and delays each trigger input signal for an number of clock cycles,
     #this could be important depending on the hardware trigger setup.
-    stretch: [1, 1, 2, 1, 1, 1]
-    delay:   [0, 0, 0, 0, 0, 0]
+    stretch: [5, 5, 5, 5, 5, 5]
+    delay:   [1, 1, 1, 1, 1, 1]
 
 clock_lemo:
   enable_clock_lemo_output: True
@@ -70,5 +70,9 @@ pmt_control:
   pmt_4: 0
 
 #Save data and generate interpreted data from the raw data set. Set to 'True' or 'False'.
-save_raw_data: True
-interpret_data: True
+save_raw_data: False
+interpret_data: False
+
+#zmq connection leave it blank or set to 'off' if not needed
+zmq_connection: "tcp://127.0.0.1:6500"
+

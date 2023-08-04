@@ -33,6 +33,14 @@ class TLUConfigure(object):
         """
         return self.conf['save_raw_data'], self.conf['interpret_data']
 
+    def get_zmq_connection(self) -> str:
+        """ Information about the zmq Address
+
+        Returns:
+            str: ZMQ Address
+        """
+        return self.conf['zmq_connection']
+
     def conf_dut(self) -> None:
         """ Parse the configuration for the DUT interface to the AIDATLU. 
         """
