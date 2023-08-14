@@ -1,4 +1,3 @@
-
 from online_monitor.converter.transceiver import Transceiver
 import zmq
 

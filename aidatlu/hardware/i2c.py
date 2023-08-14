@@ -32,7 +32,7 @@ class I2CCore(object):
         self.write(i2c_addr["core"], 0x01, 0x7F)
         if self.read(i2c_addr["core"], 0x01) & 0x80 != 0:
             #TODO What is this why is this always happening?
-            self.log.warn(
+            self.log.warning(
                 "Enabling Enclustra I2C bus might have failed. This could prevent from talking to the I2C slaves on the TLU."
             )
 
@@ -126,6 +126,7 @@ class I2CCore(object):
                 self.set_i2c_command(0x10)
         self.set_i2c_tx(value & 0xFF)
         self.set_i2c_command(0x50)
+        self._compare_value_read_write(value, self.read(device_addr, mem_addr), device_addr)
 
     def read(self, device_addr: int, mem_addr: int) -> int:
         self.set_i2c_tx((device_addr << 1) | 0x0)
@@ -140,7 +141,7 @@ class I2CCore(object):
 
         return self.read_register("i2c_master.i2c_rxtx")
 
-    def write_array(self,device_addr: int, mem_addr: int, values: list) -> None:
+    def write_array(self, device_addr: int, mem_addr: int, values: list) -> None:
         self.set_i2c_tx((device_addr << 1) | 0x0)
         self.set_i2c_command(0x90)
 
@@ -161,3 +162,9 @@ class I2CCore(object):
 
         self.set_i2c_tx(values[-1] & 0xFF)
         self.set_i2c_command(0x50) 
+
+    def _compare_value_read_write(self, written: int, read: int, function: str) -> None:
+        if written != read:
+            self.log.warning('Mismatch in register function %s. written value %s, recieved value: %s.' %(function, written, read))
+        else:
+            pass

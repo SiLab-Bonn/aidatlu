@@ -1,6 +1,8 @@
 #debugging and data  files 
 test.ipynb
 *.h5
+!/aidatlu/test/interpreted_data.h5
+!/aidatlu/test/raw_data_test.h5
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

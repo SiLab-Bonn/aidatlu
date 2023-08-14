@@ -18,7 +18,7 @@ from config_parser import TLUConfigure
 from data_parser import DataParser
 
 class AidaTLU(object):
-    def __init__(self, hw) -> None:
+    def __init__(self, hw, config_path, clock_config_path) -> None:
         self.log = logger.setup_main_logger(__class__.__name__, logging.DEBUG)
 
         self.i2c = I2CCore(hw)
@@ -30,13 +30,13 @@ class AidaTLU(object):
         #TODO some configuration also sends out ~70 triggers.
         self.io_controller = IOControl(self.i2c)
         self.clock_controller = ClockControl(self.i2c, self.io_controller)
-        self.clock_controller.write_clock_conf('misc/aida_tlu_clk_config.txt')
+        self.clock_controller.write_clock_conf(clock_config_path)
         self.dac_controller = DacControl(self.i2c)
         self.trigger_logic = TriggerLogic(self.i2c)
         self.dut_logic = DUTLogic(self.i2c)
 
         self.reset_configuration()
-        self.config_parser = TLUConfigure(self, self.io_controller)
+        self.config_parser = TLUConfigure(self, self.io_controller, config_path)
         self.data_parser = DataParser()
 
         self.log.success("TLU initialized")
@@ -172,8 +172,8 @@ class AidaTLU(object):
         """Default configuration. Configures DUT 1 to run in EUDET mode.
            This is just for testing and bugfixing.
         """
-        test_stretch = [1,1,1,1,1,1]
-        test_delay = [0,0,0,0,0,0] 
+        test_stretch = [1, 1, 1, 1, 1, 1]
+        test_delay = [0, 0, 0, 0, 0, 0] 
 
         self.io_controller.configure_hdmi(1, '0111')
         self.io_controller.configure_hdmi(2, '0111')
@@ -366,7 +366,7 @@ class AidaTLU(object):
                                 self.data_table.append(event_vec)
                 except:
                     self.log.warning('Incomplete Event handling...')
-                    pass
+                    assert KeyboardInterrupt
             
                 #Logs and poss. sends status every 1s.
                 if current_time - self.last_time > 1:
@@ -411,7 +411,10 @@ if __name__ == "__main__":
     manager = uhal.ConnectionManager("file://./misc/aida_tlu_connection.xml")
     hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
 
-    tlu = AidaTLU(hw)
+    clock_path = 'misc/aida_tlu_clk_config.txt'
+    config_path = 'conf.yaml'
+
+    tlu = AidaTLU(hw, config_path, clock_path)
 
     tlu.configure()
     

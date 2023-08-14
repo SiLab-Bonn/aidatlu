@@ -4,13 +4,13 @@ import logging
 import logger
 
 class TLUConfigure(object):
-    def __init__(self, TLU, io_control) -> None:
+    def __init__(self, TLU, io_control, config_path) -> None:
         self.log = logger.setup_main_logger(__class__.__name__, logging.DEBUG)
 
         self.tlu = TLU
         self.io_control = io_control
 
-        config_path = 'conf.yaml'
+        config_path = config_path
         with open(config_path, 'r') as file:
             self.conf = yaml.full_load(file)
 

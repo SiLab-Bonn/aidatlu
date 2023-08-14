@@ -1,4 +1,3 @@
-import time
 from online_monitor.receiver.receiver import Receiver
 
 import pyqtgraph as pg

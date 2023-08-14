@@ -52,7 +52,7 @@ class DacControl(object):
         #The last 4 channels sit on DAC 2 in reverse order.
         if channel > 1 and channel < 6:
             self._set_dac_value(3-(channel-2), dac_value, 2) 
-        self.log.info("Threshold of input %s set to %s V" %(trigger_input,threshold_voltage))
+        self.log.info("Threshold of input %s set to %s V" %(trigger_input, threshold_voltage))
 
     def set_all_voltage(self, voltage: float) -> None:
         """Sets the same Voltage for all PMT DACs.

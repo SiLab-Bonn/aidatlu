@@ -1,3 +1,9 @@
+
+import sys
+sys.path.insert(1, '..')
+sys.path.insert(1, '../hardware')
+
+from tlu import AidaTLU
 from hardware.i2c import I2CCore
 from hardware.utils import _set_bit
 from hardware.ioexpander_controller import IOControl
@@ -5,7 +11,7 @@ from hardware.dac_controller import DacControl
 from hardware.clock_controller import ClockControl
 from hardware.dut_controller import DUTLogic
 from hardware.trigger_controller import TriggerLogic
-from tlu import AidaTLU
+
 
 import time
 import numpy as np
@@ -184,7 +190,7 @@ class Test_TriggerLogic(object):
 
 if __name__ == "__main__":
     uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
-    manager = uhal.ConnectionManager("file://./misc/aida_tlu_connection.xml")
+    manager = uhal.ConnectionManager("file://../misc/aida_tlu_connection.xml")
     hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
     
     log = logger.setup_main_logger('Test AidaTLU', logging.DEBUG)

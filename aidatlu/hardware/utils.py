@@ -24,10 +24,21 @@ def _pack_bits(vector: list) -> int:
     Returns:
         int: 32-bit word representation of the input vector. 
     """
-    #TODO Numpy would prob. be more elegant for this.
     packed_bits = 0x0
     temp_int = 0x0
     for channel in range(len(vector)):
         temp_int = int(vector[channel]) << channel*5
         packed_bits = packed_bits | temp_int
     return packed_bits
+
+from pathlib import Path
+def find_latest_file(path: str, index: str):
+    """Find latest file that includes a given subset of strings called index in directory.
+    Args:
+        path (str): Path to directory. For same directory as python script use for e.q. './target_dir'.
+        index (str): (Optional) Find if specific characters are in Pathfile
+    Returns:
+        path: Path to file in target Director. Use str(find_path(.)) to obtain path as string.
+    """
+    p = Path(path)
+    return max([x for x in p.iterdir() if x.is_file() and index in str(x)], key=lambda item: item.stat().st_ctime)

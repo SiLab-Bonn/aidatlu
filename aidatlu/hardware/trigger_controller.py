@@ -34,7 +34,7 @@ class TriggerLogic(object):
         self._set_internal_trigger_interval(interval)
         new_freq = self.get_internal_trigger_frequency()
         if new_freq != frequency:
-            self.log.warn("Frequency set to different value. Internal Trigger frequency: %i Hz" %self.get_internal_trigger_frequency())
+            self.log.warning("Frequency set to different value. Internal Trigger frequency: %i Hz" %self.get_internal_trigger_frequency())
 
     def get_internal_trigger_frequency(self) -> int:
         """Reads the internal trigger frequency from the register.
