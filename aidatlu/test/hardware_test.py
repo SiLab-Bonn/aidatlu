@@ -10,7 +10,7 @@ from hardware.dac_controller import DacControl
 from hardware.clock_controller import ClockControl
 from hardware.dut_controller import DUTLogic
 from hardware.trigger_controller import TriggerLogic
-from data_parser import DataParser
+from config_parser import TLUConfigure
 
 import uhal
 import time
@@ -104,7 +104,8 @@ class Test_DUTLogic():
     dut = DUTLogic(i2c)
 
     def test_set_dut_mask(self) -> None:
-        self.dut.set_dut_mask('1111')
+        time.sleep(1)
+        self.dut.set_dut_mask('1010')
         time.sleep(1)
         self.dut.set_dut_mask('0000')
 
@@ -182,6 +183,3 @@ def test_tlu():
     tlu.get_device_id()
     tlu.get_fw_version()
 
-def test_data_interpreter():
-    data_parser = DataParser()
-    data_parser.parse('raw_data_test.h5', 'interpreted_data_test.h5')
