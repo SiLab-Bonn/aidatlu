@@ -1,6 +1,6 @@
 from online_monitor.converter.transceiver import Transceiver
 import zmq
-
+from online_monitor.utils import utils
 
 class AIDATLUConverter(Transceiver):
 
@@ -15,12 +15,14 @@ class AIDATLUConverter(Transceiver):
         return m
     
     def interpret_data(self, data):
-        return data
+        interpreted_data ={
+            'Address': data[0][0],
+            'Run Time': data[0][1][0],
+            'Event Number': data[0][1][1],
+            'Total trigger numb': data[0][1][2],
+            'Trigger freq': data[0][1][3],
+        }
+        return [interpreted_data]
 
     def serialize_data(self, data):
-        return data
-        #return jsonapi.dumps(data, cls=utils.NumpyEncoder)
-
-    def send_data(self, data):
-        for actual_backend in self.backends:
-            actual_backend[1].send_string(str(data), flags=zmq.NOBLOCK)
+        return utils.simple_enc(None, data)

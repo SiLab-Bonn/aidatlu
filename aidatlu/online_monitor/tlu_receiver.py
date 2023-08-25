@@ -5,6 +5,7 @@ from pyqtgraph.dockarea import DockArea, Dock
 from PyQt5 import QtWidgets
 import pyqtgraph as pg
 from pyqtgraph.dockarea import DockArea, Dock
+from online_monitor.utils import utils
 
 class AIDATLUReciever(Receiver):
         
@@ -69,33 +70,19 @@ class AIDATLUReciever(Receiver):
             self.plot_delay = 0
 
         def deserialize_data(self, data):
-            #Ok alot of string decoding dont panic it works
-            m = data.decode("utf-8") 
-            m = ''.join([i for i in m if i not in ['[' ,']', '  ']])
-            m = m.split(' ')
-            address = m[0].replace(',','')
-            address = m[0].replace('(','')
-            data_array = m[1:5]
-            data_array = list(filter(None, data_array))
-            for i in range(len(data_array)):
-                data_array[i] = data_array[i].replace(',', '')
-                data_array[i] = data_array[i].replace(')', '')
-            data_array = [float(i) for i in data_array]
-            array = {'address': address, 'data': data_array}
-            return array
-            #res = jsonapi.loads(data, object_hook=utils.json_numpy_obj_hook)
+            return utils.simple_dec(data)[1]
         
         def refresh_data(self):
             if len(self.hitrate_data) > 0:
                 self.trigger_rate_acc_curve.setData(x=self.runtime, y=self.hitrate_data)
             
         def handle_data(self, data):
-            self.hitrate_data.append(data['data'][3])
-            self.runtime.append(data['data'][0])
-            self.timestamp_label.setText("Run Time\n%0.2f s" %data['data'][0])
-            self.event_numb_label.setText("Event Number\n%i" %data['data'][1])
-            self.total_trig_numb.setText("Total Trigger Number\n%i" %data['data'][2])
-            self.hit_rate_label.setText("Trigger Frequency\n%0.2f Hz" %data['data'][3])
+            self.hitrate_data.append(data['Trigger freq'])
+            self.runtime.append(data['Run Time'])
+            self.timestamp_label.setText("Run Time\n%0.2f s" %data['Run Time'])
+            self.event_numb_label.setText("Event Number\n%i" %data['Event Number'])
+            self.total_trig_numb.setText("Total Trigger Number\n%i" %data['Total trigger numb'])
+            self.hit_rate_label.setText("Trigger Frequency\n%0.2f Hz" %data['Trigger freq'])
 
         def _reset(self):
             self.hitrate_data = []

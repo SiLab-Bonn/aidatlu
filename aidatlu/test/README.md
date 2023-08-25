@@ -10,5 +10,5 @@ pytest -o log_cli=True
 ```
 Also to only test the software script use:
 ```bash
-pytest software.py -o log_cli=True
+pytest software_test.py -o log_cli=True
 ```

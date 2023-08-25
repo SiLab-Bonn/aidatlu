@@ -1,6 +1,5 @@
 import time
 from math import ceil
-
 import logger
 
 i2c_addr = {

@@ -13,9 +13,9 @@ from hardware.ioexpander_controller import IOControl
 from hardware.dac_controller import DacControl
 from hardware.trigger_controller import TriggerLogic
 from hardware.dut_controller import DUTLogic
-from config_parser import TLUConfigure
+from main.config_parser import TLUConfigure
 
-from data_parser import DataParser
+from main.data_parser import DataParser
 
 class AidaTLU(object):
     def __init__(self, hw, config_path, clock_config_path) -> None:
@@ -365,21 +365,26 @@ class AidaTLU(object):
                             if save_data:
                                 self.data_table.append(event_vec)
                 except:
-                    self.log.warning('Incomplete Event handling...')
-                    assert KeyboardInterrupt
+                    if KeyboardInterrupt:
+                        run_active = False
+                    else:
+                        #If this happens: poss. Hitrate to high for FIFO and or Data handling.
+                        self.log.warning('Incomplete Event handling...')
             
                 #Logs and poss. sends status every 1s.
                 if current_time - self.last_time > 1:
                     self.log_sent_status(current_time)
-                   # self.log.warning(str(current_event))
+                    # self.log_trigger_inputs(current_event)
+                    # self.log.warning(str(current_event))
 
                 #This loop sents which inputs produced the trigger signal for the first event.
                 if (np.size(current_event)  > 1) and first_event: #TODO only first event?
                     self.log_trigger_inputs(current_event)
                     first_event = False
+
                 #Stops the TLU after some time in seconds.
-                #if current_time*25/1000000000 > 600:
-                #    run_active = False
+                # if current_time*25/1000000000 > 600:
+                #     run_active = False
             except:
                 KeyboardInterrupt
                 run_active = False
