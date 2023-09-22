@@ -1,4 +1,3 @@
-
 from main.tlu import AidaTLU
 import uhal
 
@@ -14,10 +13,14 @@ class AIDATLU():
 
         self.cfile = config_path
         self.clock = clock_path
+        self.rdy = False
 
     @property
     def run(self):
-        self.aidatlu.run()
+        if self.rdy == False:
+            print('TLU not configured, Run aborted')
+        else:
+            self.aidatlu.run()
 
     @property
     def stop(self):
@@ -25,6 +28,7 @@ class AIDATLU():
 
     @property
     def configure(self):
+        self.rdy = True
         self.init
         self.aidatlu.configure()
 
@@ -37,15 +41,16 @@ class AIDATLU():
         print('tlu.configure')
         print('start run: tlu.run')
         print('stop  run: ctr+c')
-        print('exit:      ctr+d/exit()')
+        print('exit:      ctr+d/exit()\n')
+        print('for access to the main tlu functions: tlu.aitatlu....')
 
 if __name__ == '__main__':
     uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
     manager = uhal.ConnectionManager("file://./misc/aida_tlu_connection.xml")
     hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
 
-    clock_path = 'misc/aida_tlu_clk_config.txt'
     config_path = 'conf.yaml'
-
+    clock_path = 'misc/aida_tlu_clk_config.txt'
+    
     tlu = AIDATLU(config_path, clock_path)
     

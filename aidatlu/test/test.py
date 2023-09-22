@@ -1,9 +1,8 @@
-
 import sys
 sys.path.insert(1, '..')
 sys.path.insert(1, '../hardware')
 
-from tlu import AidaTLU
+from main.tlu import AidaTLU
 from hardware.i2c import I2CCore
 from hardware.utils import _set_bit
 from hardware.ioexpander_controller import IOControl
@@ -11,7 +10,6 @@ from hardware.dac_controller import DacControl
 from hardware.clock_controller import ClockControl
 from hardware.dut_controller import DUTLogic
 from hardware.trigger_controller import TriggerLogic
-
 
 import time
 import numpy as np

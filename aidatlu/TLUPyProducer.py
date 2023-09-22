@@ -3,7 +3,7 @@
 import pyeudaq
 from pyeudaq import EUDAQ_INFO, EUDAQ_ERROR
 import time
-import tlu
+from main.tlu import AidaTLU
 import uhal
 
 """ 
@@ -36,7 +36,7 @@ class TLUPyProducer(pyeudaq.Producer):
         manager = uhal.ConnectionManager("file://./misc/aida_tlu_connection.xml")
         hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
 
-        self.tlu = tlu.AidaTLU(hw)
+        self.tlu = AidaTLU(hw)
         #print 'key_a(init) = ', self.GetInitItem("key_a")
 
     @exception_handler

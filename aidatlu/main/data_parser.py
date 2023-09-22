@@ -4,7 +4,6 @@ import logger
 import logging
 
 class DataParser(object):
-    
     def __init__(self) -> None:
         self.log = logger.setup_main_logger(__class__.__name__, logging.DEBUG)
         self.features = np.dtype([('eventnumber', 'u4'), ('timestamp', 'u8'), ('overflow', 'u8'), ('eventtype', 'u4'), ('input1', 'bool'), ('input2', 'bool'), ('input3', 'bool'), 

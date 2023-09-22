@@ -7,14 +7,12 @@ from datetime import datetime
 import zmq
 
 from hardware.i2c import I2CCore
-
 from hardware.clock_controller import ClockControl
 from hardware.ioexpander_controller import IOControl
 from hardware.dac_controller import DacControl
 from hardware.trigger_controller import TriggerLogic
 from hardware.dut_controller import DUTLogic
 from main.config_parser import TLUConfigure
-
 from main.data_parser import DataParser
 
 class AidaTLU(object):

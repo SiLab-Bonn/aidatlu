@@ -28,7 +28,7 @@ def test_interpreted_data():
     # numpy equal should do everything. But this could help for debugging.
     assert np.array_equiv(interpreted_data, interpreted_test_data)
     assert np.array_equal(interpreted_data, interpreted_test_data)
-    assert (interpreted_data==interpreted_test_data).all()
+    assert (interpreted_data == interpreted_test_data).all()
 
 def test_load_config():
     config_path = '../conf.yaml' 

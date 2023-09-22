@@ -191,7 +191,6 @@ class IOControl(object):
             # indicator map for LED positions notice the -1 for the clock led #TODO should this be global??
             indicator = [[30, 29, 31], [27, 26, 28], [24, 23, 25], [21, 20, 22], [18, 17, -1], [15, 14, 16], [12, 11, 13], [9, 8, 10], [6, 5, 7], [3, 2, 4], [1, 0, 19]]
 
-
             now_status = [] #status of all ioexpander now
             next_status = [] #status of all ioexpander next
             now_status.append(0xFF & self._get_ioexpander_output(1,1,2))
@@ -230,7 +229,6 @@ class IOControl(object):
 
             if now_status[3] != next_status[3]:
                 self._set_ioexpander_output(1, 2, 3, next_status[3])
-
 
     """ 
 

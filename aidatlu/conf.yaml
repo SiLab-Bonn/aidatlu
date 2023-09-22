@@ -3,13 +3,13 @@ internal_trigger:
   internal_trigger_rate: 0
 
 dut_module:
-  dut_1:  #aida DUT 
-    mode: 'aida' # 'aida', 'aidatrig', 'eudet', 'any'
-  dut_2:  #BDAQ MOCK
+  dut_1:  
+    mode: 'eudet' # 'aida', 'aidatrig', 'eudet', 'any'
+  dut_2:  
     mode: 'off'   # 'aida', 'aidatrig', 'eudet', 'any'
-  dut_3:  #DATURA TELESCOPE
+  dut_3:  
     mode: 'off'   # 'aida', 'aidatrig', 'eudet', 'any'
-  dut_4:  #FEI4
+  dut_4:  
     mode: 'off'   # 'aida', 'aidatrig', 'eudet', 'any'    
 
 trigger_inputs:
@@ -34,9 +34,9 @@ trigger_inputs:
   #  all veto seems to break an all do not care
 
     trigger_logic_1:
-      trig_1: -1
+      trig_1: 1
       trig_2: -1
-      trig_3: 1
+      trig_3: -1
       trig_4: -1
       trig_5: -1
       trig_6: -1
@@ -74,5 +74,5 @@ save_raw_data: True
 interpret_data: True
 
 #zmq connection leave it blank or set to 'off' if not needed
-zmq_connection: "tcp://127.0.0.1:6500" # 'off'
+zmq_connection: #"tcp://127.0.0.1:6500" # 'off'
 

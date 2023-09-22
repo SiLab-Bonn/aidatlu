@@ -50,17 +50,20 @@ class TLUConfigure(object):
                 if self.tlu.config_parser.conf['dut_module']['dut_%s'%(i+1)]['mode'] == 'eudet':
                         self.tlu.io_controller.switch_led(i+1, 'g')
                         dut[i] = 2**i
+                        #Clock output needs to be disabled for EUDET mode.
+                        self.tlu.io_controller.clock_hdmi_output(i+1, 'off')
                 if self.tlu.config_parser.conf['dut_module']['dut_%s'%(i+1)]['mode'] == 'aidatrig':
                         self.tlu.io_controller.switch_led(i+1, 'w')
                         dut[i] = 2**i
-                        dut_mode[i] = 2**(2*i)    
+                        dut_mode[i] = 2**(2*i)
+                        #In AIDA mode the clock output is needed.
+                        self.tlu.io_controller.clock_hdmi_output(i+1, 'chip')    
                 if self.tlu.config_parser.conf['dut_module']['dut_%s'%(i+1)]['mode'] == 'aida':
                         self.tlu.io_controller.switch_led(i+1, 'b')
                         dut[i] = 2**i
                         dut_mode[i] = 3*(2)**(2*i)
+                        self.tlu.io_controller.clock_hdmi_output(i+1, 'chip')
                 self.tlu.io_controller.configure_hdmi(i+1, '0111')
-                #The clock output needs to be enabled. If not the trigger number is not sent out in EUDET Mode with trigger number.
-                self.tlu.io_controller.clock_hdmi_output(i+1, 'chip')
 
         #This sets the right bits to the set dut mask registers according to the configuration parameter.
         self.tlu.dut_logic.set_dut_mask(dut[0] | dut[1]  | dut[2]  | dut[3]) 
