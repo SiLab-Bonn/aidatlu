@@ -1,4 +1,3 @@
-
 import yaml
 import logging
 import logger
@@ -66,14 +65,13 @@ class TLUConfigure(object):
                 self.tlu.io_controller.configure_hdmi(i+1, '0111')
 
         #This sets the right bits to the set dut mask registers according to the configuration parameter.
-        self.tlu.dut_logic.set_dut_mask(dut[0] | dut[1]  | dut[2]  | dut[3]) 
-        self.tlu.dut_logic.set_dut_mask_mode(dut_mode[0]  | dut_mode[1]  | dut_mode[2]  | dut_mode[3] )
+        self.tlu.dut_logic.set_dut_mask(dut[0] | dut[1] | dut[2] | dut[3]) 
+        self.tlu.dut_logic.set_dut_mask_mode(dut_mode[0] | dut_mode[1] | dut_mode[2] | dut_mode[3])
 
         #Special configs
         self.tlu.dut_logic.set_dut_mask_mode_modifier(0)
         self.tlu.dut_logic.set_dut_ignore_busy(0) 
         self.tlu.dut_logic.set_dut_ignore_shutter(0x1)
-
 
     def conf_trigger_logic(self) -> None:
         """ Configures the trigger logic. So the trigger polarity and the trigger pulse length and stretch.
@@ -89,46 +87,36 @@ class TLUConfigure(object):
         """Configures the trigger inputs. Each input can have a different threshold.
            The two trigger words mask_low and mask_high are generated with the use of two support functions. 
         """
-
         [self.tlu.dac_controller.set_threshold(i+1, self.conf['trigger_inputs']['threshold']['threshold_%s' %(i+1)]) for i in range(6)]
 
-        trigger_word = 0
-        for i in (self.conf['trigger_inputs']['trigger_inputs_logic']):
-             logic_array = []
-             for index,j in enumerate(self.conf['trigger_inputs']['trigger_inputs_logic'][i]):
-                logic_array.append(self.conf['trigger_inputs']['trigger_inputs_logic'][i][j])
-                if self.conf['trigger_inputs']['trigger_inputs_logic'][i][j] == 1:
-                      self.io_control.switch_led(index+6, 'g')
-                if self.conf['trigger_inputs']['trigger_inputs_logic'][i][j] == 0:
-                      self.io_control.switch_led(index+6, 'r')
-             trigger_word += self._find_mask_word(logic_array)
+        trigger_configuration = self.conf['trigger_inputs']['trigger_inputs_logic']
+        self.log.info('Trigger Configuration: %s' %(trigger_configuration))
 
-        mask_low, mask_high = self._mask_words(trigger_word)
-
-        self.log.info('mask high: %s, mask low: %s' %(hex(mask_high),hex(mask_low)))
-
-        self.tlu.trigger_logic.set_trigger_mask(mask_high, mask_low)
-
-    def _find_mask_word(self, logic_array: list) -> int:
-        """This function creates all combination of trigger words and compares them to the one from the configuration file.
-           When they match the word is returned.
-
-        Args:
-        logic_array (list): The combinations are compared to the logic array.
-
-        Returns:
-        int: Returns the long word variant of the trigger word.
-        """
+        #Sets the Trigger Leds to green if the Input is enabled and to red if the input is set to VETO.
+        #TODO this breaks when there are multiple enabled and veto statements.
+        for trigger_led in range(6):
+            if '~CH%i' %(trigger_led +1) in trigger_configuration:
+                self.io_control.switch_led(trigger_led+6, 'r')
+            elif 'CH%i' %(trigger_led +1) in trigger_configuration:
+                self.io_control.switch_led(trigger_led+6, 'g')
+        
         long_word = 0x0
+        # Goes through all possible trigger combinations and checks if the combination is valid with the trigger logic.
+        # When the word is valid this is added to the longword.
         for combination in range(64):
-                #Transform a given integer in binary in reverse order to a list.
-                pattern_list = [(combination >> element) & 0x1 for element in range(6)] 
-                #Ignore DO NOT CARE input -1
-                logic_array = [pattern_list[i] if logic_array[i] == -1 else logic_array[i] for i in range(len(logic_array))]
-                valid = (logic_array == pattern_list)
-                long_word = (valid << combination) | long_word
-        return long_word
+            pattern_list = [(combination >> element) & 0x1 for element in range(6)]
+            CCH5 = pattern_list[5]
+            CCH4 = pattern_list[4]
+            CCH3 = pattern_list[3]
+            CCH2 = pattern_list[2]
+            CCH1 = pattern_list[1]
+            CCH0 = pattern_list[0]
+            valid = (lambda CH1, CH2, CH3, CH4, CH5, CH6: eval(trigger_configuration))(CCH0, CCH1, CCH2, CCH3, CCH4, CCH5)
+            long_word = (valid << combination) | long_word
 
+        mask_low, mask_high = self._mask_words(long_word)
+        self.log.info('mask high: %s, mask low: %s' %(hex(mask_high), hex(mask_low)))
+        self.tlu.trigger_logic.set_trigger_mask(mask_high, mask_low)
 
     def _mask_words(self, word: int) -> tuple:
         """ Transforms the long word variant of the trigger word to the mask_low mask_high variant.

@@ -22,32 +22,12 @@ trigger_inputs:
     threshold_5: -0.06
     threshold_6: -0.06
 
-  trigger_inputs_logic:
-  #Enable Trigger logic. A 1 in a trigger input means the trigger has to be HIGH,
-  #a 0 corresponds to a VETO and a -1 to DO NOT CARE.
-  #The elements in words e.q trig_1 and trig_2 have a AND between them. 
-  #Different words e.q. trigger_logic_1 and trigger_logic_2 have OR between them.
-  #So element-wise AND and dictionary-wise OR.
-  #TODO The signal length of the trigger inputs should be analyzed
-  #     with the osziloscope. For mor complicated OR and VETO trigger words this seems to have an effect.
-  #TODO the code will most prob. have edge cases where it will break. 
-  #  all veto seems to break an all do not care
-
-    trigger_logic_1:
-      trig_1: 1
-      trig_2: -1
-      trig_3: -1
-      trig_4: -1
-      trig_5: -1
-      trig_6: -1
-
- #   trigger_logic_2:
- #     trig_1: 0
- #     trig_2: 0
- #     trig_3: 0
-#      trig_4: 0
-#      trig_5: 0
-#      trig_6: 0
+  # Trigger Logic configuration accept a python expression for the trigger inputs.
+  # The logic is set by using the variables for the input channels 'CH1', 'CH2', 'CH3', 'CH4', 'CH5'and 'CH6'
+  # and the Python bitwise operators AND: '&', OR: '|', NOT: '~' and so on. Dont forget to use brackets...
+  # eq.: "(CH1 & ~CH2) & (CH3 | CH4 | CH5 | CH6)" 
+  # produces a valid trigger, when CH1 and not CH2 triggers, together when one of CH3, CH4, CH5 or CH6 triggers.
+  trigger_inputs_logic: '(CH1 | CH2 | CH3 | CH4 | CH5 | CH6)'
 
   trigger_polarity:
     #TLU triggers on rising (0) or falling (1) edge

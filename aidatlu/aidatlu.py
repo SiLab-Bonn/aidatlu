@@ -42,7 +42,7 @@ class AIDATLU():
         print('start run: tlu.run')
         print('stop  run: ctr+c')
         print('exit:      ctr+d/exit()\n')
-        print('for access to the main tlu functions: tlu.aitatlu....')
+        print('for access to the main tlu functions: tlu.aidatlu....')
 
 if __name__ == '__main__':
     uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
@@ -53,4 +53,8 @@ if __name__ == '__main__':
     clock_path = 'misc/aida_tlu_clk_config.txt'
     
     tlu = AIDATLU(config_path, clock_path)
+
+    # Uncomment if you just want to use EUDET mode and just plug and play TLU.
+    # tlu.configure
+    # tlu.run
     
