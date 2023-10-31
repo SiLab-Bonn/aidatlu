@@ -4,6 +4,7 @@ import coloredlogs
 
 FORMAT = "%(asctime)s [%(name)-18s] - %(levelname)-7s %(message)s"
 
+
 def setup_main_logger(name="AidaTLU", level=logging.INFO):
     _reset_all_loggers()
 
@@ -18,6 +19,7 @@ def setup_main_logger(name="AidaTLU", level=logging.INFO):
 
     return logger
 
+
 def setup_derived_logger(name, level=logging.INFO):
     logger = logging.getLogger(name)
     logger.setLevel(level)
@@ -30,6 +32,7 @@ def setup_derived_logger(name, level=logging.INFO):
 
     return logger
 
+
 def setup_logfile(filename, level=logging.INFO):
     fh = logging.FileHandler(filename)
     fh.setLevel(level)
@@ -37,11 +40,13 @@ def setup_logfile(filename, level=logging.INFO):
 
     return fh
 
+
 def add_logfile_to_loggers(fh):
     # Add filehandler to all active loggers
     for lg in logging.Logger.manager.loggerDict.values():
         if isinstance(lg, logging.Logger):
             lg.addHandler(fh)
+
 
 def _add_logfiles_to(logger):
     fhs = []
@@ -54,11 +59,13 @@ def _add_logfiles_to(logger):
     for fh in fhs:
         logger.addHandler(fh)
 
+
 def close_logfile(fh):
     # Remove filehandler from all active loggers
     for lg in logging.Logger.manager.loggerDict.values():
         if isinstance(lg, logging.Logger):
             lg.removeHandler(fh)
+
 
 def _setup_coloredlogs(logger):
     loglevel = logger.getEffectiveLevel()
@@ -82,6 +89,7 @@ def _setup_coloredlogs(logger):
 
     coloredlogs.install(fmt=FORMAT, milliseconds=True, loglevel=loglevel)
 
+
 def _add_success_level(logger):
     logging.SUCCESS = 35
     logging.addLevelName(logging.SUCCESS, "SUCCESS")
@@ -89,12 +97,14 @@ def _add_success_level(logger):
         logging.SUCCESS, msg, *args, **kwargs
     )
 
+
 def _add_notice_level(logger):
     logging.NOTICE = 25
     logging.addLevelName(logging.NOTICE, "NOTICE")
     logger.notice = lambda msg, *args, **kwargs: logger.log(
         logging.NOTICE, msg, *args, **kwargs
     )
+
 
 def _reset_all_loggers():
     logging.root.handlers = []

@@ -13,6 +13,7 @@ Prob. one needs to work a bit on the run loop.
 
 """
 
+
 def exception_handler(method):
     def inner(*args, **kwargs):
         try:
@@ -20,46 +21,48 @@ def exception_handler(method):
         except Exception as e:
             EUDAQ_ERROR(str(e))
             raise e
+
     return inner
+
 
 class TLUPyProducer(pyeudaq.Producer):
     def __init__(self, name, runctrl):
         pyeudaq.Producer.__init__(self, name, runctrl)
-        
+
         self.is_running = 0
-        EUDAQ_INFO('New instance of TLUPyProducer')
+        EUDAQ_INFO("New instance of TLUPyProducer")
 
     @exception_handler
-    def DoInitialise(self):        
-        EUDAQ_INFO('DoInitialise')
+    def DoInitialise(self):
+        EUDAQ_INFO("DoInitialise")
         uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
         manager = uhal.ConnectionManager("file://./misc/aida_tlu_connection.xml")
         hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
 
         self.tlu = AidaTLU(hw)
-        #print 'key_a(init) = ', self.GetInitItem("key_a")
+        # print 'key_a(init) = ', self.GetInitItem("key_a")
 
     @exception_handler
-    def DoConfigure(self):        
-        EUDAQ_INFO('DoConfigure')
+    def DoConfigure(self):
+        EUDAQ_INFO("DoConfigure")
         self.tlu.configure()
-        #print 'key_b(conf) = ', self.GetConfigItem("key_b")
+        # print 'key_b(conf) = ', self.GetConfigItem("key_b")
 
     @exception_handler
     def DoStartRun(self):
-        EUDAQ_INFO('DoStartRun')
+        EUDAQ_INFO("DoStartRun")
         self.tlu.run()
         self.is_running = 1
-        
+
     @exception_handler
-    def DoStopRun(self):        
-        EUDAQ_INFO('DoStopRun')
+    def DoStopRun(self):
+        EUDAQ_INFO("DoStopRun")
         self.tlu.stop_run()
         self.is_running = 0
 
     @exception_handler
-    def DoReset(self):        
-        EUDAQ_INFO('DoReset')
+    def DoReset(self):
+        EUDAQ_INFO("DoReset")
         self.tlu.reset_configuration()
         self.is_running = 0
 
@@ -67,28 +70,31 @@ class TLUPyProducer(pyeudaq.Producer):
     def RunLoop(self):
         EUDAQ_INFO("Start of RunLoop in TLUPyProducer")
         trigger_n = 0
-        #TODO here the Run loop from the tlu is probably needed
-        while(self.is_running):
+        # TODO here the Run loop from the tlu is probably needed
+        while self.is_running:
             ev = pyeudaq.Event("RawEvent", "sub_name")
             ev.SetTriggerN(trigger_n)
-            #block = bytes(r'raw_data_string')
-            #ev.AddBlock(0, block)
-            #print ev
+            # block = bytes(r'raw_data_string')
+            # ev.AddBlock(0, block)
+            # print ev
             # Mengqing:
-            datastr = 'raw_data_string'
-            block = bytes(datastr, 'utf-8')
+            datastr = "raw_data_string"
+            block = bytes(datastr, "utf-8")
             ev.AddBlock(0, block)
-            #print(ev)
-            
+            # print(ev)
+
             self.SendEvent(ev)
             trigger_n += 1
             time.sleep(1)
         EUDAQ_INFO("End of RunLoop in TLUPyProducer")
 
+
 if __name__ == "__main__":
     myproducer = TLUPyProducer("AIDA_TLU", "tcp://localhost:44000")
-    print ("connecting to runcontrol in localhost:44000", )
+    print(
+        "connecting to runcontrol in localhost:44000",
+    )
     myproducer.Connect()
     time.sleep(2)
-    while(myproducer.IsConnected()):
+    while myproducer.IsConnected():
         time.sleep(1)
