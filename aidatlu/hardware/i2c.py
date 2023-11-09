@@ -17,6 +17,7 @@ i2c_addr = {
     "display": 0x3A,  # Display
 }
 
+
 class I2CCore(object):
     def __init__(self, hw_int):
         """hw_int: IPBus HwInterface instance"""
@@ -30,7 +31,7 @@ class I2CCore(object):
 
         self.write(i2c_addr["core"], 0x01, 0x7F)
         if self.read(i2c_addr["core"], 0x01) & 0x80 != 0:
-            #TODO What is this why is this always happening?
+            # TODO What is this why is this always happening?
             self.log.warning(
                 "Enabling Enclustra I2C bus might have failed. This could prevent from talking to the I2C slaves on the TLU."
             )
@@ -62,8 +63,8 @@ class I2CCore(object):
 
     def write_register(self, register: str, value: int) -> None:
         """
-            register: str  Name of node in address file
-            value:    int  Value to be written
+        register: str  Name of node in address file
+        value:    int  Value to be written
         """
         if type(value) != int:
             raise TypeError("Value must be integer")
@@ -75,7 +76,7 @@ class I2CCore(object):
 
     def read_register(self, register: str) -> int:
         """
-            register: str  Name of node in address file
+        register: str  Name of node in address file
         """
         try:
             ret = self.i2c_hw.getNode(register).read()
@@ -125,7 +126,9 @@ class I2CCore(object):
                 self.set_i2c_command(0x10)
         self.set_i2c_tx(value & 0xFF)
         self.set_i2c_command(0x50)
-        self._compare_value_read_write(value, self.read(device_addr, mem_addr), device_addr)
+        self._compare_value_read_write(
+            value, self.read(device_addr, mem_addr), device_addr
+        )
 
     def read(self, device_addr: int, mem_addr: int) -> int:
         self.set_i2c_tx((device_addr << 1) | 0x0)
@@ -147,7 +150,7 @@ class I2CCore(object):
         self.set_i2c_tx(mem_addr)
         self.set_i2c_command(0x10)
 
-        for i in range(len(values)-1):
+        for i in range(len(values) - 1):
             if i > 0xFF:
                 n_bytes_to_write = ceil(len(hex(i)[2:] / 2))
                 for byte in range(
@@ -160,10 +163,13 @@ class I2CCore(object):
             self.set_i2c_command(0x10)
 
         self.set_i2c_tx(values[-1] & 0xFF)
-        self.set_i2c_command(0x50) 
+        self.set_i2c_command(0x50)
 
     def _compare_value_read_write(self, written: int, read: int, function: str) -> None:
         if written != read:
-            self.log.warning('Mismatch in register function %s. written value %s, recieved value: %s.' %(function, written, read))
+            self.log.warning(
+                "Mismatch in register function %s. written value %s, recieved value: %s."
+                % (function, written, read)
+            )
         else:
             pass
