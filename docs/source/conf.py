@@ -47,7 +47,7 @@ source_suffix = {
     '.md': 'markdown',
 }
 
-autodoc_mock_imports = ["hardware", "DutLogic", "main", "aidatlu"]
+autodoc_mock_imports = ["hardware", "DutLogic", "main", "uhal"]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

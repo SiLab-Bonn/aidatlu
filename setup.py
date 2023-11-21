@@ -7,7 +7,7 @@ author = 'Christian Bespin'
 author_email = 'bespin@physik.uni-bonn.de'
 
 # Requirements
-install_requires = ['']
+install_requires = ['online_monitor', 'pytest', 'numpy', 'tables', 'logger']
 
 
 setup(
