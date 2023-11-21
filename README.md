@@ -62,4 +62,4 @@ For more commands take a look at the python script aidatlu.py.
 All configurations are done by the use of a yaml file (tlu_configuration.yaml).
 
 # Documentation
-For some more details take a look at the [documentation](https://silab-bonn.github.io/aidatlu/).
+Additionally, take a look at the [documentation](https://silab-bonn.github.io/aidatlu/).
