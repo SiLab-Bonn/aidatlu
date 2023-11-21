@@ -43,7 +43,7 @@ class DataParser(object):
 
         self.log.info('Data parsed from "%s" to "%s"' % (filepath_in, filepath_out))
 
-    def read_file(self, filepath: str) -> tb:
+    def read_file(self, filepath: str) -> list:
         """Reads raw data file of the TLU
 
         Args:

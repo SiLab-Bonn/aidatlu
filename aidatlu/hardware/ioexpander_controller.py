@@ -146,7 +146,7 @@ class IOControl(object):
         """changes LED with led_id to specific color
 
         Args:
-            led_id (int): ID for the 11 LEDs, led_ id has to be between 1 and 11
+            led_id (int): ID for the 11 LEDs, led_id has to be between 1 and 11
             color (str, optional): Color code [white: "w", red: "r", green: "g", blue: "b", off: "off"]
                                    for Clock LED only [red: "r", green: "g", off: "off"].
                                    Defaults to "off".

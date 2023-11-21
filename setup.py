@@ -1,11 +1,14 @@
 from setuptools import setup
 from setuptools import find_packages
 
+import aidatlu
+
 author = 'Christian Bespin'
 author_email = 'bespin@physik.uni-bonn.de'
 
 # Requirements
 install_requires = ['']
+
 
 setup(
     name='aidatlu',

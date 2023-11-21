@@ -51,7 +51,7 @@ if __name__ == "__main__":
     manager = uhal.ConnectionManager("file://./misc/aida_tlu_connection.xml")
     hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
 
-    config_path = "conf.yaml"
+    config_path = "tlu_configuration.yaml"
     clock_path = "misc/aida_tlu_clk_config.txt"
 
     tlu = AIDATLU(config_path, clock_path)

@@ -1,16 +1,12 @@
 Metadata-Version: 2.1
 Name: aidatlu
 Version: 0.1.0
-Summary: UNKNOWN
-Home-page: UNKNOWN
-Author: 
-Author-email: 
-Maintainer: 
-Maintainer-email: 
-License: UNKNOWN
-Platform: any
-Requires-Python: >=3.0
+Summary: Control software for AIDA-2020 TLU
+Home-page: https://github.com/Silab-Bonn/aidatlu
+Author: Christian Bespin
+Author-email: bespin@physik.uni-bonn.de
+Maintainer: Christian Bespin
+Maintainer-email: bespin@physik.uni-bonn.de
+Platform: posix
+Requires-Python: >=3.8
 License-File: LICENSE
-
-UNKNOWN
-

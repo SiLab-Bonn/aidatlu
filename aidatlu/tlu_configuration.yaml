@@ -1,0 +1,60 @@
+internal_trigger:
+#Generate TLU internal trigger with given rate in Hz
+  internal_trigger_rate: 0
+
+dut_module:
+  #telescope
+  dut_1:  
+    mode: 'eudet' # 'aida', 'aidatrig', 'eudet', 'any'
+  dut_2:  
+    mode: 'off'   # 'aida', 'aidatrig', 'eudet', 'any'
+  #DUT
+  dut_3:
+    mode: 'eudet'   # 'aida', 'aidatrig', 'eudet', 'any'
+  #FE-I4/itk
+  dut_4: 
+    mode: 'eudet'   # 'aida', 'aidatrig', 'eudet', 'any'    
+
+trigger_inputs:
+  #threshold voltages for the trigger inputs in V.
+  threshold:
+    threshold_1: -0.015  #-0.06 for scintillator
+    threshold_2: -0.1   #-0.06 for scintillator
+    threshold_3: 0.1    #0.1 for HitOr
+    threshold_4: 0.1
+    threshold_5: 0.1
+    threshold_6: 0.1
+
+  # Trigger Logic configuration accept a python expression for the trigger inputs.
+  # The logic is set by using the variables for the input channels 'CH1', 'CH2', 'CH3', 'CH4', 'CH5'and 'CH6'
+  # and the Python bitwise operators AND: '&', OR: '|', NOT: '~' and so on. Dont forget to use brackets...
+  # eq.: "(CH1 & ~CH2) & (CH3 | CH4 | CH5 | CH6)" 
+  # produces a valid trigger, when CH1 and not CH2 triggers and when one of CH3, CH4, CH5 or CH6 triggers.
+  trigger_inputs_logic: CH1
+
+  trigger_polarity:
+    #TLU triggers on rising (0) or falling (1) edge
+    polarity: 1
+
+  trigger_signal_shape:
+    #Stretches and delays each trigger input signal for an number of clock cycles,
+    #this could be important depending on the hardware trigger setup.
+    stretch: [5, 1, 5, 5, 5, 5] # [10, 2, 1, 1, 1, 1]  #    stretch: [8, 2, 15, 15, 15, 15]  
+    delay: [1, 0, 0, 0, 0, 0] # [30, 0, 0, 0, 0, 0]    #     delay:   [30, 1, 1, 1, 1, 1]
+
+clock_lemo:
+  enable_clock_lemo_output: True
+
+pmt_control:
+  #PMT control voltages in V
+  pmt_1: 0.8
+  pmt_2: 0.8
+  pmt_3: 0
+  pmt_4: 0
+
+#Save data and generate interpreted data from the raw data set. Set to 'True' or 'False'.
+save_raw_data: True
+interpret_data: True
+
+#zmq connection leave it blank or set to 'off' if not needed
+zmq_connection: "tcp://192.168.69.110:7500" # 'off'
