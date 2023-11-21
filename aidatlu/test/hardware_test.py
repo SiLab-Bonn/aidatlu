@@ -180,7 +180,7 @@ def test_tlu():
     hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
 
     clock_path = "../misc/aida_tlu_clk_config.txt"
-    config_path = "../conf.yaml"
+    config_path = "../tlu_configuration.yaml"
 
     tlu = AidaTLU(hw, config_path, clock_path)
 

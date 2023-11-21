@@ -16,10 +16,15 @@ make -j $((`nproc`-1))
 # Pass current PATH to su shell to build against current environment python
 sudo env PATH=$PATH make install prefix=<install_location>
 ```
-One needs then to import the library path.
+One needs then to import the library path
 ```bash
 export LD_LIBRARY_PATH=/opt/cactus/lib
 ```
+and start the controlhub
+```bash
+controlhub_start
+```
+in the according directory.
 ## Python packages
 Install the python package as usual
 ```

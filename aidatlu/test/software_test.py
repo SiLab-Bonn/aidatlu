@@ -53,6 +53,6 @@ def test_interpreted_data():
 
 
 def test_load_config():
-    config_path = "../conf.yaml"
+    config_path = "../tlu_configuration.yaml"
     with open(config_path, "r") as file:
         conf = yaml.full_load(file)
