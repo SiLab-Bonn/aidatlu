@@ -14,6 +14,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -e .
+          pip install pydata-sphinx-theme
           pip install sphinx sphinx_rtd_theme myst_parser sphinx_mdinclude
       - name: Sphinx build
         run: |

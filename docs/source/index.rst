@@ -14,7 +14,7 @@ Welcome to AIDA-TLU's documentation!
    Documentation
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    hardware_code
    main_code
