@@ -60,7 +60,6 @@ html_theme_options = {
     # "show_toc_level": 2,
     # "show_nav_level": 3,
     "primary_sidebar_end": ["indices.html", "sidebar-ethical-ads.html"],
-    # "primary_sidebar_items": ["page-toc", "edit-this-page", "sourcelink"]
     "secondary_sidebar_items": [],
     #[...]
 }

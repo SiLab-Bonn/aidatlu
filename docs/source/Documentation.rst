@@ -178,7 +178,7 @@ This leads to 64 possible combinations of so-called trigger words.
 Where each trigger word describes one specific trigger configuration. 
 One obtains the resulting trigger configuration to write into the trigger logic register by adding up all desired valid trigger configurations.
 For example if one need triggers from input 1 or input 2. 
-Than all valid trigger combinations are:
+Than all valid trigger combinations, ignoring the inputs channels 3-6 are:
 
 .. table::
     :align: left
@@ -195,7 +195,7 @@ Than all valid trigger combinations are:
 
 The software uses two different variants of these words.
 A long word variant which is just the 64-bit trigger word. 
-For the second one the long word is split into two 32-bit words (mask\_low and mask\_high).
+For the second variant the long word is split into two 32-bit words (mask\_low and mask\_high).
 To help with the generation of these trigger words, the software uses a specific function to translate
 the trigger settings in the configuration file to these words.
 
@@ -212,7 +212,7 @@ rounding error for higher frequency. This shifts the actual output trigger frequ
 The number of triggers since the last trigger VETO is stored together with the 
 total number of triggers per run.
 From these numbers general status messages for e.q. the trigger rate are generated.
-These status messages can also be distributed over a zmq socket using the online monitor. 
+These status messages can also be distributed over a ZMQ socket using the online monitor. 
 
 Operating Modes
 *****************
@@ -236,7 +236,7 @@ In AIDA mode the clock of the TLU and the DUT is synchronized.
 For this the TLU clock needs to be distributed. 
 The distribution of the clock via the LEMO has the problem that the clock signal form no longer arrives cleanly at the device.
 So distributing the clock usign the HDMI connectors is advised.
-A important step is to synchronize all delays (e.q. different cable length) of the clock signal with the trigger signal if encountered. 
+An important step is to synchronize all delays (e.q. different cable length) of the clock signal with the trigger signal if encountered. 
 
 At the start of a run the TLU sends out a RESET signal to the DUT.
 This signal can then be used by the DUT to synchronize the timestamp of the device and the TLU. 
@@ -246,30 +246,31 @@ To generate a new trigger no answer of the DUT is needed.
 But the DUT can veto new trigger signals at any time by asserting BUSY.
 The following is a checklist for the working of the AIDA mode together with the (SiLab-Bonn) BDAQ board.
 
-    * AIDA Mode BDAQ Firmware.
-    * Change Testbench yaml.
+    * AIDA Mode BDAQ Firmware. Here the external trigger clock is used also internally.
+    * Changes in testbench yaml.
         * Change Trigger Mode from 3 to 2.
         * Change Trigger Handshake Wait Cycle from 5 to 1.
     * Use special clock cable configuration. 
-      So enabele the clock LEMO output of the TLU 
+      So enable the clock LEMO output of the TLU 
       and connect the clock output to the BDAQ board.
-    * Check Cable length to synchronize clock DUT signals.
+      Or use special HDMI RJ45 AIDA mode adapter.
+    * Check Cable lengths to synchronize clock and trigger signals.
     * Note when starting triggering, 
-      the DUT scan needs to be started before the TLU scan for the 
+      the DUT scan needs to be started before the TLU scan for the timestamp
       RESET to arrive.
-    * For now also the aidamode needs to be enabled in the scan configurations.
+    * For now also the AIDA mode needs to be enabled in the scan configurations.
       This can for now only be found on a special TJ DAQ branch. 
       Or in the testbench yaml, depending on the setup there is to enable RESET option.
 
 If only one BDAQ board is used in AIDA mode there is a chance for two very fast trigger to occur right one after the other.
 If the distance between the triggers is smaller than the distance between the first trigger signal and the BUSY signal.
 Then the tlu sends out two triggers because no handshake is awaited.
-This leads to an eventnumber drift.
+This leads to an event number drift.
 This can be prevented by stretching the trigger input signal by some clock cycles. 
 Another important thing is to follow the procedure for starting an AIDA run:
 
     * configure TLU
-    * start all DUT's, telescopes and timreference planes
+    * start all DUT's, telescopes and time reference plane scans
     * start TLU run
 
 AIDA Mode with Trigger Number

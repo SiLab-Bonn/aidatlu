@@ -2,21 +2,24 @@
 The AIDA-2020 TLU is configured using a yaml file (tlu_configuration.yaml).
 In the following, the possible configuration parameters and settings are briefly explained.
 
-### internal_trigger
+### Internal Trigger Generation (internal_trigger)
 The setting internal trigger allows the TLU to generate a trigger internally with a given frequency.
 To disable the generation of internal triggers set this frequency to zero.
 
-### dut_module
+### DUT Module (dut_module)
 The DUT module configures the individual DUT interfaces.
 Where each interface can be set to one operating mode.
 The possible modes are 'aida', 'aidatrig' and 'eudet'.
 With 'aidatrig' the AIDA mode with additional trigger number.
+And 'aida' or 'eudet' the AIDA or EUDET operating modes.
 It is important to note that only working DUT devices should be enabled.
-One not properly working DUT can block the TLU from sending out triggers.
+One not properly working DUT can block the TLU from sending out triggers (especially in EUDET mode).
 
-### trigger_inputs
-Trigger inputs take care of the complete control of the trigger inputs.
-Where the threshold for each trigger input can be tuned in Volt between [-1.3; 1.3] V.
+### Trigger Inputs (trigger_inputs)
+Multiple settings of the trigger inputs are configurable. 
+This includes trigger input thresholds, trigger logic, trigger polarity and trigger signal shaping.
+
+The threshold for each trigger input can be tuned individually between [-1.3; 1.3] V.
 
 Another setting controls the trigger input logic. 
 Each trigger input can have one of three settings. The input can act as 'active', 'veto' or 'do not care'.
@@ -33,13 +36,13 @@ This is set with a list containing the number of clock cycles for every differen
 This value is written in a 5-bit register so the maximum stretch or delay in clock cycles is 32.
 One should stretch each used trigger input signal at least by 1 to prevent the generation of incomplete triggers.
 
-### clock_lemo
+### Clock LEMO (clock_lemo)
 The clock LEMO setting enables or disables the clock LEMO output.
-Set to 'True' or 'False'.
+Set this to 'True' or 'False'.
 
-### pmt_control
-Sets the PMT control voltage between [0; 1] V.
+### PMT Power (pmt_control)
+Set the PMT control voltage. The possible range is between [0; 1] V.
 
-### Others
+### Data Handling and Online Monitor
 Two settings concern the data handling. The creation of raw and interpreted data files.
-At last, the zmq connection is set.
+At last, the ZMQ connection can be configured.
