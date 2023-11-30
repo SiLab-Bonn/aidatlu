@@ -6,11 +6,14 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'AIDA-TLU'
-copyright = '2023, Rasmus Partzsch'
-author = 'Rasmus Partzsch'
-release = '0.9'
 
+with open('../../VERSION') as version_file:
+    version = version_file.read().strip()
+
+project = 'AIDA-TLU'
+copyright = '2023, SiLab, Institute of Physics, University of Bonn'
+author = 'Rasmus Partzsch'
+release = version
 
 import sys
 import os

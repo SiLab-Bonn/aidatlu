@@ -9,10 +9,12 @@ author_email = 'bespin@physik.uni-bonn.de'
 # Requirements
 install_requires = ['online_monitor', 'pytest', 'numpy', 'tables', 'logger']
 
+with open('VERSION') as version_file:
+    version = version_file.read().strip()
 
 setup(
     name='aidatlu',
-    version='0.1.0',
+    version=version,
     description='Control software for AIDA-2020 TLU',
     url='https://github.com/Silab-Bonn/aidatlu',
     license='',
