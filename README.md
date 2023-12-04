@@ -10,22 +10,33 @@ For a more in-depth look at the hardware components please take a look at the of
 ## IPbus
 You need to install [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html) and its Python bindings to the desired interpreter.
 Follow the linked tutorial for prerequisites and general installation.
-The following commands have been proven useful for custom installation and building against current (non-system) Python within an environment:
+Install prerequisites.
 ```bash
-make -j $((`nproc`-1))
+sudo apt-get install -y make erlang g++ libboost-all-dev libpugixml-dev python-all-dev rsyslog
+sudo touch /usr/lib/erlang/man/man1/x86_64-linux-gnu-gcov-tool.1.gz
+sudo touch /usr/lib/erlang/man/man1/gcov-tool.1.gz
+```
+Checkout from git and compile the repository.
+```bash
+git clone --depth=1 -b v2.8.12 --recurse-submodules https://github.com/ipbus/ipbus-software.git
+cd ipbus-software
+make
+```
+Instead of the general installation you can install against the current Python environment.
+```bash
 # Pass current PATH to su shell to build against current environment python
-sudo env PATH=$PATH make install prefix=<install_location>
+sudo env PATH=$PATH make install
 ```
 Afterwards you should be able to import uhal in your specific Python environment.
-Then import the library path
+When using a custom installation path for IPbus you need to import the library path.
 ```bash
 export LD_LIBRARY_PATH=<install_location>/lib
 ```
-and start the controlhub from ipbus-software/controlhub/scripts
+Then start the controlhub from ipbus-software/controlhub/scripts.
 ```bash
 controlhub_start
 ```
-from the corresponding directory.
+The contolhub needs to run for the working of the AIDA-TLU, so needs to be started again each time the controlhub is stopped. 
 ## Python packages
 Install the Python package as usual.
 ```
