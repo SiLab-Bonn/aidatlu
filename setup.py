@@ -7,7 +7,8 @@ author = 'Christian Bespin'
 author_email = 'bespin@physik.uni-bonn.de'
 
 # Requirements
-install_requires = ['online_monitor', 'pytest', 'numpy', 'tables', 'logger']
+install_requires = ['pytest', 'numpy', 'tables', 'logger', 'coloredlogs',
+                    'sphinx', 'myst_parser', 'sphinx_mdinclude']
 
 with open('VERSION') as version_file:
     version = version_file.read().strip()

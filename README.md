@@ -19,9 +19,9 @@ sudo env PATH=$PATH make install prefix=<install_location>
 Afterwards you should be able to import uhal in your specific Python environment.
 Then import the library path
 ```bash
-export LD_LIBRARY_PATH=/opt/cactus/lib
+export LD_LIBRARY_PATH=<install_location>/lib
 ```
-and start the controlhub
+and start the controlhub from ipbus-software/controlhub/scripts
 ```bash
 controlhub_start
 ```
