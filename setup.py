@@ -1,10 +1,8 @@
 from setuptools import setup
 from setuptools import find_packages
 
-import aidatlu
-
-author = 'Christian Bespin'
-author_email = 'bespin@physik.uni-bonn.de'
+author = 'Christian Bespin, Rasmus Partzsch'
+author_email = 'bespin@physik.uni-bonn.de, s6rapart@uni-bonn.de'
 
 # Requirements
 install_requires = ['pytest', 'numpy', 'tables', 'logger', 'coloredlogs', 'pyzmq', 'online_monitor',
@@ -18,8 +16,8 @@ setup(
     version=version,
     description='Control software for AIDA-2020 TLU',
     url='https://github.com/Silab-Bonn/aidatlu',
-    license='',
-    long_description='',
+    license='License AGPL-3.0 license',
+    long_description='Repository for controlling the AIDA-2020 Trigger Logic Unit (TLU) with Python using uHAL bindings from IPbus.',
     author=author,
     maintainer=author,
     author_email=author_email,
