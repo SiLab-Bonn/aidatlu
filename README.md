@@ -22,7 +22,7 @@ git clone --depth=1 -b v2.8.12 --recurse-submodules https://github.com/ipbus/ipb
 cd ipbus-software
 make
 ```
-Instead of the general installation you can install against the current Python environment.
+Next install against the current Python environment.
 ```bash
 # Pass current PATH to su shell to build against current environment python
 sudo env PATH=$PATH make install
@@ -32,6 +32,7 @@ When using a custom installation path for IPbus you need to import the library p
 ```bash
 export LD_LIBRARY_PATH=<install_location>/lib
 ```
+The default install location is located in /opt/cactus/.
 Then start the controlhub from ipbus-software/controlhub/scripts.
 ```bash
 controlhub_start
