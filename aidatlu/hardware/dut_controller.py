@@ -5,7 +5,6 @@ from hardware.i2c import I2CCore
 class DUTLogic(object):
     def __init__(self, i2c: I2CCore):
         self.log = logger.setup_derived_logger("DUT Logic")
-
         self.i2c = i2c
 
     def set_dut_mask(self, enable: int | str) -> None:

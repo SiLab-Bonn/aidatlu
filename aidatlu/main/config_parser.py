@@ -142,35 +142,39 @@ class TLUConfigure(object):
         ]
 
         trigger_configuration = self.conf["trigger_inputs"]["trigger_inputs_logic"]
+
         self.log.info("Trigger Configuration: %s" % (trigger_configuration))
 
         # Sets the Trigger Leds to green if the Input is enabled and to red if the input is set to VETO.
         # TODO this breaks when there are multiple enabled and veto statements.
-        for trigger_led in range(6):
-            if "~CH%i" % (trigger_led + 1) in trigger_configuration:
-                self.io_control.switch_led(trigger_led + 6, "r")
-            elif "CH%i" % (trigger_led + 1) in trigger_configuration:
-                self.io_control.switch_led(trigger_led + 6, "g")
+        if trigger_configuration != None:
+            for trigger_led in range(6):
+                if "~CH%i" % (trigger_led + 1) in trigger_configuration:
+                    self.io_control.switch_led(trigger_led + 6, "r")
+                elif "CH%i" % (trigger_led + 1) in trigger_configuration:
+                    self.io_control.switch_led(trigger_led + 6, "g")
 
-        long_word = 0x0
-        # Goes through all possible trigger combinations and checks if the combination is valid with the trigger logic.
-        # When the word is valid this is added to the longword.
-        for combination in range(64):
-            pattern_list = [(combination >> element) & 0x1 for element in range(6)]
-            CCH5 = pattern_list[5]
-            CCH4 = pattern_list[4]
-            CCH3 = pattern_list[3]
-            CCH2 = pattern_list[2]
-            CCH1 = pattern_list[1]
-            CCH0 = pattern_list[0]
-            valid = (lambda CH1, CH2, CH3, CH4, CH5, CH6: eval(trigger_configuration))(
-                CCH0, CCH1, CCH2, CCH3, CCH4, CCH5
+            long_word = 0x0
+            # Goes through all possible trigger combinations and checks if the combination is valid with the trigger logic.
+            # When the word is valid this is added to the longword.
+            for combination in range(64):
+                pattern_list = [(combination >> element) & 0x1 for element in range(6)]
+                CCH5 = pattern_list[5]
+                CCH4 = pattern_list[4]
+                CCH3 = pattern_list[3]
+                CCH2 = pattern_list[2]
+                CCH1 = pattern_list[1]
+                CCH0 = pattern_list[0]
+                valid = (
+                    lambda CH1, CH2, CH3, CH4, CH5, CH6: eval(trigger_configuration)
+                )(CCH0, CCH1, CCH2, CCH3, CCH4, CCH5)
+                long_word = (valid << combination) | long_word
+
+            mask_low, mask_high = self._mask_words(long_word)
+            self.log.info(
+                "mask high: %s, mask low: %s" % (hex(mask_high), hex(mask_low))
             )
-            long_word = (valid << combination) | long_word
-
-        mask_low, mask_high = self._mask_words(long_word)
-        self.log.info("mask high: %s, mask low: %s" % (hex(mask_high), hex(mask_low)))
-        self.tlu.trigger_logic.set_trigger_mask(mask_high, mask_low)
+            self.tlu.trigger_logic.set_trigger_mask(mask_high, mask_low)
 
     def _mask_words(self, word: int) -> tuple:
         """Transforms the long word variant of the trigger word to the mask_low mask_high variant.

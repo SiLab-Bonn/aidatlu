@@ -30,8 +30,7 @@ class I2CCore(object):
         self.set_i2c_control(0x80)
 
         self.write(i2c_addr["core"], 0x01, 0x7F)
-        if self.read(i2c_addr["core"], 0x01) & 0x80 != 0:
-            # TODO What is this why is this always happening?
+        if self.read(i2c_addr["core"], 0x01) & 0x80 != 0x80:
             self.log.warning(
                 "Enabling Enclustra I2C bus might have failed. This could prevent from talking to the I2C slaves on the TLU."
             )

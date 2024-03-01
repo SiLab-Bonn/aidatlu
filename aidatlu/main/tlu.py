@@ -22,15 +22,16 @@ class AidaTLU(object):
 
         self.i2c = I2CCore(hw)
         self.i2c_hw = hw
+        self.log.info("IPbus interface")
         self.i2c.init()
         if self.i2c.modules["eeprom"]:
             self.log.info("Found device with ID %s" % hex(self.get_device_id()))
 
         # TODO some configuration also sends out ~70 triggers.
         self.io_controller = IOControl(self.i2c)
+        self.dac_controller = DacControl(self.i2c)
         self.clock_controller = ClockControl(self.i2c, self.io_controller)
         self.clock_controller.write_clock_conf(clock_config_path)
-        self.dac_controller = DacControl(self.i2c)
         self.trigger_logic = TriggerLogic(self.i2c)
         self.dut_logic = DUTLogic(self.i2c)
 
@@ -44,18 +45,21 @@ class AidaTLU(object):
     def configure(self) -> None:
         """loads the conf.yaml and configures the TLU accordingly."""
         self.config_parser.configure()
+        self.get_event_fifo_fill_level()
+        self.get_event_fifo_csr()
+        self.get_scalar()
 
     def reset_configuration(self) -> None:
         """Switch off all outputs, reset all counters and set threshold to 1.2V"""
         # Disable all outputs
         self.io_controller.clock_lemo_output(False)
         for i in range(4):
-            self.io_controller.configure_hdmi(i + 1, 0)
+            self.io_controller.configure_hdmi(i + 1, 1)
         self.dac_controller.set_all_voltage(0)
         self.io_controller.all_off()
         # sets all thresholds to 1.2 V
         for i in range(6):
-            self.dac_controller.set_threshold(i + 1, 1.2)
+            self.dac_controller.set_threshold(i + 1, 0)
         # Resets all internal counters and raise the trigger veto.
         self.set_run_active(False)
         self.reset_status()
@@ -257,8 +261,13 @@ class AidaTLU(object):
             list: 6 element long vector containing bitwords of the data.
         """
         event_numb = self.get_event_fifo_fill_level()
+        fifo_status = self.get_event_fifo_csr()
         if event_numb * 6 == 0xFEA:
             self.log.warning("FIFO is full")
+            fifo_content = self.i2c_hw.getNode("eventBuffer.EventFifoData").readBlock(
+                event_numb
+            )
+            self.i2c_hw.dispatch()
         if event_numb and event_numb % 6 == 0:
             fifo_content = self.i2c_hw.getNode("eventBuffer.EventFifoData").readBlock(
                 event_numb
@@ -266,6 +275,15 @@ class AidaTLU(object):
             self.i2c_hw.dispatch()
             return np.array(fifo_content)
         pass
+
+    def get_scalar(self):
+        s0 = self.i2c.read_register("triggerInputs.ThrCount0R")
+        s1 = self.i2c.read_register("triggerInputs.ThrCount1R")
+        s2 = self.i2c.read_register("triggerInputs.ThrCount2R")
+        s3 = self.i2c.read_register("triggerInputs.ThrCount3R")
+        s4 = self.i2c.read_register("triggerInputs.ThrCount4R")
+        s5 = self.i2c.read_register("triggerInputs.ThrCount5R")
+        return s0, s1, s2, s3, s4, s5
 
     def init_raw_data_table(self):
         """Initializes the raw data table, where the raw FIFO data is found."""
@@ -302,9 +320,13 @@ class AidaTLU(object):
         self.hit_rate = (
             self.trigger_logic.get_post_veto_trigger() - self.last_triggers_freq
         ) / (time - self.last_time)
+        self.particle_rate = (
+            self.trigger_logic.get_pre_veto_trigger() - self.last_particle_freq
+        ) / (time - self.last_time)
         self.run_time = time
         self.event_number = self.trigger_logic.get_post_veto_trigger()
         self.total_trigger_number = self.trigger_logic.get_pre_veto_trigger()
+        s0, s1, s2, s3, s4, s5 = self.get_scalar()
 
         if self.zmq_address not in [None, "off"]:
             self.socket.send_string(
@@ -321,17 +343,20 @@ class AidaTLU(object):
 
         self.last_time = time
         self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
+        self.last_particle_freq = self.trigger_logic.get_pre_veto_trigger()
 
         self.log.info(
-            "Run time: %.3f s, Event numb.: %s, Total trigger numb.: %s, Trigger freq.: %.f Hz"
+            "Run time: %.3f s, Event: %s, Total trigger: %s, Trigger in freq: %.f Hz, Trigger out freq.: %.f Hz"
             % (
                 self.run_time,
                 self.event_number,
                 self.total_trigger_number,
+                self.particle_rate,
                 self.hit_rate,
             )
         )
 
+        # self.log.info('Scalar %i:%i:%i:%i:%i:%i' %(s0, s1, s2, s3, s4, s5))
         # self.log.warning('FIFO level: %s' %self.log.warning(self.get_event_fifo_fill_level()))
         # self.log.warning('FIFO level 2: %s' %self.log.warning(self.get_event_fifo_csr()))
         # self.log.info("fifo csr: %s fifo fill level: %s" %(self.get_event_fifo_csr(),self.get_event_fifo_csr()))
@@ -366,11 +391,14 @@ class AidaTLU(object):
     def run(self) -> None:
         """Start run of the TLU."""
         self.start_run()
+        self.get_fw_version()
+        self.get_device_id()
         run_active = True
         # reset starting parameter
         start_time = self.get_timestamp()
         self.last_time = 0
         self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
+        self.last_particle_freq = self.trigger_logic.get_pre_veto_trigger()
         first_event = True
         # prepare data handling and zmq connection
         save_data, interpret_data = self.config_parser.get_data_handling()
@@ -401,6 +429,7 @@ class AidaTLU(object):
                         for event_vec in np.split(
                             current_event, len(current_event) / 6
                         ):
+                            # TODO Carefull if save data is active at high trigger rates than the RUN LOOP is to slow above around 24 kHz
                             if save_data:
                                 self.data_table.append(event_vec)
                 except:

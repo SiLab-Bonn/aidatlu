@@ -84,7 +84,7 @@ class ClockControl(object):
     def parse_clock_conf(self, file_path: str) -> list:
         """reads the clock config file and returns a panda dataframe with two rows Adress and Data
            The configuration file is produced by Clockbuilder Pro (Silicon Labs).
-           
+
         Args:
             file_path (str): File path to the configuration file.
 
