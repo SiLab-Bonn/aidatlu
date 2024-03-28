@@ -37,7 +37,16 @@ class TLUConfigure(object):
         Returns:
             tuple: two bools, save and interpret data.
         """
-        return self.conf["save_raw_data"], self.conf["interpret_data"]
+
+        return self.conf["save_data"], self.conf["save_data"]
+
+    def get_output_data_path(self) -> str:
+        """Parses the output data path
+
+        Returns:
+            str: output path
+        """
+        return self.conf["output_data_path"]
 
     def get_zmq_connection(self) -> str:
         """Information about the zmq Address

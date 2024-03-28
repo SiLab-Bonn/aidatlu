@@ -1,6 +1,8 @@
 Documentation
 ==================
 
+.. image:: img/structure.png
+    :width: 600
 
 Introduction
 *************

@@ -20,7 +20,8 @@ class AIDATLUConverter(Transceiver):
             "Run Time": data[0][1][0],
             "Event Number": data[0][1][1],
             "Total trigger numb": data[0][1][2],
-            "Trigger freq": data[0][1][3],
+            "Particle Rate": data[0][1][3],
+            "Trigger freq": data[0][1][4],
         }
         return [interpreted_data]
 

@@ -1,8 +1,9 @@
 
+
 .. mdinclude:: ../../README.md
 
-Structure of the AIDA 202 TLU python control software.
+Structure and communications of the AIDA 202 TLU python control software.
 
-.. image:: img/structure.png
+.. image:: img/structure_software.png
     :width: 600
 

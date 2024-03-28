@@ -285,7 +285,7 @@ class AidaTLU(object):
         s5 = self.i2c.read_register("triggerInputs.ThrCount5R")
         return s0, s1, s2, s3, s4, s5
 
-    def init_raw_data_table(self):
+    def init_raw_data_table(self) -> None:
         """Initializes the raw data table, where the raw FIFO data is found."""
         self.data = np.dtype(
             [
@@ -309,6 +309,7 @@ class AidaTLU(object):
         self.h5_file.create_group(
             self.h5_file.root, "configuration", self.config_parser.conf
         )
+        self.buffer = []
 
     def log_sent_status(self, time: int) -> None:
         """Logs the status of the TLU run with trigger number, runtime usw.
@@ -335,6 +336,7 @@ class AidaTLU(object):
                         self.run_time,
                         self.event_number,
                         self.total_trigger_number,
+                        self.particle_rate,
                         self.hit_rate,
                     ]
                 ),
@@ -356,6 +358,7 @@ class AidaTLU(object):
             )
         )
 
+        # uncomment for debugging
         # self.log.info('Scalar %i:%i:%i:%i:%i:%i' %(s0, s1, s2, s3, s4, s5))
         # self.log.warning('FIFO level: %s' %self.log.warning(self.get_event_fifo_fill_level()))
         # self.log.warning('FIFO level 2: %s' %self.log.warning(self.get_event_fifo_csr()))
@@ -405,11 +408,14 @@ class AidaTLU(object):
         self.zmq_address = self.config_parser.get_zmq_connection()
 
         if save_data:
-            self.raw_data_path = "tlu_data/tlu_raw_run%s_%s.h5" % (
+            self.path = self.config_parser.get_output_data_path()
+            if self.path == None:
+                self.path = "tlu_data/"
+            self.raw_data_path = self.path + "tlu_raw_run%s_%s.h5" % (
                 self.run_number,
                 datetime.now().strftime("%Y_%m_%d_%H_%M_%S"),
             )
-            self.interpreted_data_path = "tlu_data/tlu_interpreted_run%s_%s.h5" % (
+            self.interpreted_data_path = self.path + "tlu_interpreted_run%s_%s.h5" % (
                 self.run_number,
                 datetime.now().strftime("%Y_%m_%d_%H_%M_%S"),
             )
@@ -424,13 +430,13 @@ class AidaTLU(object):
                 current_time = (last_time - start_time) * 25 / 1000000000
                 current_event = self.pull_fifo_event()
                 try:
-                    if np.size(current_event) > 1:
-                        # This additional loop is needed because the event fifo can have multiple events in dependence of the trigger rate.
-                        for event_vec in np.split(
-                            current_event, len(current_event) / 6
-                        ):
-                            # TODO Carefull if save data is active at high trigger rates than the RUN LOOP is to slow above around 24 kHz
-                            if save_data:
+                    if save_data:
+                        if np.size(current_event) > 1:
+                            # This additional loop is needed because the event fifo can have multiple events in dependence of the trigger rate.
+                            for event_vec in np.split(
+                                current_event, len(current_event) / 6
+                            ):
+                                # TODO Carefull if save data is active at high trigger rates than the RUN LOOP is to slow above around 24 kHz
                                 self.data_table.append(event_vec)
                 except:
                     if KeyboardInterrupt:

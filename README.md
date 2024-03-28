@@ -37,7 +37,11 @@ Then start the controlhub from ipbus-software/controlhub/scripts.
 ```bash
 controlhub_start
 ```
-The contolhub needs to run for the working of the AIDA-TLU, so needs to be started again each time the controlhub is stopped. 
+The contolhub needs to run for the working of the AIDA TLU, so needs to be started again each time the controlhub is stopped. 
+The default IP address of the TLU is:
+```
+192.168.200.30
+```
 ## Python packages
 Install the Python package as usual.
 ```
