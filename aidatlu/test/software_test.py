@@ -1,11 +1,8 @@
-import sys
-
-sys.path.insert(1, "..")
 
 import yaml
 import numpy as np
 import tables as tb
-from main.data_parser import DataParser
+from aidatlu.main.data_parser import DataParser
 
 
 def test_data_parser():

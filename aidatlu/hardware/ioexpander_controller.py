@@ -1,7 +1,7 @@
-import logger
-from hardware.i2c import I2CCore
+from aidatlu import logger
+from aidatlu.hardware.i2c import I2CCore
+from aidatlu.hardware.utils import _set_bit
 import time
-from hardware.utils import _set_bit
 
 """ 
 

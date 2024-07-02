@@ -1,6 +1,6 @@
 import time
 from math import ceil
-import logger
+from aidatlu import logger
 
 i2c_addr = {
     "core": 0x21,

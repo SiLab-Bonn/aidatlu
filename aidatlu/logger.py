@@ -1,5 +1,4 @@
 import logging
-
 import coloredlogs
 
 FORMAT = "%(asctime)s [%(name)-18s] - %(levelname)-7s %(message)s"

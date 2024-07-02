@@ -1,6 +1,6 @@
 import yaml
 import logging
-import logger
+from aidatlu import logger
 
 
 class TLUConfigure(object):

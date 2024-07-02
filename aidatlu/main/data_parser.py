@@ -1,6 +1,6 @@
 import numpy as np
 import tables as tb
-import logger
+from aidatlu import logger
 import logging
 
 

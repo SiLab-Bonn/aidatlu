@@ -1,16 +1,12 @@
-import sys
 
-sys.path.insert(1, "..")
-sys.path.insert(1, "../hardware")
-
-from main.tlu import AidaTLU
-from hardware.i2c import I2CCore
-from hardware.ioexpander_controller import IOControl
-from hardware.dac_controller import DacControl
-from hardware.clock_controller import ClockControl
-from hardware.dut_controller import DUTLogic
-from hardware.trigger_controller import TriggerLogic
-from main.config_parser import TLUConfigure
+from aidatlu.main.tlu import AidaTLU
+from aidatlu.hardware.i2c import I2CCore
+from aidatlu.hardware.ioexpander_controller import IOControl
+from aidatlu.hardware.dac_controller import DacControl
+from aidatlu.hardware.clock_controller import ClockControl
+from aidatlu.hardware.dut_controller import DUTLogic
+from aidatlu.hardware.trigger_controller import TriggerLogic
+from aidatlu.main.config_parser import TLUConfigure
 
 import uhal
 import time
