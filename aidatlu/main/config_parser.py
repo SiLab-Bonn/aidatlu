@@ -31,6 +31,55 @@ class TLUConfigure(object):
         self.tlu.set_enable_record_data(1)
         self.log.success("TLU configured")
 
+    def get_configuration_table(self) -> list:
+        """Creates the configuration list to save in the data files
+
+        Returns:
+            list: configuration list
+        """
+        conf = [
+            (
+                "internal_trigger_rate",
+                self.conf["internal_trigger"]["internal_trigger_rate"],
+            ),
+            ("DUT_1", self.conf["dut_module"]["dut_1"]["mode"]),
+            ("DUT_2", self.conf["dut_module"]["dut_2"]["mode"]),
+            ("DUT_3", self.conf["dut_module"]["dut_3"]["mode"]),
+            ("DUT_4", self.conf["dut_module"]["dut_4"]["mode"]),
+            ("threshold_1", self.conf["trigger_inputs"]["threshold"]["threshold_1"]),
+            ("threshold_2", self.conf["trigger_inputs"]["threshold"]["threshold_2"]),
+            ("threshold_3", self.conf["trigger_inputs"]["threshold"]["threshold_3"]),
+            ("threshold_4", self.conf["trigger_inputs"]["threshold"]["threshold_4"]),
+            ("threshold_5", self.conf["trigger_inputs"]["threshold"]["threshold_3"]),
+            ("threshold_6", self.conf["trigger_inputs"]["threshold"]["threshold_4"]),
+            (
+                "trigger_inputs_logic",
+                "%s" % (self.conf["trigger_inputs"]["trigger_inputs_logic"]),
+            ),
+            (
+                "trigger_signal_shape_stretch",
+                "%s"
+                % str(self.conf["trigger_inputs"]["trigger_signal_shape"]["stretch"]),
+            ),
+            (
+                "trigger_signal_shape_delay",
+                "%s"
+                % str(self.conf["trigger_inputs"]["trigger_signal_shape"]["delay"]),
+            ),
+            (
+                "enable_clock_lemo_output",
+                self.conf["clock_lemo"]["enable_clock_lemo_output"],
+            ),
+            ("pmt_control_1", self.conf["pmt_control"]["pmt_1"]),
+            ("pmt_control_2", self.conf["pmt_control"]["pmt_2"]),
+            ("pmt_control_3", self.conf["pmt_control"]["pmt_3"]),
+            ("pmt_control_4", self.conf["pmt_control"]["pmt_4"]),
+            ("save_data", self.conf["save_data"]),
+            ("output_data_path", self.conf["output_data_path"]),
+            ("zmq_connection", self.conf["zmq_connection"]),
+        ]
+        return conf
+
     def get_data_handling(self) -> tuple:
         """Information about data handling.
 

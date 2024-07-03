@@ -45,6 +45,7 @@ class AidaTLU(object):
     def configure(self) -> None:
         """loads the conf.yaml and configures the TLU accordingly."""
         self.config_parser.configure()
+        self.conf_list = self.config_parser.get_configuration_table()
         self.get_event_fifo_fill_level()
         self.get_event_fifo_csr()
         self.get_scalar()
@@ -297,6 +298,14 @@ class AidaTLU(object):
                 ("w5", "u4"),
             ]
         )
+
+        config = np.dtype(
+            [
+                ("attribute", "S32"),
+                ("value", "S32"),
+            ]
+        )
+
         self.filter_data = tb.Filters(complib="blosc", complevel=5)
         self.h5_file = tb.open_file(self.raw_data_path, mode="w", title="TLU")
         self.data_table = self.h5_file.create_table(
@@ -306,10 +315,17 @@ class AidaTLU(object):
             title="data",
             filters=self.filter_data,
         )
-        self.h5_file.create_group(
-            self.h5_file.root, "configuration", self.config_parser.conf
+        # self.h5_file.create_group(
+        #     self.h5_file.root, "configuration", self.config_parser.conf
+        # )
+        config_table = self.h5_file.create_table(
+            self.h5_file.root,
+            name="conf",
+            description=config,
+            filters=self.filter_data,
         )
         self.buffer = []
+        config_table.append(self.conf_list)
 
     def log_sent_status(self, time: int) -> None:
         """Logs the status of the TLU run with trigger number, runtime usw.
@@ -411,6 +427,8 @@ class AidaTLU(object):
             self.path = self.config_parser.get_output_data_path()
             if self.path == None:
                 self.path = "tlu_data/"
+                if __name__ == "__main__":
+                    self.path = "../tlu_data/"
             self.raw_data_path = self.path + "tlu_raw_run%s_%s.h5" % (
                 self.run_number,
                 datetime.now().strftime("%Y_%m_%d_%H_%M_%S"),

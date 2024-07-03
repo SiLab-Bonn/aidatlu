@@ -2,6 +2,7 @@ from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.utils import _pack_bits
 from aidatlu import logger
 
+
 class TriggerLogic(object):
     def __init__(self, i2c: I2CCore) -> None:
         self.log = logger.setup_derived_logger("Trigger Controller")

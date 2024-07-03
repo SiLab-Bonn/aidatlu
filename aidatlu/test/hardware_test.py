@@ -1,4 +1,3 @@
-
 from aidatlu.main.tlu import AidaTLU
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.ioexpander_controller import IOControl
@@ -11,7 +10,6 @@ from aidatlu.main.config_parser import TLUConfigure
 import uhal
 import time
 import numpy as np
-import uhal
 
 
 class Test_IOCControl:

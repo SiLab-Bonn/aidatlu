@@ -65,7 +65,7 @@ class DataParser(object):
         with tb.open_file(filepath, "r") as file:
             table = file.root.raw_data
             raw_data = np.array(table[:], dtype=data)
-            self.config = str(file.root.configuration).split(" ", 2)[2]
+            self.conf = np.array(file.root.conf[:])
         return raw_data
 
     def _create_table(self, out_file, name, title, dtype):
@@ -135,10 +135,22 @@ class DataParser(object):
             data (table): raw data
         """
         # filter_data = tb.Filters(complib='blosc', complevel=5)
+        config = np.dtype(
+            [
+                ("attribute", "S32"),
+                ("value", "S32"),
+            ]
+        )
         with tb.open_file(filepath, mode="w", title="TLU_interpreted") as h5_file:
             data_table = self._create_table(
                 h5_file, name="interpreted_data", title="data", dtype=self.features
             )
             # data_table = h5_file.create_table(h5_file.root, name='interpreted_data', description=features , title='data', filters=filter_data)
             data_table.append(data)
-            h5_file.create_group(h5_file.root, "configuration", self.config)
+            config_table = h5_file.create_table(
+                h5_file.root,
+                name="conf",
+                description=config,
+            )
+            config_table.append(self.conf)
+            # h5_file.create_group(h5_file.root, "configuration", self.config)
