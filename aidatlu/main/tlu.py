@@ -5,6 +5,7 @@ import numpy as np
 import tables as tb
 from datetime import datetime
 import zmq
+from pathlib import Path
 
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.clock_controller import ClockControl
@@ -306,6 +307,7 @@ class AidaTLU(object):
             ]
         )
 
+        Path(self.path).mkdir(parents=True, exist_ok=True)
         self.filter_data = tb.Filters(complib="blosc", complevel=5)
         self.h5_file = tb.open_file(self.raw_data_path, mode="w", title="TLU")
         self.data_table = self.h5_file.create_table(
