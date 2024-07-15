@@ -6,6 +6,7 @@ import tables as tb
 from datetime import datetime
 import zmq
 from pathlib import Path
+import time
 
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.clock_controller import ClockControl
@@ -263,14 +264,10 @@ class AidaTLU(object):
             list: 6 element long vector containing bitwords of the data.
         """
         event_numb = self.get_event_fifo_fill_level()
-        fifo_status = self.get_event_fifo_csr()
-        if event_numb * 6 == 0xFEA:
-            self.log.warning("FIFO is full")
-            fifo_content = self.i2c_hw.getNode("eventBuffer.EventFifoData").readBlock(
-                event_numb
-            )
-            self.i2c_hw.dispatch()
-        if event_numb and event_numb % 6 == 0:
+        # fifo_status = self.get_event_fifo_csr()
+        if event_numb:
+            if event_numb * 6 == 0xFEA:
+                self.log.warning("FIFO is full")
             fifo_content = self.i2c_hw.getNode("eventBuffer.EventFifoData").readBlock(
                 event_numb
             )
@@ -291,12 +288,7 @@ class AidaTLU(object):
         """Initializes the raw data table, where the raw FIFO data is found."""
         self.data = np.dtype(
             [
-                ("w0", "u4"),
-                ("w1", "u4"),
-                ("w2", "u4"),
-                ("w3", "u4"),
-                ("w4", "u4"),
-                ("w5", "u4"),
+                ("raw", "u4"),
             ]
         )
 
@@ -317,9 +309,6 @@ class AidaTLU(object):
             title="data",
             filters=self.filter_data,
         )
-        # self.h5_file.create_group(
-        #     self.h5_file.root, "configuration", self.config_parser.conf
-        # )
         config_table = self.h5_file.create_table(
             self.h5_file.root,
             name="conf",
@@ -446,18 +435,13 @@ class AidaTLU(object):
 
         while run_active:
             try:
+                time.sleep(0.000001)
                 last_time = self.get_timestamp()
                 current_time = (last_time - start_time) * 25 / 1000000000
                 current_event = self.pull_fifo_event()
                 try:
-                    if save_data:
-                        if np.size(current_event) > 1:
-                            # This additional loop is needed because the event fifo can have multiple events in dependence of the trigger rate.
-                            for event_vec in np.split(
-                                current_event, len(current_event) / 6
-                            ):
-                                # TODO Carefull if save data is active at high trigger rates than the RUN LOOP is to slow above around 24 kHz
-                                self.data_table.append(event_vec)
+                    if save_data and np.size(current_event) > 1:
+                        self.data_table.append(current_event)
                 except:
                     if KeyboardInterrupt:
                         run_active = False
@@ -471,11 +455,11 @@ class AidaTLU(object):
                     # self.log_trigger_inputs(current_event)
                     # self.log.warning(str(current_event))
 
-                # This loop sents which inputs produced the trigger signal for the first event.
+                # # This loop sents which inputs produced the trigger signal for the first event.
                 if (
                     np.size(current_event) > 1
                 ) and first_event:  # TODO only first event?
-                    self.log_trigger_inputs(current_event)
+                    self.log_trigger_inputs(current_event[0:6])
                     first_event = False
 
                 # Stops the TLU after some time in seconds.

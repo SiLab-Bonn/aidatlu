@@ -2,6 +2,7 @@ import numpy as np
 import tables as tb
 from aidatlu import logger
 import logging
+import numba
 
 
 class DataParser(object):
@@ -37,7 +38,12 @@ class DataParser(object):
         """
         table = self.read_file(filepath_in)
         data = self.transform_data(
-            table["w0"], table["w1"], table["w2"], table["w3"], table["w4"], table["w5"]
+            table["raw"][::6],
+            table["raw"][1::6],
+            table["raw"][2::6],
+            table["raw"][3::6],
+            table["raw"][4::6],
+            table["raw"][5::6],
         )
         self.write_data(filepath_out, data)
 
@@ -52,16 +58,7 @@ class DataParser(object):
         Returns:
             table: pytable of the raw data
         """
-        data = np.dtype(
-            [
-                ("w0", "u4"),
-                ("w1", "u4"),
-                ("w2", "u4"),
-                ("w3", "u4"),
-                ("w4", "u4"),
-                ("w5", "u4"),
-            ]
-        )
+        data = np.dtype([("raw", "u4")])
         with tb.open_file(filepath, "r") as file:
             table = file.root.raw_data
             raw_data = np.array(table[:], dtype=data)
@@ -105,6 +102,8 @@ class DataParser(object):
         Returns:
             np.array: array with coloumns
         """
+        if np.any(w5) != 0:
+            self.log.warning("Corrupted Data found")
         out_array = np.zeros(len(w3), dtype=self.features)
         out_array["eventnumber"] = w3
         out_array["timestamp"] = (w0 & 0x0000FFFF << 32) + w1
@@ -145,7 +144,6 @@ class DataParser(object):
             data_table = self._create_table(
                 h5_file, name="interpreted_data", title="data", dtype=self.features
             )
-            # data_table = h5_file.create_table(h5_file.root, name='interpreted_data', description=features , title='data', filters=filter_data)
             data_table.append(data)
             config_table = h5_file.create_table(
                 h5_file.root,
@@ -153,4 +151,3 @@ class DataParser(object):
                 description=config,
             )
             config_table.append(self.conf)
-            # h5_file.create_group(h5_file.root, "configuration", self.config)
