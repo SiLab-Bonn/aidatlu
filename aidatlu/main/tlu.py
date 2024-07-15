@@ -7,6 +7,7 @@ from datetime import datetime
 import zmq
 from pathlib import Path
 import time
+import threading
 
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.clock_controller import ClockControl
@@ -318,6 +319,18 @@ class AidaTLU(object):
         self.buffer = []
         config_table.append(self.conf_list)
 
+    def handle_status(self) -> None:
+        t = threading.currentThread()
+        while getattr(t, "do_run", True):
+            time.sleep(0.5)
+            last_time = self.get_timestamp()
+            current_time = (last_time - self.start_time) * 25 / 1000000000
+            # Logs and poss. sends status every 1s.
+            if current_time - self.last_time > 1:
+                self.log_sent_status(current_time)
+                # self.log_trigger_inputs(current_event)
+                # self.log.warning(str(current_event))
+
     def log_sent_status(self, time: int) -> None:
         """Logs the status of the TLU run with trigger number, runtime usw.
            Also calculates the mean trigger frequency between function calls.
@@ -405,7 +418,7 @@ class AidaTLU(object):
         self.get_device_id()
         run_active = True
         # reset starting parameter
-        start_time = self.get_timestamp()
+        self.start_time = self.get_timestamp()
         self.last_time = 0
         self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
         self.last_particle_freq = self.trigger_logic.get_pre_veto_trigger()
@@ -433,11 +446,11 @@ class AidaTLU(object):
         if self.zmq_address not in [None, "off"]:
             self.setup_zmq()
 
+        t = threading.Thread(target=self.handle_status)
+        t.start()
         while run_active:
             try:
                 time.sleep(0.000001)
-                last_time = self.get_timestamp()
-                current_time = (last_time - start_time) * 25 / 1000000000
                 current_event = self.pull_fifo_event()
                 try:
                     if save_data and np.size(current_event) > 1:
@@ -448,12 +461,6 @@ class AidaTLU(object):
                     else:
                         # If this happens: poss. Hitrate to high for FIFO and or Data handling.
                         self.log.warning("Incomplete Event handling...")
-
-                # Logs and poss. sends status every 1s.
-                if current_time - self.last_time > 1:
-                    self.log_sent_status(current_time)
-                    # self.log_trigger_inputs(current_event)
-                    # self.log.warning(str(current_event))
 
                 # # This loop sents which inputs produced the trigger signal for the first event.
                 if (
@@ -468,8 +475,9 @@ class AidaTLU(object):
             except:
                 KeyboardInterrupt
                 run_active = False
+                t.do_run = False
+                self.stop_run()
 
-        self.stop_run()
         # Cleanup of FIFO
         try:
             while np.size(current_event) > 1:
