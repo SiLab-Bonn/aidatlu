@@ -6,7 +6,7 @@ from aidatlu.main.data_parser import DataParser
 
 def test_data_parser():
     data_parser = DataParser()
-    data_parser.parse("raw_data_test.h5", "interpreted_data_test.h5")
+    data_parser.interpret_data("raw_data_test.h5", "interpreted_data_test.h5")
 
 
 def test_interpreted_data():

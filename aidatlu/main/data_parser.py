@@ -2,11 +2,10 @@ import numpy as np
 import tables as tb
 from aidatlu import logger
 import logging
-import numba
-
+from tqdm import tqdm
 
 class DataParser(object):
-    def __init__(self) -> None:
+    def __init__(self, chunk_size: int = 2000000) -> None:
         self.log = logger.setup_main_logger(__class__.__name__, logging.DEBUG)
         self.features = np.dtype(
             [
@@ -28,42 +27,61 @@ class DataParser(object):
                 ("sc6", "u4"),
             ]
         )
+        self.raw_features = np.dtype([("raw", "u4")])
+        self.chunk_size = chunk_size*6
 
-    def parse(self, filepath_in: str, filepath_out: str) -> None:
-        """Parse the data from filepath in readable form to filepath out
-
-        Args:
-            filepath_in (str): Raw data file from TLU.
-            filepath_out (str): New interpreted data file.
-        """
-        table = self.read_file(filepath_in)
-        data = self.transform_data(
-            table["raw"][::6],
-            table["raw"][1::6],
-            table["raw"][2::6],
-            table["raw"][3::6],
-            table["raw"][4::6],
-            table["raw"][5::6],
-        )
-        self.write_data(filepath_out, data)
-
-        self.log.info('Data parsed from "%s" to "%s"' % (filepath_in, filepath_out))
-
-    def read_file(self, filepath: str) -> list:
-        """Reads raw data file of the TLU
+    def interpret_data(self, filepath_in: str, filepath_out: str) -> None:
+        """Interprets raw tlu data. The data is interpreted in chunksizes.
+        The data is parsed form filepath_in to filepath_out.
+        An event consists of six consecutive raw data entries tha last entry should be a 0.
+        The raw data is sliced and the last data entry checked for corrupted data.
 
         Args:
-            filepath (str): filepath to the data file
-
-        Returns:
-            table: pytable of the raw data
+            filepath_in (str): raw data file path
+            filepath_out (str): output path of the interpreted data
         """
-        data = np.dtype([("raw", "u4")])
-        with tb.open_file(filepath, "r") as file:
-            table = file.root.raw_data
-            raw_data = np.array(table[:], dtype=data)
+        self.log.info('Interpreting Data')
+        self.chunk_offset = 0
+        with tb.open_file(filepath_in, "r") as file:
+            n_words = file.root.raw_data.shape[0]
             self.conf = np.array(file.root.conf[:])
-        return raw_data
+            if n_words == 0:
+                self.log.warning('Data is empty. Skip analysis!')
+                return
+
+            with tb.open_file(filepath_out, mode="w", title="TLU_interpreted") as h5_file:
+                data_table = self._create_table(
+                h5_file, name="interpreted_data", title="data", dtype=self.features
+                )
+                # pbar = tqdm(total=int(n_words/self.chunk_size), unit=' Chunks', unit_scale=True)
+                for chunk in tqdm(range(0, n_words, self.chunk_size)):
+                    stop = self.chunk_offset+self.chunk_size
+                    if chunk + self.chunk_size > n_words:
+                        stop = n_words
+                    table = file.root.raw_data[self.chunk_offset:stop]
+                    raw_data = np.array(table[:], dtype=self.raw_features)
+                    data = self._transform_data(
+                    raw_data["raw"][::6],
+                    raw_data["raw"][1::6],
+                    raw_data["raw"][2::6],
+                    raw_data["raw"][3::6],
+                    raw_data["raw"][4::6],
+                    raw_data["raw"][5::6],
+                    )
+                    data_table.append(data)
+                    self.chunk_offset = chunk
+                config = np.dtype(
+                [
+                    ("attribute", "S32"),
+                    ("value", "S32"),
+                ])
+                config_table = h5_file.create_table(
+                    h5_file.root,
+                    name="conf",
+                    description=config,
+                )
+                config_table.append(self.conf)
+        self.log.success('Data parsed from "%s" to "%s"' % (filepath_in, filepath_out))
 
     def _create_table(self, out_file, name, title, dtype):
         """Create hit table node for storage in out_file.
@@ -80,7 +98,7 @@ class DataParser(object):
 
         return table
 
-    def transform_data(
+    def _transform_data(
         self,
         w0: np.array,
         w1: np.array,
@@ -126,7 +144,43 @@ class DataParser(object):
         out_array["sc6"] = (w4 >> 16) & 0xFF
         return out_array
 
-    def write_data(self, filepath: str, data: np.array) -> None:
+    def _parse(self, filepath_in: str, filepath_out: str) -> None:
+        """Parse the data from filepath in readable form to filepath out
+
+        Args:
+            filepath_in (str): Raw data file from TLU.
+            filepath_out (str): New interpreted data file.
+        """
+        table = self.read_file(filepath_in)
+        data = self.transform_data(
+            table["raw"][::6],
+            table["raw"][1::6],
+            table["raw"][2::6],
+            table["raw"][3::6],
+            table["raw"][4::6],
+            table["raw"][5::6],
+        )
+        self.write_data(filepath_out, data)
+
+        self.log.info('Data parsed from "%s" to "%s"' % (filepath_in, filepath_out))
+
+    def _read_file(self, filepath: str) -> list:
+        """Reads raw data file of the TLU
+
+        Args:
+            filepath (str): filepath to the data file
+
+        Returns:
+            table: pytable of the raw data
+        """
+        data = np.dtype([("raw", "u4")])
+        with tb.open_file(filepath, "r") as file:
+            table = file.root.raw_data
+            raw_data = np.array(table[:], dtype=data)
+            self.conf = np.array(file.root.conf[:])
+        return raw_data
+
+    def _write_data(self, filepath: str, data: np.array) -> None:
         """Analyzes the raw data table and writes it into a new .h5 file
 
         Args:
@@ -151,3 +205,11 @@ class DataParser(object):
                 description=config,
             )
             config_table.append(self.conf)
+
+if __name__ == "__main__":
+    path_in = '../tlu_data/tlu_raw' + '.h5'
+    path_out = '../tlu_data/tlu_interpreted' + '.h5'
+
+    data_parser = DataParser()
+
+    data_parser.interpret_data(path_in, path_out)

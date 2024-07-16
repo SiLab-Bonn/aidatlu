@@ -59,17 +59,17 @@ The TLU is configured with the standard tlu_configuration file. To stop the run 
 
 While configuring the TLU outputs are powered on and off. 
 This leads to problems in AIDA mode where the clock is powered off shortly during configuration.
-To avoid this at the start of runs in AIDA mode the best way is to use the aidatlu.py script.
+To avoid this at the start of runs in AIDA mode the best way is to use the aidatlu_run.py script.
 This is started and controlled with the terminal input:
 ```bash
-    python -i aidatlu.py
+    python -i aidatlu_run.py
 ```
 This initializes the main tlu.py script. One is now able to control the TLU through the Python terminal interface,
 with the following commands:
 ```bash
-    tlu.configure
-    tlu.run
-    tlu.help
+    tlu.configure()
+    tlu.run()
+    tlu.help()
 ```
 Naturally, this also works for any EUDET mode runs.
 Runs are stopped with the keyboard interrupt ctr+c.

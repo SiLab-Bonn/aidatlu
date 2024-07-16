@@ -320,7 +320,7 @@ class AidaTLU(object):
         config_table.append(self.conf_list)
 
     def handle_status(self) -> None:
-        t = threading.currentThread()
+        t = threading.current_thread()
         while getattr(t, "do_run", True):
             time.sleep(0.5)
             last_time = self.get_timestamp()
@@ -458,6 +458,8 @@ class AidaTLU(object):
                 except:
                     if KeyboardInterrupt:
                         run_active = False
+                        t.do_run = False
+                        self.stop_run()
                     else:
                         # If this happens: poss. Hitrate to high for FIFO and or Data handling.
                         self.log.warning("Incomplete Event handling...")
@@ -493,7 +495,7 @@ class AidaTLU(object):
             self.h5_file.close()
         if interpret_data:
             try:
-                self.data_parser.parse(self.raw_data_path, self.interpreted_data_path)
+                self.data_parser.interpret_data(self.raw_data_path, self.interpreted_data_path)
             except:
                 self.log.warning("Cannot interpret data.")
         self.log.success("Run finished")

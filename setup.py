@@ -5,7 +5,7 @@ author = 'Christian Bespin, Rasmus Partzsch'
 author_email = 'bespin@physik.uni-bonn.de, s6rapart@uni-bonn.de'
 
 # Requirements
-install_requires = ['pytest', 'numpy', 'tables', 'coloredlogs', 'pyzmq', 'online_monitor',
+install_requires = ['pytest', 'numpy', 'tables', 'coloredlogs', 'pyzmq', 'online_monitor', 'tqdm'
                     ]
 
 with open('VERSION') as version_file:

@@ -10,37 +10,32 @@ class AIDATLU:
         print("  / _ \ | || |) / _ \    | | | |_| |_| |")
         print(" /_/ \_\___|___/_/ \_\   |_| |____\___/ \n")
         print(" ---------------------------------------")
-        print("tlu.help\n")
+        print("tlu.help()\n")
 
         self.cfile = config_path
         self.clock = clock_path
         self.rdy = False
 
-    @property
     def run(self):
         if self.rdy == False:
             print("TLU not configured, Run aborted")
         else:
             self.aidatlu.run()
 
-    @property
     def stop(self):
         self.aidatlu.stop_run()
 
-    @property
     def configure(self):
         self.rdy = True
-        self.init
+        self.init()
         self.aidatlu.configure()
 
-    @property
     def init(self):
         self.aidatlu = AidaTLU(hw, self.cfile, self.clock)
 
-    @property
     def help(self):
-        print("tlu.configure")
-        print("start run: tlu.run")
+        print("tlu.configure()")
+        print("start run: tlu.run()")
         print("stop  run: ctr+c")
         print("exit:      ctr+d/exit()\n")
         print("for access to the main tlu functions: tlu.aidatlu....")
