@@ -46,3 +46,9 @@ Set the PMT control voltage. The possible range is between [0; 1] V.
 ### Data Handling and Online Monitor
 Two settings concern the data handling. The creation of raw and interpreted data files.
 At last, the ZMQ connection can be configured.
+
+### Stop Conditions
+Two optional stop conditions can be set in tlu_configuration.yaml.
+The maximum number of trigger events (max_trigger_number, e.g. max_trigger_number: 1000000)
+and a timeout in seconds (timeout, e.g. timeout: 100) can be set.
+These configurations are not included by default in the tlu_configuration file, so add them manually if needed.

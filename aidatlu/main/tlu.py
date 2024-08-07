@@ -330,6 +330,13 @@ class AidaTLU(object):
                 self.log_sent_status(current_time)
                 # self.log_trigger_inputs(current_event)
                 # self.log.warning(str(current_event))
+                            # Stops the TLU after some time in seconds.
+            if self.timeout != None:
+                if current_time > self.timeout:
+                    self.stop_condition = True
+            if self.max_trigger != None:
+                if self.trigger_logic.get_post_veto_trigger() > self.max_trigger:
+                    self.stop_condition = True
 
     def log_sent_status(self, time: int) -> None:
         """Logs the status of the TLU run with trigger number, runtime usw.
@@ -423,9 +430,11 @@ class AidaTLU(object):
         self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
         self.last_particle_freq = self.trigger_logic.get_pre_veto_trigger()
         first_event = True
+        self.stop_condition = False
         # prepare data handling and zmq connection
         save_data, interpret_data = self.config_parser.get_data_handling()
         self.zmq_address = self.config_parser.get_zmq_connection()
+        self.max_trigger, self.timeout = self.config_parser.get_stop_condition()
 
         if save_data:
             self.path = self.config_parser.get_output_data_path()
@@ -455,6 +464,11 @@ class AidaTLU(object):
                 try:
                     if save_data and np.size(current_event) > 1:
                         self.data_table.append(current_event)
+                    # if t.do_run == False:
+                    #     run_active = False
+                    #     self.stop_run()
+                    if self.stop_condition == True:
+                        raise KeyboardInterrupt
                 except:
                     if KeyboardInterrupt:
                         run_active = False
@@ -471,9 +485,8 @@ class AidaTLU(object):
                     self.log_trigger_inputs(current_event[0:6])
                     first_event = False
 
-                # Stops the TLU after some time in seconds.
-                # if current_time*25/1000000000 > 600:
-                #     run_active = False
+
+
             except:
                 KeyboardInterrupt
                 run_active = False

@@ -89,6 +89,24 @@ class TLUConfigure(object):
 
         return self.conf["save_data"], self.conf["save_data"]
 
+    def get_stop_condition(self) -> tuple:
+        """Information about tlu stop condition.
+
+        Returns:
+            tuple: maximum trigger number and timeout in seconds.
+        """
+        try:
+            max_number = int(self.conf["max_trigger_number"])
+            self.log.info('Stop condition maximum triggers: %s' %max_number)
+        except:
+            max_number = None
+        try:
+            timeout = float(self.conf["timeout"])
+            self.log.info('Stop condition timeout: %s s' %timeout)
+        except:
+            timeout = None
+        return max_number, timeout
+
     def get_output_data_path(self) -> str:
         """Parses the output data path
 
