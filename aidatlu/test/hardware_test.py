@@ -23,8 +23,8 @@ class Test_IOCControl:
 
     def test_ioexpander_led(self) -> None:
         self.ioexpander.all_off()
-        # self.ioexpander.test_leds(single = True)
-        # self.ioexpander.all_off()
+        self.ioexpander.test_leds(single = True)
+        self.ioexpander.all_off()
         time.sleep(1)
         self.ioexpander.all_on()
         time.sleep(2)
@@ -128,7 +128,6 @@ class Test_DUTLogic:
     def test_set_dut_ignore_busy(self) -> None:
         self.dut.set_dut_ignore_shutter(0)
 
-
 class Test_TriggerLogic:
     uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
     manager = uhal.ConnectionManager("file://../misc/aida_tlu_connection.xml")
@@ -167,18 +166,45 @@ class Test_TriggerLogic:
         time.sleep(1)
         self.trigger.set_pulse_delay_pack([1, 1, 1, 1, 1, 1])
 
-
-def test_tlu():
+def test_run():
     uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
-    manager = uhal.ConnectionManager("file://../misc/aida_tlu_connection.xml")
+    manager = uhal.ConnectionManager("file://.././misc/aida_tlu_connection.xml")
     hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
 
-    clock_path = "../misc/aida_tlu_clk_config.txt"
     config_path = "../tlu_configuration.yaml"
-
+    clock_path = "../misc/aida_tlu_clk_config.txt"
     tlu = AidaTLU(hw, config_path, clock_path)
 
     tlu.configure()
+    tlu.timeout = 5
+    tlu.run()
 
-    tlu.get_device_id()
-    tlu.get_fw_version()
+if __name__ == '__main__':
+    test_io = Test_IOCControl()
+    test_io.test_clock_lemo_output()
+    test_io.test_configure_hdmi()
+    test_io.test_ioexpander_led()
+
+    test_dac = Test_DacControl()
+    test_dac.test_set_threshold()
+    test_dac.test_set_threshold()
+
+    test_dut = Test_DUTLogic()
+    test_dut.test_set_dut_ignore_busy()
+    test_dut.test_set_dut_mask()
+    test_dut.test_set_dut_mask_mode()
+    test_dut.test_set_dut_mask_modifier()
+
+    test_clock = Test_ClockControl()
+    test_clock.test_device_info()
+    test_clock.test_write_clock_register()
+
+    test_trigger = Test_TriggerLogic()
+    test_trigger.test_set_internal_trigger_frequency()
+    test_trigger.test_set_pulse_delay_pack()
+    test_trigger.test_set_pulse_stretch_pack()
+    test_trigger.test_set_trigger_mask()
+    test_trigger.test_set_trigger_polarity()
+    test_trigger.test_set_trigger_veto()
+
+    test_run = test_run()
