@@ -171,12 +171,11 @@ def test_run():
     manager = uhal.ConnectionManager("file://.././misc/aida_tlu_connection.xml")
     hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
 
-    config_path = "../tlu_configuration.yaml"
+    config_path = "tlu_test_configuration.yaml"
     clock_path = "../misc/aida_tlu_clk_config.txt"
     tlu = AidaTLU(hw, config_path, clock_path)
 
     tlu.configure()
-    tlu.timeout = 5
     tlu.run()
 
 if __name__ == '__main__':

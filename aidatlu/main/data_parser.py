@@ -5,7 +5,7 @@ import logging
 from tqdm import tqdm
 
 class DataParser(object):
-    def __init__(self, chunk_size: int = 2000000) -> None:
+    def __init__(self) -> None:
         self.log = logger.setup_main_logger(__class__.__name__, logging.DEBUG)
         self.features = np.dtype(
             [
@@ -28,9 +28,8 @@ class DataParser(object):
             ]
         )
         self.raw_features = np.dtype([("raw", "u4")])
-        self.chunk_size = chunk_size*6
 
-    def interpret_data(self, filepath_in: str, filepath_out: str) -> None:
+    def interpret_data(self, filepath_in: str, filepath_out: str, chunk_size: int = 2000000) -> None:
         """Interprets raw tlu data. The data is interpreted in chunksizes.
         The data is parsed form filepath_in to filepath_out.
         An event consists of six consecutive raw data entries tha last entry should be a 0.
@@ -41,24 +40,25 @@ class DataParser(object):
             filepath_out (str): output path of the interpreted data
         """
         self.log.info('Interpreting Data')
-        self.chunk_offset = 0
+        chunk_size = chunk_size*6
         with tb.open_file(filepath_in, "r") as file:
             n_words = file.root.raw_data.shape[0]
             self.conf = np.array(file.root.conf[:])
+
             if n_words == 0:
                 self.log.warning('Data is empty. Skip analysis!')
                 return
-
+            
             with tb.open_file(filepath_out, mode="w", title="TLU_interpreted") as h5_file:
                 data_table = self._create_table(
                 h5_file, name="interpreted_data", title="data", dtype=self.features
                 )
-                # pbar = tqdm(total=int(n_words/self.chunk_size), unit=' Chunks', unit_scale=True)
-                for chunk in tqdm(range(0, n_words, self.chunk_size)):
-                    stop = self.chunk_offset+self.chunk_size
-                    if chunk + self.chunk_size > n_words:
+                for chunk in tqdm(range(0, n_words, chunk_size)):
+                    chunk_offset = chunk
+                    stop = chunk_offset+chunk_size
+                    if chunk + chunk_size > n_words:
                         stop = n_words
-                    table = file.root.raw_data[self.chunk_offset:stop]
+                    table = file.root.raw_data[chunk_offset:stop]
                     raw_data = np.array(table[:], dtype=self.raw_features)
                     data = self._transform_data(
                     raw_data["raw"][::6],
@@ -69,7 +69,7 @@ class DataParser(object):
                     raw_data["raw"][5::6],
                     )
                     data_table.append(data)
-                    self.chunk_offset = chunk
+                    
                 config = np.dtype(
                 [
                     ("attribute", "S32"),
@@ -92,7 +92,6 @@ class DataParser(object):
             name=name,
             description=dtype,
             title=title,
-            #   expectedrows=self.chunk_size,
             filters=tb.Filters(complib="blosc", complevel=5, fletcher32=False),
         )
 
