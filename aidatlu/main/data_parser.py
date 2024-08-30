@@ -4,6 +4,7 @@ from aidatlu import logger
 import logging
 from tqdm import tqdm
 
+
 class DataParser(object):
     def __init__(self) -> None:
         self.log = logger.setup_main_logger(__class__.__name__, logging.DEBUG)
@@ -29,7 +30,9 @@ class DataParser(object):
         )
         self.raw_features = np.dtype([("raw", "u4")])
 
-    def interpret_data(self, filepath_in: str, filepath_out: str, chunk_size: int = 2000000) -> None:
+    def interpret_data(
+        self, filepath_in: str, filepath_out: str, chunk_size: int = 2000000
+    ) -> None:
         """Interprets raw tlu data. The data is interpreted in chunksizes.
         The data is parsed form filepath_in to filepath_out.
         An event consists of six consecutive raw data entries tha last entry should be a 0.
@@ -39,42 +42,45 @@ class DataParser(object):
             filepath_in (str): raw data file path
             filepath_out (str): output path of the interpreted data
         """
-        self.log.info('Interpreting Data')
-        chunk_size = chunk_size*6
+        self.log.info("Interpreting Data")
+        chunk_size = chunk_size * 6
         with tb.open_file(filepath_in, "r") as file:
             n_words = file.root.raw_data.shape[0]
             self.conf = np.array(file.root.conf[:])
 
             if n_words == 0:
-                self.log.warning('Data is empty. Skip analysis!')
+                self.log.warning("Data is empty. Skip analysis!")
                 return
-            
-            with tb.open_file(filepath_out, mode="w", title="TLU_interpreted") as h5_file:
+
+            with tb.open_file(
+                filepath_out, mode="w", title="TLU_interpreted"
+            ) as h5_file:
                 data_table = self._create_table(
-                h5_file, name="interpreted_data", title="data", dtype=self.features
+                    h5_file, name="interpreted_data", title="data", dtype=self.features
                 )
                 for chunk in tqdm(range(0, n_words, chunk_size)):
                     chunk_offset = chunk
-                    stop = chunk_offset+chunk_size
+                    stop = chunk_offset + chunk_size
                     if chunk + chunk_size > n_words:
                         stop = n_words
                     table = file.root.raw_data[chunk_offset:stop]
                     raw_data = np.array(table[:], dtype=self.raw_features)
                     data = self._transform_data(
-                    raw_data["raw"][::6],
-                    raw_data["raw"][1::6],
-                    raw_data["raw"][2::6],
-                    raw_data["raw"][3::6],
-                    raw_data["raw"][4::6],
-                    raw_data["raw"][5::6],
+                        raw_data["raw"][::6],
+                        raw_data["raw"][1::6],
+                        raw_data["raw"][2::6],
+                        raw_data["raw"][3::6],
+                        raw_data["raw"][4::6],
+                        raw_data["raw"][5::6],
                     )
                     data_table.append(data)
-                    
+
                 config = np.dtype(
-                [
-                    ("attribute", "S32"),
-                    ("value", "S32"),
-                ])
+                    [
+                        ("attribute", "S32"),
+                        ("value", "S32"),
+                    ]
+                )
                 config_table = h5_file.create_table(
                     h5_file.root,
                     name="conf",
@@ -205,9 +211,10 @@ class DataParser(object):
             )
             config_table.append(self.conf)
 
+
 if __name__ == "__main__":
-    path_in = '../tlu_data/tlu_raw' + '.h5'
-    path_out = '../tlu_data/tlu_interpreted' + '.h5'
+    path_in = "../tlu_data/tlu_raw" + ".h5"
+    path_out = "../tlu_data/tlu_interpreted" + ".h5"
 
     data_parser = DataParser()
 

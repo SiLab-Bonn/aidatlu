@@ -330,7 +330,7 @@ class AidaTLU(object):
                 self.log_sent_status(current_time)
                 # self.log_trigger_inputs(current_event)
                 # self.log.warning(str(current_event))
-                            # Stops the TLU after some time in seconds.
+                # Stops the TLU after some time in seconds.
             if self.timeout != None:
                 if current_time > self.timeout:
                     self.stop_condition = True
@@ -485,8 +485,6 @@ class AidaTLU(object):
                     self.log_trigger_inputs(current_event[0:6])
                     first_event = False
 
-
-
             except:
                 KeyboardInterrupt
                 run_active = False
@@ -508,7 +506,9 @@ class AidaTLU(object):
             self.h5_file.close()
         if interpret_data:
             try:
-                self.data_parser.interpret_data(self.raw_data_path, self.interpreted_data_path)
+                self.data_parser.interpret_data(
+                    self.raw_data_path, self.interpreted_data_path
+                )
             except:
                 self.log.warning("Cannot interpret data.")
         self.log.success("Run finished")

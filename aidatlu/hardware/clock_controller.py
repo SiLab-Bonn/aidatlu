@@ -2,14 +2,12 @@ from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.ioexpander_controller import IOControl
 from aidatlu import logger
 
-"""
-
-Si5344 
-
-"""
-
 
 class ClockControl(object):
+    """The control class for the Si5344 clock chip.
+    Main purpose is to read/write the clock configuration file to the chip.
+    """
+
     def __init__(self, i2c: I2CCore, io_control: IOControl) -> None:
         self.log = logger.setup_derived_logger("Clock Controller")
         self.log.info("Initializing Clock Chip")
@@ -41,13 +39,13 @@ class ClockControl(object):
             list: List of the design ID contains 8 integers or hex strings.
         """
         reg_address = 0x026B
-        numb_words = 8
+        n_words = 8
         words = []
-        for _ in range(numb_words):
+        for _ in range(n_words):
             words.append(self.read_clock_register(reg_address))
             reg_address += 1
         if hex_str:
-            words = [hex(words[i]) for i in range(numb_words)]
+            words = [hex(words[i]) for i in range(n_words)]
         return words
 
     def read_clock_register(self, address: int) -> int:

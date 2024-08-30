@@ -3,14 +3,13 @@ from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.utils import _set_bit
 import time
 
-""" 
-
-PCA9539PW
-
-"""
-
 
 class IOControl(object):
+    """Main class for the control of the IO expander PCA9539PW.
+    Four I/O expanders are in use, two for the 11 front panel LEDs. and two
+    for the HDMI DUT interfaces.
+    """
+
     def __init__(self, i2c: I2CCore) -> None:
         self.log = logger.setup_derived_logger("IO Expander")
 

@@ -12,12 +12,12 @@ class AIDATLU:
         print(" ---------------------------------------")
         print("tlu.help()\n")
 
-        self.cfile = config_path
-        self.clock = clock_path
-        self.rdy = False
+        self.config_file = config_path
+        self.clock_file = clock_path
+        self.ready = False
 
     def run(self):
-        if self.rdy == False:
+        if not self.ready:
             print("TLU not configured, Run aborted")
         else:
             self.aidatlu.run()
@@ -26,12 +26,12 @@ class AIDATLU:
         self.aidatlu.stop_run()
 
     def configure(self):
-        self.rdy = True
+        self.ready = True
         self.init()
         self.aidatlu.configure()
 
     def init(self):
-        self.aidatlu = AidaTLU(hw, self.cfile, self.clock)
+        self.aidatlu = AidaTLU(hw, self.config_file, self.clock_file)
 
     def help(self):
         print("tlu.configure()")

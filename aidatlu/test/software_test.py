@@ -3,6 +3,7 @@ import tables as tb
 from aidatlu.main.data_parser import DataParser
 from aidatlu.main.config_parser import TLUConfigure
 
+
 def test_data_parser():
     data_parser = DataParser()
     data_parser.interpret_data("raw_data_test.h5", "interpreted_data_test.h5")
@@ -46,6 +47,7 @@ def test_interpreted_data():
     assert np.array_equal(interpreted_data, interpreted_test_data)
     assert (interpreted_data == interpreted_test_data).all()
 
+
 def test_load_config():
     config_path = "../tlu_configuration.yaml"
     config_parser = TLUConfigure(TLU=None, io_control=None, config_path=config_path)
@@ -55,7 +57,8 @@ def test_load_config():
     _ = config_parser.get_stop_condition()
     _ = config_parser.get_zmq_connection()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     test_data_parser()
     test_interpreted_data()
     test_load_config()

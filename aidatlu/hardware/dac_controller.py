@@ -1,14 +1,13 @@
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu import logger
 
-""" 
-
-AD5665R
-
-"""
-
 
 class DacControl(object):
+    """Control class for the three AD5665R. One controls the PMT control power (pwr_dac).
+    Two set the trigger input thresholds (dac_1, dac_2).
+    Each AD5665R has four parallel outputs.
+    """
+
     def __init__(self, i2c: I2CCore, int_ref: bool = False) -> None:
         self.log = logger.setup_derived_logger("Voltage Controller")
 
@@ -20,12 +19,12 @@ class DacControl(object):
         self._set_dac_reference(int_ref, 2)
 
     def set_threshold(
-        self, trigger_input: int, threshold_voltage: float, ref_v: float = 1.3
+        self, trigger_channel: int, threshold_voltage: float, ref_v: float = 1.3
     ) -> None:
         """Sets the Threshold voltage for the trigger input channel. Use channel = 7 to set threshold for all channels.
 
         Args:
-            trigger_input (int): Trigger input channel. From 1 to 7, where 7 controlls all input channels.
+            trigger_channel (int): Trigger input channel. From 1 to 7, where 7 controlls all input channels.
             threshold_voltage (float): Threshold voltage in volt.
             ref_v (float): Reference voltage of the DAC. Defaults to the external reference voltage 1.3 V.
         """
@@ -42,18 +41,17 @@ class DacControl(object):
                 % (-ref_v, -ref_v)
             )
             threshold_voltage = -ref_v
-        if trigger_input != 7:
-            if trigger_input < 1 or trigger_input > 6:
-                raise ValueError(
-                    "Invalid trigger input channel. Channel has to be between 1 and 6. Or use channel = 7 for all channels."
-                )
+        if trigger_channel < 1 or trigger_channel > 7:
+            raise ValueError(
+                "Invalid trigger input channel. Channel has to be between 1 and 6. Or use channel = 7 for all channels."
+            )
 
-        channel = trigger_input - 1  # shift channel number by 1
+        channel = trigger_channel - 1  # shift channel number by 1
         # calculates the DAC value for the threshold DAC
         v_dac = (threshold_voltage + ref_v) / 2
         dac_value = int(0xFFFF * v_dac / ref_v)
 
-        # Sets threshold for the different channels. The different handling of the channels come from the weird connections of the ADC.
+        # Sets threshold for the different channels. The different handling of the channels comes from the weird connections of the ADC.
         if channel == 6:
             self._set_dac_value(channel + 1, dac_value, 1)
             self._set_dac_value(channel + 1, dac_value, 2)
@@ -64,7 +62,7 @@ class DacControl(object):
         if channel > 1 and channel < 6:
             self._set_dac_value(3 - (channel - 2), dac_value, 2)
         self.log.info(
-            "Threshold of input %s set to %s V" % (trigger_input, threshold_voltage)
+            "Threshold of input %s set to %s V" % (trigger_channel, threshold_voltage)
         )
 
     def set_all_voltage(self, voltage: float) -> None:
@@ -120,7 +118,7 @@ class DacControl(object):
             internal (bool, optional): Defaults to False.
             dac (int): 0 is the power dac, 1 and 2 are DAC 1 and DAC 2 for the thresholds. Defaults to 0.
         """
-        # There is a factor 2 in the output voltage between internal and external DAC reference. In general internal reference is a factor of 2 larger!!
+        # There is a factor 2 in the output voltage between internal and external DAC reference. In general internal reference is a factor of 2 larger!
         if internal:
             chr = [0x00, 0x01]
         else:
@@ -132,7 +130,6 @@ class DacControl(object):
             self.i2c.write_array(self.i2c.modules["dac_1"], 0x38, chr)
         if dac == 2:
             self.i2c.write_array(self.i2c.modules["dac_2"], 0x38, chr)
-        # self.i2c.write_array(self.i2c.modules["pwr_dac"], 0x38, chr)
         self.log.info(
             "Set %s DAC reference of DAC %s"
             % (("internal" if internal else "external"), dac)

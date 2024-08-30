@@ -97,12 +97,12 @@ class TLUConfigure(object):
         """
         try:
             max_number = int(self.conf["max_trigger_number"])
-            self.log.info('Stop condition maximum triggers: %s' %max_number)
+            self.log.info("Stop condition maximum triggers: %s" % max_number)
         except:
             max_number = None
         try:
             timeout = float(self.conf["timeout"])
-            self.log.info('Stop condition timeout: %s s' %timeout)
+            self.log.info("Stop condition timeout: %s s" % timeout)
         except:
             timeout = None
         return max_number, timeout
