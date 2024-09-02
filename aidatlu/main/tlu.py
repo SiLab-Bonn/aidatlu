@@ -59,7 +59,7 @@ class AidaTLU(object):
         self.io_controller.clock_lemo_output(False)
         for i in range(4):
             self.io_controller.configure_hdmi(i + 1, 1)
-        self.dac_controller.set_all_voltage(0)
+        self.dac_controller.set_voltage(5, 0)
         self.io_controller.all_off()
         # sets all thresholds to 1.2 V
         for i in range(6):

@@ -65,25 +65,16 @@ class DacControl(object):
             "Threshold of input %s set to %s V" % (trigger_channel, threshold_voltage)
         )
 
-    def set_all_voltage(self, voltage: float) -> None:
-        """Sets the same Voltage for all PMT DACs.
-
-        Args:
-            voltage (float): DAC voltage in volts.
-        """
-        for channel in range(4):
-            self.set_voltage(channel + 1, voltage)
-
     def set_voltage(self, pmt_channel: int, voltage: float) -> None:
         """Sets given PMT DAC to given output voltage.
 
         Args:
-            pmt_channel (int): DAC channel for the PMT from 1 to 4.
+            pmt_channel (int): DAC channel for the PMT from 1 to 5, where channel 5 sets the voltage of all PMT channels.
             voltage (float): DAC output voltage
         """
 
-        if pmt_channel < 1 or pmt_channel > 4:
-            raise ValueError("PMT Channel has to be between 1 and 4")
+        if pmt_channel < 1 or pmt_channel > 5:
+            raise ValueError("PMT Channel has to be between 1 and 5")
 
         if voltage < 0:
             self.log.warn(
@@ -107,9 +98,21 @@ class DacControl(object):
         if pmt_channel == 4:
             channel_map = 2
 
-        # 0xFFFF is max DAC value
-        self._set_dac_value(channel_map, int(voltage * 0xFFFF))
-        self.log.info("PMT channel %s set to %s V" % (pmt_channel, voltage))
+        if pmt_channel == 5:
+            self._set_all_voltage(voltage)
+        else:
+            # 0xFFFF is max DAC value
+            self._set_dac_value(channel_map, int(voltage * 0xFFFF))
+            self.log.info("PMT channel %s set to %s V" % (pmt_channel, voltage))
+
+    def _set_all_voltage(self, voltage: float) -> None:
+        """Sets the same Voltage for all PMT DACs.
+
+        Args:
+            voltage (float): DAC voltage in volts.
+        """
+        for channel in range(4):
+            self.set_voltage(channel + 1, voltage)
 
     def _set_dac_reference(self, internal: bool = False, dac: int = 0) -> None:
         """Choose internal or external DAC reference

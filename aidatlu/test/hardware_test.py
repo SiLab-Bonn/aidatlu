@@ -72,7 +72,7 @@ class Test_DacControl:
             for volts in np.arange(0, 1, 0.5):
                 self.dac_true.set_voltage(i + 1, volts)
                 time.sleep(0.2)
-        self.dac_true.set_all_voltage(0)
+        self.dac_true.set_voltage(5, 0)
 
 
 class Test_ClockControl:
