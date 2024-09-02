@@ -5,7 +5,7 @@ from aidatlu import logger
 
 class TLUConfigure(object):
     def __init__(self, TLU, io_control, config_path) -> None:
-        self.log = logger.setup_main_logger(__class__.__name__, logging.DEBUG)
+        self.log = logger.setup_main_logger(__class__.__name__, logging.INFO)
 
         self.tlu = TLU
         self.io_control = io_control
@@ -247,7 +247,7 @@ class TLUConfigure(object):
                 long_word = (valid << combination) | long_word
 
             mask_low, mask_high = self._mask_words(long_word)
-            self.log.info(
+            self.log.debug(
                 "mask high: %s, mask low: %s" % (hex(mask_high), hex(mask_low))
             )
             self.tlu.trigger_logic.set_trigger_mask(mask_high, mask_low)

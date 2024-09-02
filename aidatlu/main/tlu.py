@@ -21,7 +21,7 @@ from aidatlu.main.data_parser import DataParser
 
 class AidaTLU(object):
     def __init__(self, hw, config_path, clock_config_path) -> None:
-        self.log = logger.setup_main_logger(__class__.__name__, logging.DEBUG)
+        self.log = logger.setup_main_logger(__class__.__name__, logging.INFO)
 
         self.i2c = I2CCore(hw)
         self.i2c_hw = hw
@@ -43,7 +43,6 @@ class AidaTLU(object):
         self.data_parser = DataParser()
 
         self.log.success("TLU initialized")
-        # if present, init display
 
     def configure(self) -> None:
         """loads the conf.yaml and configures the TLU accordingly."""
@@ -328,9 +327,7 @@ class AidaTLU(object):
             # Logs and poss. sends status every 1s.
             if current_time - self.last_time > 1:
                 self.log_sent_status(current_time)
-                # self.log_trigger_inputs(current_event)
-                # self.log.warning(str(current_event))
-                # Stops the TLU after some time in seconds.
+            # Stops the TLU after some time in seconds.
             if self.timeout != None:
                 if current_time > self.timeout:
                     self.stop_condition = True
@@ -385,13 +382,12 @@ class AidaTLU(object):
             )
         )
 
-        # uncomment for debugging
-        # self.log.info('Scalar %i:%i:%i:%i:%i:%i' %(s0, s1, s2, s3, s4, s5))
-        # self.log.warning('FIFO level: %s' %self.log.warning(self.get_event_fifo_fill_level()))
-        # self.log.warning('FIFO level 2: %s' %self.log.warning(self.get_event_fifo_csr()))
-        # self.log.info("fifo csr: %s fifo fill level: %s" %(self.get_event_fifo_csr(),self.get_event_fifo_csr()))
-        # self.log.info("post: %s pre: %s" %(self.trigger_logic.get_post_veto_trigger(),self.trigger_logic.get_pre_veto_trigger()))
-        # self.log.info("time stamp: %s" %(self.get_timestamp()))
+        self.log.debug('Scalar %i:%i:%i:%i:%i:%i' %(s0, s1, s2, s3, s4, s5))
+        self.log.debug('FIFO level: %s' %self.get_event_fifo_fill_level())
+        self.log.debug('FIFO level 2: %s' %self.get_event_fifo_csr())
+        self.log.debug("fifo csr: %s fifo fill level: %s" %(self.get_event_fifo_csr(),self.get_event_fifo_csr()))
+        self.log.debug("post: %s pre: %s" %(self.trigger_logic.get_post_veto_trigger(),self.trigger_logic.get_pre_veto_trigger()))
+        self.log.debug("time stamp: %s" %(self.get_timestamp()))
 
     def log_trigger_inputs(self, event_vector: list) -> None:
         """Logs which inputs triggered the event corresponding to the event vector.

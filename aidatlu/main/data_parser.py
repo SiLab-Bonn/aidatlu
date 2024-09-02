@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 class DataParser(object):
     def __init__(self) -> None:
-        self.log = logger.setup_main_logger(__class__.__name__, logging.DEBUG)
+        self.log = logger.setup_main_logger(__class__.__name__, logging.INFO)
         self.features = np.dtype(
             [
                 ("eventnumber", "u4"),
@@ -192,7 +192,6 @@ class DataParser(object):
             filepath (str): Path to the new .h5 file.
             data (table): raw data
         """
-        # filter_data = tb.Filters(complib='blosc', complevel=5)
         config = np.dtype(
             [
                 ("attribute", "S32"),

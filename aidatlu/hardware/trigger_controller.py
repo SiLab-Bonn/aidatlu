@@ -8,11 +8,7 @@ class TriggerLogic(object):
         self.log = logger.setup_derived_logger("Trigger Controller")
         self.i2c = i2c
 
-    """ 
-
-    Internal Trigger Generation 
-
-    """
+    """ Internal Trigger Generation """
 
     def set_internal_trigger_frequency(self, frequency: int) -> None:
         """Sets the internal trigger frequency.
@@ -27,12 +23,12 @@ class TriggerLogic(object):
         if frequency < 0:
             raise ValueError("Frequency smaller 0 does not work")
         if frequency > max_freq:
-            raise ValueError("Frequency larger 160MHz not allowed")
+            raise ValueError("Frequency larger %s Hz not supported" %max_freq)
         if frequency == 0:
             interval = frequency
         else:
             interval = int(
-                160000000 / frequency
+                max_freq / frequency
             )  # TODO here is a rounding error that comes from the interval calculations at ~10kHz.
         self._set_internal_trigger_interval(interval)
         new_freq = self.get_internal_trigger_frequency()
@@ -48,12 +44,13 @@ class TriggerLogic(object):
         Returns:
             int: Frequency in Hz
         """
+        max_freq = 160000000
         interval = self.i2c.read_register("triggerLogic.InternalTriggerIntervalR")
         if interval == 0:
             freq = 0
         else:
             freq = int(
-                160000000 / interval
+                max_freq / interval
             )  # TODO here is prob. a rounding error I should use a round function this would prob. prevent the warning at ~10kHz.
         return freq
 
@@ -66,11 +63,7 @@ class TriggerLogic(object):
         """
         self.i2c.write_register("triggerLogic.InternalTriggerIntervalW", interval)
 
-    """ 
-     
-    Trigger Logic
-    
-    """
+    """ Trigger Logic """
 
     def set_trigger_veto(self, veto: bool) -> None:
         """Enables or disables new trigger. This can be used to reset the procession of new triggers.
@@ -78,7 +71,7 @@ class TriggerLogic(object):
             veto (bool): Sets a veto to the trigger logic of the tlu.
         """
         if type(veto) != bool:
-            raise TypeError("Veto must be a bool")
+            raise TypeError("Veto must be type bool")
 
         self.i2c.write_register("triggerLogic.TriggerVetoW", int(veto))
         self.log.info("Trigger Veto set to: %s" % self.get_trigger_veto())
@@ -94,9 +87,8 @@ class TriggerLogic(object):
         self.i2c.write_register("triggerInputs.InvertEdgeW", trigger_polarity)
         self.log.info(
             "Trigger on %s edge" % ("falling" if value == 1 else "rising")
-        )  # TODO NOT TESTED
+        )
 
-    #    def set_trigger_mask(self, value: int) -> None:
     def set_trigger_mask(self, mask_high: int, mask_low: int) -> None:
         """Sets the trigger logic. Each of the 64 possible combination is divided into two 32-bit words mask high and mask low.
 
@@ -104,8 +96,6 @@ class TriggerLogic(object):
             mask_high (int): The most significant 32-bit word generated from the trigger configuration.
             mask_low (int): The least significant 32-bit word generated from the trigger configuration.
         """
-        # mask_high = (value >> 32) & 0xFF
-        # mask_low = value & 0xFF
         self.i2c.write_register("triggerLogic.TriggerPattern_lowW", mask_low)
         self.i2c.write_register("triggerLogic.TriggerPattern_highW", mask_high)
         self.log.info("Trigger mask: %s" % self.get_trigger_mask())
@@ -129,12 +119,20 @@ class TriggerLogic(object):
     def get_pre_veto_trigger(self) -> int:
         """Number of triggers recorded in the TLU before the veto is applied."""
         return self.i2c.read_register("triggerLogic.PreVetoTriggersR")
+    
+    def set_trigger_mask_from_full_word(self, value: int) -> None:
+        """Sets the trigger logic. Each of the 64 possible combination is divided into two 32-bit words mask high and mask low.
 
-    """ 
-    
-    Trigger Pulse Length and Delay 
-    
-    """
+        Args:
+            value (int): Sets trigger logic from trigger logic combination word.
+        """
+        mask_high = (value >> 32) & 0xFF
+        mask_low = value & 0xFF
+        self.i2c.write_register("triggerLogic.TriggerPattern_lowW", mask_low)
+        self.i2c.write_register("triggerLogic.TriggerPattern_highW", mask_high)
+        self.log.info("Trigger mask: %s" % self.get_trigger_mask())
+
+    """ Trigger Pulse Length and Delay """
 
     def set_pulse_stretch_pack(self, vector: list) -> None:
         """Stretch word for trigger pulses. Each element of the input vector is stretched by N clock cycles.

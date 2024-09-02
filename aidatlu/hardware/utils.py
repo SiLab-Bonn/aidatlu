@@ -25,8 +25,8 @@ def _pack_bits(vector: list) -> int:
     Returns:
         int: 32-bit word representation of the input vector.
     """
-    packed_bits = 0x0
-    temp_int = 0x0
+    packed_bits = 0
+    temp_int = 0
     for channel in range(len(vector)):
         temp_int = int(vector[channel]) << channel * 5
         packed_bits = packed_bits | temp_int
