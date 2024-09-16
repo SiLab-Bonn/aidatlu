@@ -55,11 +55,7 @@ class IOControl(object):
         self._set_ioexpander_direction(2, exp_id=2, cmd_byte=7, direction="output")
         self._set_ioexpander_output(2, exp_id=2, cmd_byte=3, value=0xB0)
 
-    """ 
-
-    LED Control
-
-    """
+    """ LED Control """
 
     def test_leds(self, single=True) -> None:
         """Test the 11 LEDs
@@ -206,19 +202,18 @@ class IOControl(object):
             [1, 0, 19],
         ]
 
-        now_status = []  # status of all ioexpander now
-        next_status = []  # status of all ioexpander next
-        now_status.append(0xFF & self._get_ioexpander_output(1, 1, 2))
-        now_status.append(0xFF & self._get_ioexpander_output(1, 1, 3))
-        now_status.append(0xFF & self._get_ioexpander_output(1, 2, 2))
-        now_status.append(0xFF & self._get_ioexpander_output(1, 2, 3))
+        status_now = []  # status of all ioexpander now
+        status_next = []  # status of all ioexpander next
+        status_now.append(0xFF & self._get_ioexpander_output(1, 1, 2))
+        status_now.append(0xFF & self._get_ioexpander_output(1, 1, 3))
+        status_now.append(0xFF & self._get_ioexpander_output(1, 2, 2))
+        status_now.append(0xFF & self._get_ioexpander_output(1, 2, 3))
 
         word = 0x00000000
-        word = word | now_status[0]
-        word = word | (now_status[1] << 8)
-        word = word | (now_status[2] << 16)
-        word = word | (now_status[3] << 24)
-        # print(word,"word for debugging")
+        word = word | status_now[0]
+        word = word | (status_now[1] << 8)
+        word = word | (status_now[2] << 16)
+        word = word | (status_now[3] << 24)
 
         for index in range(3):
             if (
@@ -229,29 +224,24 @@ class IOControl(object):
             else:
                 word = _set_bit(word, indicator[led_id - 1][index], rgb[index])
 
-        next_status.append(0xFF & word)
-        next_status.append(0xFF & (word >> 8))
-        next_status.append(0xFF & (word >> 16))
-        next_status.append(0xFF & (word >> 24))
-        # print(next_status,"next_status of the ioexpander for debugging")
+        status_next.append(0xFF & word)
+        status_next.append(0xFF & (word >> 8))
+        status_next.append(0xFF & (word >> 16))
+        status_next.append(0xFF & (word >> 24))
 
-        if now_status[0] != next_status[0]:
-            self._set_ioexpander_output(1, 1, 2, next_status[0])
+        if status_now[0] != status_next[0]:
+            self._set_ioexpander_output(1, 1, 2, status_next[0])
 
-        if now_status[1] != next_status[1]:
-            self._set_ioexpander_output(1, 1, 3, next_status[1])
+        if status_now[1] != status_next[1]:
+            self._set_ioexpander_output(1, 1, 3, status_next[1])
 
-        if now_status[2] != next_status[2]:
-            self._set_ioexpander_output(1, 2, 2, next_status[2])
+        if status_now[2] != status_next[2]:
+            self._set_ioexpander_output(1, 2, 2, status_next[2])
 
-        if now_status[3] != next_status[3]:
-            self._set_ioexpander_output(1, 2, 3, next_status[3])
+        if status_now[3] != status_next[3]:
+            self._set_ioexpander_output(1, 2, 3, status_next[3])
 
-    """ 
-
-    Output Control
-
-    """
+    """ Output Control """
 
     def configure_hdmi(self, hdmi_channel: int, enable: int | str) -> None:
         """This enables the pins of one HDMI channel as input (0) or output (1).

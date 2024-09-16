@@ -2,7 +2,7 @@ from setuptools import setup
 from setuptools import find_packages
 
 author = 'Christian Bespin, Rasmus Partzsch'
-author_email = 'bespin@physik.uni-bonn.de, s6rapart@uni-bonn.de'
+author_email = 'bespin@physik.uni-bonn.de, rasmus.partzsch@uni-bonn.de'
 
 # Requirements
 install_requires = ['pytest', 'numpy', 'tables', 'coloredlogs', 'pyzmq', 'online_monitor', 'tqdm'

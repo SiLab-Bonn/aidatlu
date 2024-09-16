@@ -42,10 +42,7 @@ def test_interpreted_data():
         table = file.root.interpreted_data
         interpreted_test_data = np.array(table[:], dtype=features)
 
-    # numpy equal should do everything. But this could help for debugging.
-    assert np.array_equiv(interpreted_data, interpreted_test_data)
     assert np.array_equal(interpreted_data, interpreted_test_data)
-    assert (interpreted_data == interpreted_test_data).all()
 
 
 def test_load_config():

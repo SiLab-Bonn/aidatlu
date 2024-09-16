@@ -23,7 +23,7 @@ class TriggerLogic(object):
         if frequency < 0:
             raise ValueError("Frequency smaller 0 does not work")
         if frequency > max_freq:
-            raise ValueError("Frequency larger %s Hz not supported" %max_freq)
+            raise ValueError("Frequency larger %s Hz not supported" % max_freq)
         if frequency == 0:
             interval = frequency
         else:
@@ -85,9 +85,7 @@ class TriggerLogic(object):
         """
         trigger_polarity = 0x3F & value
         self.i2c.write_register("triggerInputs.InvertEdgeW", trigger_polarity)
-        self.log.info(
-            "Trigger on %s edge" % ("falling" if value == 1 else "rising")
-        )
+        self.log.info("Trigger on %s edge" % ("falling" if value == 1 else "rising"))
 
     def set_trigger_mask(self, mask_high: int, mask_low: int) -> None:
         """Sets the trigger logic. Each of the 64 possible combination is divided into two 32-bit words mask high and mask low.
@@ -119,7 +117,7 @@ class TriggerLogic(object):
     def get_pre_veto_trigger(self) -> int:
         """Number of triggers recorded in the TLU before the veto is applied."""
         return self.i2c.read_register("triggerLogic.PreVetoTriggersR")
-    
+
     def set_trigger_mask_from_full_word(self, value: int) -> None:
         """Sets the trigger logic. Each of the 64 possible combination is divided into two 32-bit words mask high and mask low.
 

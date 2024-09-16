@@ -46,7 +46,7 @@ class AIDATLUReciever(Receiver):
 
         self.reset_button.clicked.connect(lambda: self._reset())
 
-        # # particle rate dock
+        # particle rate dock
         trigger_rate_graphics = pg.GraphicsLayoutWidget()
         trigger_rate_graphics.show()
         plot_trigger_rate = pg.PlotItem(
@@ -55,7 +55,7 @@ class AIDATLUReciever(Receiver):
         self.trigger_rate_acc_curve = pg.PlotCurveItem(pen="#B00B13")
         self.particle_rate_acc_curve = pg.PlotCurveItem(pen="#0000FF")
 
-        # # add legend
+        # add legend
         legend_acc = pg.LegendItem(offset=(80, 10))
         legend_acc.setParentItem(plot_trigger_rate)
         legend_acc.addItem(self.trigger_rate_acc_curve, "Accepted Trigger Rate")
@@ -63,7 +63,7 @@ class AIDATLUReciever(Receiver):
         legend_real.setParentItem(plot_trigger_rate)
         legend_real.addItem(self.particle_rate_acc_curve, "Particle Rate")
 
-        # # add items to plots and customize plots viewboxes
+        # add items to plots and customize plots viewboxes
         plot_trigger_rate.addItem(self.trigger_rate_acc_curve)
         plot_trigger_rate.addItem(self.particle_rate_acc_curve)
 
@@ -72,13 +72,13 @@ class AIDATLUReciever(Receiver):
         plot_trigger_rate.getAxis("left").setZValue(0)
         plot_trigger_rate.getAxis("left").setGrid(155)
 
-        # # add plots to graphicslayout and layout to dock
+        # add plots to graphicslayout and layout to dock
         trigger_rate_graphics.addItem(
             plot_trigger_rate, row=0, col=1, rowspan=1, colspan=2
         )
         dock_rate.addWidget(trigger_rate_graphics)
 
-        # # add dict of all used plotcurveitems for individual handling of each plot
+        # add dict of all used plotcurveitems for individual handling of each plot
         self.plots = {
             "trigger_rate_acc": self.trigger_rate_acc_curve,
             "particle_rate_acc": self.particle_rate_acc_curve,

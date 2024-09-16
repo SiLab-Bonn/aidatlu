@@ -382,12 +382,21 @@ class AidaTLU(object):
             )
         )
 
-        self.log.debug('Scalar %i:%i:%i:%i:%i:%i' %(s0, s1, s2, s3, s4, s5))
-        self.log.debug('FIFO level: %s' %self.get_event_fifo_fill_level())
-        self.log.debug('FIFO level 2: %s' %self.get_event_fifo_csr())
-        self.log.debug("fifo csr: %s fifo fill level: %s" %(self.get_event_fifo_csr(),self.get_event_fifo_csr()))
-        self.log.debug("post: %s pre: %s" %(self.trigger_logic.get_post_veto_trigger(),self.trigger_logic.get_pre_veto_trigger()))
-        self.log.debug("time stamp: %s" %(self.get_timestamp()))
+        self.log.debug("Scalar %i:%i:%i:%i:%i:%i" % (s0, s1, s2, s3, s4, s5))
+        self.log.debug("FIFO level: %s" % self.get_event_fifo_fill_level())
+        self.log.debug("FIFO level 2: %s" % self.get_event_fifo_csr())
+        self.log.debug(
+            "fifo csr: %s fifo fill level: %s"
+            % (self.get_event_fifo_csr(), self.get_event_fifo_csr())
+        )
+        self.log.debug(
+            "post: %s pre: %s"
+            % (
+                self.trigger_logic.get_post_veto_trigger(),
+                self.trigger_logic.get_pre_veto_trigger(),
+            )
+        )
+        self.log.debug("time stamp: %s" % (self.get_timestamp()))
 
     def log_trigger_inputs(self, event_vector: list) -> None:
         """Logs which inputs triggered the event corresponding to the event vector.
@@ -460,9 +469,6 @@ class AidaTLU(object):
                 try:
                     if save_data and np.size(current_event) > 1:
                         self.data_table.append(current_event)
-                    # if t.do_run == False:
-                    #     run_active = False
-                    #     self.stop_run()
                     if self.stop_condition == True:
                         raise KeyboardInterrupt
                 except:
@@ -474,7 +480,7 @@ class AidaTLU(object):
                         # If this happens: poss. Hitrate to high for FIFO and or Data handling.
                         self.log.warning("Incomplete Event handling...")
 
-                # # This loop sents which inputs produced the trigger signal for the first event.
+                # This loop sents which inputs produced the trigger signal for the first event.
                 if (
                     np.size(current_event) > 1
                 ) and first_event:  # TODO only first event?

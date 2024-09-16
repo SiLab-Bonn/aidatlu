@@ -105,14 +105,14 @@ class DacControl(object):
             self._set_dac_value(channel_map, int(voltage * 0xFFFF))
             self.log.info("PMT channel %s set to %s V" % (pmt_channel, voltage))
 
-    def _set_all_voltage(self, voltage: float) -> None:
+    def _set_all_voltage(self, voltages: float) -> None:
         """Sets the same Voltage for all PMT DACs.
 
         Args:
-            voltage (float): DAC voltage in volts.
+            voltages (float): DAC voltages in volts.
         """
         for channel in range(4):
-            self.set_voltage(channel + 1, voltage)
+            self.set_voltage(channel + 1, voltages)
 
     def _set_dac_reference(self, internal: bool = False, dac: int = 0) -> None:
         """Choose internal or external DAC reference
