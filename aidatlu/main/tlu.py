@@ -21,11 +21,11 @@ from aidatlu.main.data_parser import DataParser
 
 class AidaTLU(object):
     def __init__(self, hw, config_path, clock_config_path) -> None:
-        self.log = logger.setup_main_logger(__class__.__name__, logging.INFO)
+        self.log = logger.setup_main_logger(__class__.__name__)
 
         self.i2c = I2CCore(hw)
         self.i2c_hw = hw
-        self.log.info("IPbus interface")
+        self.log.info("Initializing IPbus interface")
         self.i2c.init()
         if self.i2c.modules["eeprom"]:
             self.log.info("Found device with ID %s" % hex(self.get_device_id()))
@@ -89,10 +89,6 @@ class AidaTLU(object):
 
     def get_fw_version(self) -> int:
         return self.i2c.read_register("version")
-
-    # def reset_board(self) -> None:
-    #     #THIS FUNCTION CRASHES THE TLU. TLU needs a power cycle afterwards. This does not work at all...
-    #     self.i2c.write_register("logic_clocks.LogicRst", 1)
 
     def reset_timestamp(self) -> None:
         """Sets bit to  'ResetTimestampW' register to reset the time stamp."""
@@ -264,7 +260,6 @@ class AidaTLU(object):
             list: 6 element long vector containing bitwords of the data.
         """
         event_numb = self.get_event_fifo_fill_level()
-        # fifo_status = self.get_event_fifo_csr()
         if event_numb:
             if event_numb * 6 == 0xFEA:
                 self.log.warning("FIFO is full")

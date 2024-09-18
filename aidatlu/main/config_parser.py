@@ -5,7 +5,7 @@ from aidatlu import logger
 
 class TLUConfigure(object):
     def __init__(self, TLU, io_control, config_path) -> None:
-        self.log = logger.setup_main_logger(__class__.__name__, logging.INFO)
+        self.log = logger.setup_main_logger(__class__.__name__)
 
         self.tlu = TLU
         self.io_control = io_control

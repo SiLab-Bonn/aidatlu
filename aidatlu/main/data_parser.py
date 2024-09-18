@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 class DataParser(object):
     def __init__(self) -> None:
-        self.log = logger.setup_main_logger(__class__.__name__, logging.INFO)
+        self.log = logger.setup_main_logger(__class__.__name__)
         self.features = np.dtype(
             [
                 ("eventnumber", "u4"),

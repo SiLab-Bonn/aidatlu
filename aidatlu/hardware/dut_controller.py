@@ -4,7 +4,7 @@ from aidatlu.hardware.i2c import I2CCore
 
 class DUTLogic(object):
     def __init__(self, i2c: I2CCore):
-        self.log = logger.setup_derived_logger("DUT Logic")
+        self.log = logger.setup_derived_logger(__class__.__name__)
         self.i2c = i2c
 
     def set_dut_mask(self, enable: int | str) -> None:
@@ -22,7 +22,7 @@ class DUTLogic(object):
             raise ValueError("Enable has to be between 0 and 15 ('1111')")
 
         self.i2c.write_register("DUTInterfaces.DUTMaskW", enable & 0xF)
-        self.log.info("DUT mask set to %s" % self.get_dut_mask())
+        self.log.debug("DUT mask set to %s" % self.get_dut_mask())
 
     def set_dut_mask_mode(self, mode: int | str) -> None:
         """Sets the DUT interface mode. Mode consits of one 8-bit WORD or more specific 4 2-bit WORDs.
@@ -42,7 +42,7 @@ class DUTLogic(object):
             raise ValueError("Mode has to be between 0 and 256 ('100000000').")
 
         self.i2c.write_register("DUTInterfaces.DUTInterfaceModeW", mode)
-        self.log.info("DUT mask mode is set to %s" % self.get_dut_mask_mode())
+        self.log.debug("DUT mask mode is set to %s" % self.get_dut_mask_mode())
 
     def set_dut_mask_mode_modifier(self, value: int) -> None:
         """#TODO Only affects the EUDET mode of operation, looks like some special EUDET configuration.
@@ -51,7 +51,7 @@ class DUTLogic(object):
             value (int): _description_ #TODO
         """
         self.i2c.write_register("DUTInterfaces.DUTInterfaceModeModifierW", value)
-        self.log.info(
+        self.log.debug(
             "DUT mask mode modifier is set to %s" % self.get_dut_mask_mode_modifier()
         )
 
@@ -71,7 +71,7 @@ class DUTLogic(object):
             raise ValueError("Channels has to be between 0 and 16 ('10000').")
 
         self.i2c.write_register("DUTInterfaces.IgnoreDUTBusyW", channels)
-        self.log.info("DUT ignore busy is set to %s" % self.get_dut_ignore_busy())
+        self.log.debug("DUT ignore busy is set to %s" % self.get_dut_ignore_busy())
 
     def get_dut_mask(self) -> int:
         """Reads the contend in the register 'DUTMaskR'.
@@ -107,7 +107,7 @@ class DUTLogic(object):
 
     def set_dut_ignore_shutter(self, value: int) -> None:
         self.i2c.write_register("DUTInterfaces.IgnoreShutterVetoW", value)
-        self.log.info("DUT ignore shutter set to %s" % self.get_dut_ignore_shutter())
+        self.log.debug("DUT ignore shutter set to %s" % self.get_dut_ignore_shutter())
 
     def get_dut_ignore_shutter(self):
         return self.i2c.read_register("DUTInterfaces.IgnoreShutterVetoR")

@@ -332,6 +332,10 @@ Tests can be run individually.
 
     pytest software_test.py
 
+Log Level
+------
+To set different log levels change the default log level in logger.py 'setup_main_logger' and 'setup_derived_logger'.
+
 Integration into EUDAQ2
 ------------------------
 Due to the similarities of the python control software and the established EUDAQ TLU software

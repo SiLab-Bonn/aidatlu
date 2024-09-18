@@ -11,7 +11,7 @@ class IOControl(object):
     """
 
     def __init__(self, i2c: I2CCore) -> None:
-        self.log = logger.setup_derived_logger("IO Expander")
+        self.log = logger.setup_derived_logger(__class__.__name__)
 
         self.log.info("Initializing IO expander")
         self.i2c = i2c
@@ -282,7 +282,7 @@ class IOControl(object):
         new_status = (old_status & (~mask)) | (new_nibble & mask)
 
         self._set_ioexpander_output(2, expander_id, bank, new_status)
-        self.log.info("HDMI Channel %i set to %s" % (hdmi_channel + 1, str(enable)))
+        self.log.debug("HDMI Channel %i set to %s" % (hdmi_channel + 1, str(enable)))
 
     def clock_hdmi_output(self, hdmi_channel: int, clock_source: str) -> None:
         """Enables the Clock output for one HDMI channel.
@@ -344,11 +344,7 @@ class IOControl(object):
             self.switch_led(5, "off")
         self.log.info("Clock LEMO output %s" % ("enabled" if enable else "disabled"))
 
-    """ 
-
-    General Expander Control
-
-    """
+    """ General Expander Control """
 
     def _set_ioexpander_polarity(
         self, io_exp: int, exp_id: int, cmd_byte: int, polarity: bool = False

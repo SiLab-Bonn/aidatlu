@@ -5,7 +5,7 @@ from aidatlu import logger
 
 class TriggerLogic(object):
     def __init__(self, i2c: I2CCore) -> None:
-        self.log = logger.setup_derived_logger("Trigger Controller")
+        self.log = logger.setup_derived_logger(__class__.__name__)
         self.i2c = i2c
 
     """ Internal Trigger Generation """
@@ -96,7 +96,7 @@ class TriggerLogic(object):
         """
         self.i2c.write_register("triggerLogic.TriggerPattern_lowW", mask_low)
         self.i2c.write_register("triggerLogic.TriggerPattern_highW", mask_high)
-        self.log.info("Trigger mask: %s" % self.get_trigger_mask())
+        self.log.debug("Trigger mask: %s" % self.get_trigger_mask())
 
     def get_trigger_mask(self) -> int:
         """Retrieves the trigger logic words from the registers. The trigger pattern represents one of the 64 possible logic combinations."""
@@ -128,7 +128,7 @@ class TriggerLogic(object):
         mask_low = value & 0xFF
         self.i2c.write_register("triggerLogic.TriggerPattern_lowW", mask_low)
         self.i2c.write_register("triggerLogic.TriggerPattern_highW", mask_high)
-        self.log.info("Trigger mask: %s" % self.get_trigger_mask())
+        self.log.debug("Trigger mask: %s" % self.get_trigger_mask())
 
     """ Trigger Pulse Length and Delay """
 
@@ -142,7 +142,7 @@ class TriggerLogic(object):
         """
         packed = _pack_bits(vector)
         self._set_pulse_stretch(packed)
-        self.log.info("Pulse stretch is set to %s" % self.get_pulse_stretch_pack())
+        self.log.debug("Pulse stretch is set to %s" % self.get_pulse_stretch_pack())
 
     def set_pulse_delay_pack(self, vector: list) -> None:
         """Delay word for trigger pulses. Each element of the input vector is delayed by N clock cycles.
@@ -153,7 +153,7 @@ class TriggerLogic(object):
         """
         packed = _pack_bits(vector)
         self._set_pulse_delay(packed)
-        self.log.info("Pulse Delay is set to %s" % self.get_pulse_delay_pack())
+        self.log.debug("Pulse Delay is set to %s" % self.get_pulse_delay_pack())
 
     def get_pulse_stretch_pack(self) -> int:
         """Get packed word describing the input pulse stretch."""

@@ -9,7 +9,7 @@ class DacControl(object):
     """
 
     def __init__(self, i2c: I2CCore, int_ref: bool = False) -> None:
-        self.log = logger.setup_derived_logger("Voltage Controller")
+        self.log = logger.setup_derived_logger(__class__.__name__)
 
         self.log.info("Initializing DAC Control")
         self.i2c = i2c
@@ -30,13 +30,13 @@ class DacControl(object):
         """
 
         if threshold_voltage > ref_v:
-            self.log.warn(
+            self.log.warning(
                 "Threshold larger than %s V is not supported, Threshold will default to %s V "
                 % (ref_v, ref_v)
             )
             threshold_voltage = ref_v
         if threshold_voltage < -ref_v:
-            self.log.warn(
+            self.log.warning(
                 "Threshold smaller than %s V is not supported, Threshold will default to %s V "
                 % (-ref_v, -ref_v)
             )
@@ -77,13 +77,13 @@ class DacControl(object):
             raise ValueError("PMT Channel has to be between 1 and 5")
 
         if voltage < 0:
-            self.log.warn(
+            self.log.warning(
                 "A Voltage value smaller than 0 is not supported, Voltage will default to 0"
             )
             voltage = 0
 
         if voltage > 1:
-            self.log.warn(
+            self.log.warning(
                 "A Voltage value higher than 1 is not supported, Voltage will default to 1"
             )
             voltage = 1
@@ -150,13 +150,13 @@ class DacControl(object):
             raise ValueError("Channel has to be between 0 and 7")
 
         if value < 0x0000:
-            self.log.warn(
+            self.log.warning(
                 "DAC value < 0x0000 not supported, value will default to 0x0000"
             )
             value = 0
 
         if value > 0xFFFF:
-            self.log.warn(
+            self.log.warning(
                 "DAC value > 0xFFFF not supported, value will default to 0xFFFF"
             )
             value = 0xFFFF
