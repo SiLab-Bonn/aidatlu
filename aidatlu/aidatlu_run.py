@@ -1,0 +1,56 @@
+from main.tlu import AidaTLU
+import uhal
+
+
+class AIDATLU:
+    def __init__(self, config_path, clock_path):
+        print(" ---------------------------------------")
+        print("    _   ___ ___   _     _____ _   _   _ ")
+        print("   /_\ |_ _|   \ /_\   |_   _| | | | | |")
+        print("  / _ \ | || |) / _ \    | | | |_| |_| |")
+        print(" /_/ \_\___|___/_/ \_\   |_| |____\___/ \n")
+        print(" ---------------------------------------")
+        print("tlu.help()\n")
+
+        self.config_file = config_path
+        self.clock_file = clock_path
+        self.ready = False
+
+    def run(self):
+        if not self.ready:
+            print("TLU not configured, Run aborted")
+        else:
+            self.aidatlu.run()
+
+    def stop(self):
+        self.aidatlu.stop_run()
+
+    def configure(self):
+        self.ready = True
+        self.init()
+        self.aidatlu.configure()
+
+    def init(self):
+        self.aidatlu = AidaTLU(hw, self.config_file, self.clock_file)
+
+    def help(self):
+        print("tlu.configure()")
+        print("start run: tlu.run()")
+        print("stop  run: ctr+c")
+        print("exit:      ctr+d/exit()\n")
+        print("for access to the main tlu functions: tlu.aidatlu....")
+
+
+if __name__ == "__main__":
+    uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
+    manager = uhal.ConnectionManager("file://./misc/aida_tlu_connection.xml")
+    hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
+
+    config_path = "tlu_configuration.yaml"
+    clock_path = "misc/aida_tlu_clk_config.txt"
+
+    tlu = AIDATLU(config_path, clock_path)
+
+    # Uncomment if you just want to use EUDET mode and just plug and play TLU.
+    # tlu.configure
+    # tlu.run
