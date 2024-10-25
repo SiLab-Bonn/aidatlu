@@ -16,12 +16,12 @@ It is important to note that only working DUT devices should be enabled.
 One not properly working DUT can block the TLU from sending out triggers (especially in EUDET mode).
 
 ### Trigger Inputs (trigger_inputs)
-Multiple settings of the trigger inputs are configurable. 
+Multiple settings of the trigger inputs are configurable.
 This includes trigger input thresholds, trigger logic, trigger polarity and trigger signal shaping.
 
 The threshold for each trigger input can be tuned individually between [-1.3; 1.3] V.
 
-Another setting controls the trigger input logic. 
+Another setting controls the trigger input logic.
 Each trigger input can have one of three settings. The input can act as 'active', 'veto' or 'do not care'.
 Between each trigger input, there is also the possibility to set 'AND' or 'OR'.
 A desired trigger configuration is set with the use of the [Python bitwise operators](https://wiki.python.org/moin/BitwiseOperators).

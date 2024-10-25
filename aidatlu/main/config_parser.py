@@ -67,6 +67,15 @@ class TLUConfigure(object):
                 % str(self.conf["trigger_inputs"]["trigger_signal_shape"]["delay"]),
             ),
             (
+                "trigger_polarity",
+                "%s"
+                % (
+                    "falling"
+                    if self.conf["trigger_inputs"]["trigger_polarity"]["polarity"] == 1
+                    else "rising"
+                ),
+            ),
+            (
                 "enable_clock_lemo_output",
                 self.conf["clock_lemo"]["enable_clock_lemo_output"],
             ),

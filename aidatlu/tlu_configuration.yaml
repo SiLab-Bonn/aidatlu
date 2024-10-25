@@ -2,20 +2,20 @@ internal_trigger: #Generate TLU internal trigger with given rate in Hz
   internal_trigger_rate: 10000
 
 dut_module:
-  dut_1:  
+  dut_1:
     mode: 'aida' # 'aida', 'aidatrig', 'eudet', 'any'
-  dut_2:  
+  dut_2:
     mode: 'aida'   # 'aida', 'aidatrig', 'eudet', 'any'
   dut_3:
     mode: 'eudet'   # 'aida', 'aidatrig', 'eudet', 'any'
-  dut_4: 
-    mode: 'off'   # 'aida', 'aidatrig', 'eudet', 'any'    
+  dut_4:
+    mode: 'off'   # 'aida', 'aidatrig', 'eudet', 'any'
 
 trigger_inputs: #threshold voltages for the trigger inputs in V.
   threshold:
     threshold_1: -0.1
-    threshold_2: -0.1   
-    threshold_3: -0.1    
+    threshold_2: -0.1
+    threshold_3: -0.1
     threshold_4: -0.1
     threshold_5: -0.1
     threshold_6: -0.1
@@ -29,8 +29,8 @@ trigger_inputs: #threshold voltages for the trigger inputs in V.
     polarity: 1
 
   trigger_signal_shape: #Stretches and delays each trigger input signal for an number of clock cycles,
-    stretch: [2, 2, 2, 2, 2, 2] 
-    delay: [0, 0, 0, 0, 0, 0] 
+    stretch: [2, 2, 2, 2, 2, 2]
+    delay: [0, 0, 0, 0, 0, 0]
 
 clock_lemo:
   enable_clock_lemo_output: True
@@ -43,7 +43,7 @@ pmt_control:
 
 #Save data and generate interpreted data from the raw data set. Set to 'True' or 'False'.
 save_data: True
-output_data_path: '/media/data/ITK_DEBUG/tests_3/itk/chip_0/' 
+output_data_path: '/media/data/ITK_DEBUG/tests_3/itk/chip_0/'
 
 #zmq connection leave it blank or set to 'off' if not needed
 zmq_connection: 'off' #"tcp://127.0.0.1:6500"

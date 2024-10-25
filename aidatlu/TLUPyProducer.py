@@ -6,7 +6,7 @@ import time
 from main.tlu import AidaTLU
 import uhal
 
-""" 
+"""
 Example Producer from EUDAQ
 This is not well tested. But something like this should work.
 Prob. one needs to work a bit on the run loop.

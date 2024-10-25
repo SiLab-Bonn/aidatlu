@@ -1,7 +1,7 @@
 ################################################
-#                                              
-# This configuration is only used during tests 
-# 
+#
+# This configuration is only used during tests
+#
 ###############################################
 
 
@@ -9,20 +9,20 @@ internal_trigger: #Generate TLU internal trigger with given rate in Hz
   internal_trigger_rate: 100000
 
 dut_module:
-  dut_1:  
+  dut_1:
     mode: 'aida' # 'aida', 'aidatrig', 'eudet', 'any'
-  dut_2:  
+  dut_2:
     mode: 'off'   # 'aida', 'aidatrig', 'eudet', 'any'
   dut_3:
     mode: 'off'   # 'aida', 'aidatrig', 'eudet', 'any'
-  dut_4: 
-    mode: 'off'   # 'aida', 'aidatrig', 'eudet', 'any'    
+  dut_4:
+    mode: 'off'   # 'aida', 'aidatrig', 'eudet', 'any'
 
 trigger_inputs: #threshold voltages for the trigger inputs in V.
   threshold:
     threshold_1: -0.1
-    threshold_2: -0.1   
-    threshold_3: -0.1    
+    threshold_2: -0.1
+    threshold_3: -0.1
     threshold_4: -0.1
     threshold_5: -0.1
     threshold_6: -0.1
@@ -36,8 +36,8 @@ trigger_inputs: #threshold voltages for the trigger inputs in V.
     polarity: 1
 
   trigger_signal_shape: #Stretches and delays each trigger input signal for an number of clock cycles,
-    stretch: [2, 2, 2, 2, 2, 2] 
-    delay: [0, 0, 0, 0, 0, 0] 
+    stretch: [2, 2, 2, 2, 2, 2]
+    delay: [0, 0, 0, 0, 0, 0]
 
 clock_lemo:
   enable_clock_lemo_output: True
