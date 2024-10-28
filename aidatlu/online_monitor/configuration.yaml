@@ -4,7 +4,7 @@ converter :
         kind : tlu_converter
         frontend : tcp://131.220.165.88:1500
         backend : tcp://127.0.0.1:7501
-        theshold: 10
+        threshold: 10
 
 receiver :
     AIDA_TLU :

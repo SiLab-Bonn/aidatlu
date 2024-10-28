@@ -35,7 +35,7 @@ class DataParser(object):
     ) -> None:
         """Interprets raw tlu data. The data is interpreted in chunksizes.
         The data is parsed form filepath_in to filepath_out.
-        An event consists of six consecutive raw data entries tha last entry should be a 0.
+        An event consists of six consecutive raw data entries the last entry should be always 0.
         The raw data is sliced and the last data entry checked for corrupted data.
 
         Args:
@@ -123,7 +123,7 @@ class DataParser(object):
             w5 (np.array): this should always be 0.
 
         Returns:
-            np.array: array with coloumns
+            np.array: array with columns
         """
         if np.any(w5) != 0:
             self.log.warning("Corrupted Data found")

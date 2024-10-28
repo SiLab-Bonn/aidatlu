@@ -213,7 +213,7 @@ class AidaTLU(object):
         self.run_number += 1
 
     def set_enable_record_data(self, value: int) -> None:
-        """#TODO not sure what this does. Looks like a seperate internal event buffer to the FIFO.
+        """#TODO not sure what this does. Looks like a separate internal event buffer to the FIFO.
 
         Args:
             value (int): #TODO I think this does not work
@@ -494,7 +494,7 @@ class AidaTLU(object):
                 current_event = self.pull_fifo_event()
         except:
             KeyboardInterrupt
-            self.log.warning("Interupted FIFO cleanup")
+            self.log.warning("Interrupted FIFO cleanup")
 
         if self.zmq_address not in [None, "off"]:
             self.socket.close()

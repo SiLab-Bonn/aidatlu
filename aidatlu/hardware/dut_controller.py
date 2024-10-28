@@ -25,7 +25,7 @@ class DUTLogic(object):
         self.log.debug("DUT mask set to %s" % self.get_dut_mask())
 
     def set_dut_mask_mode(self, mode: int | str) -> None:
-        """Sets the DUT interface mode. Mode consits of one 8-bit WORD or more specific 4 2-bit WORDs.
+        """Sets the DUT interface mode. Mode consists of one 8-bit WORD or more specific 4 2-bit WORDs.
             Each 2-bit WORD corresponds to one HDMI output and its mode.
             With HDMI channel 1 = bit 0 and 1, channel 2 = bit 2 and 3, channel 3 = bit 4 and 5 and channel 4 = bit 6 and 7.
             The mode is set with X0 = EUDET and X1 = AIDA. #TODO They mention the leading bit X can be used for future modes. Is this still up to date?
@@ -57,7 +57,7 @@ class DUTLogic(object):
 
     def set_dut_ignore_busy(self, channels: int | str) -> None:
         """If set the TLU ignores the BUSY signal from a DUT in AIDA mode.
-            Channels consits of a 4-bit WORD describing the DUT interfaces.
+            Channels consists of a 4-bit WORD describing the DUT interfaces.
             With DUT interface 1 = bit 0, interface 2 = bit 1, interface 3 = bit 2 and interface 4 = bit 3.
             #TODO not sure if this is true here. No answers in documentation.
 

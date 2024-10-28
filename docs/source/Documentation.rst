@@ -237,7 +237,7 @@ AIDA Mode
 In AIDA mode the clock of the TLU and the DUT is synchronized.
 For this the TLU clock needs to be distributed.
 The distribution of the clock via the LEMO has the problem that the clock signal form no longer arrives cleanly at the device.
-So distributing the clock usign the HDMI connectors is advised.
+So distributing the clock using the HDMI connectors is advised.
 An important step is to synchronize all delays (e.q. different cable length) of the clock signal with the trigger signal if encountered.
 
 At the start of a run the TLU sends out a RESET signal to the DUT.

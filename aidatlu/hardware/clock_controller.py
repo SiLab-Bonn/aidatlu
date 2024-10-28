@@ -80,7 +80,7 @@ class ClockControl(object):
         self.i2c.write(self.i2c.modules["clk"], address, data)
 
     def parse_clock_conf(self, file_path: str) -> list:
-        """reads the clock config file and returns a panda dataframe with two rows Adress and Data
+        """reads the clock config file and returns a panda dataframe with two rows Address and Data
            The configuration file is produced by Clockbuilder Pro (Silicon Labs).
 
         Args:

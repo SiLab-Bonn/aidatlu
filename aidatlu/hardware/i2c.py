@@ -167,7 +167,7 @@ class I2CCore(object):
     def _compare_value_read_write(self, written: int, read: int, function: str) -> None:
         if written != read:
             self.log.warning(
-                "Mismatch in register function %s. written value %s, recieved value: %s."
+                "Mismatch in register function %s. written value %s, received value: %s."
                 % (function, written, read)
             )
         else:

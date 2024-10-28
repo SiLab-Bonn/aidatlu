@@ -24,7 +24,7 @@ class DacControl(object):
         """Sets the Threshold voltage for the trigger input channel. Use channel = 7 to set threshold for all channels.
 
         Args:
-            trigger_channel (int): Trigger input channel. From 1 to 7, where 7 controlls all input channels.
+            trigger_channel (int): Trigger input channel. From 1 to 7, where 7 controls all input channels.
             threshold_voltage (float): Threshold voltage in volt.
             ref_v (float): Reference voltage of the DAC. Defaults to the external reference voltage 1.3 V.
         """

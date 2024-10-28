@@ -247,7 +247,7 @@ class IOControl(object):
         """This enables the pins of one HDMI channel as input (0) or output (1).
             Enable is a 4-bit WORD for each pin as integer or binary string. With CONT = bit 0, SPARE = bit 1, TRIG = bit 2 and BUSY = bit 3.
             E.q. 0b0111 or '0111' sets CONT, SPARE and TRIGGER as outputs and BUSY as input. '1100' sets CONT and SPARE as input and BUSY and TRIG as output.
-            The clock runs with the seperate function: clock_hdmi_output.
+            The clock runs with the separate function: clock_hdmi_output.
 
         Args:
             hdmi_num (int): HDMI channels from 1 to 4
