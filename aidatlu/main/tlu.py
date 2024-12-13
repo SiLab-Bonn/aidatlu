@@ -482,8 +482,7 @@ class AidaTLU(object):
                     self.log_trigger_inputs(current_event[0:6])
                     first_event = False
 
-            except:
-                KeyboardInterrupt
+            except KeyboardInterrupt:
                 run_active = False
                 t.do_run = False
                 self.stop_run()
@@ -492,8 +491,7 @@ class AidaTLU(object):
         try:
             while np.size(current_event) > 1:
                 current_event = self.pull_fifo_event()
-        except:
-            KeyboardInterrupt
+        except KeyboardInterrupt:
             self.log.warning("Interrupted FIFO cleanup")
 
         if self.zmq_address not in [None, "off"]:
