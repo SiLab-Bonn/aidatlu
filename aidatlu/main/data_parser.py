@@ -127,6 +127,10 @@ class DataParser(object):
         """
         if np.any(w5) != 0:
             self.log.warning("Corrupted Data found")
+
+        # Cast w0 to uint64 for concatenating 2 x 32bit to 64bit later
+        w0 = w0.astype(np.uint64)
+
         out_array = np.zeros(len(w3), dtype=self.features)
         out_array["eventnumber"] = w3
         out_array["timestamp"] = (w0 & 0x0000FFFF << 32) + w1
