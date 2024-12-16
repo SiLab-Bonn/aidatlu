@@ -1,46 +1,30 @@
+from pathlib import Path
+
 import numpy as np
 import tables as tb
-from aidatlu.main.data_parser import DataParser
 from aidatlu.main.config_parser import TLUConfigure
+from aidatlu.main.data_parser import DataParser
+
+BASE_PATH = Path(__file__).parent
 
 
-def test_data_parser():
+def test_interpretation():
+    """Test data interpretation and compare to reference file
+    """
+
     data_parser = DataParser()
-    data_parser.interpret_data("raw_data_test.h5", "interpreted_data_test.h5")
-
-
-def test_interpreted_data():
-    features = np.dtype(
-        [
-            ("eventnumber", "u4"),
-            ("timestamp", "u4"),
-            ("overflow", "u4"),
-            ("eventtype", "u4"),
-            ("input1", "u4"),
-            ("input2", "u4"),
-            ("input3", "u4"),
-            ("input4", "u4"),
-            ("inpu5", "u4"),
-            ("input6", "u4"),
-            ("sc1", "u4"),
-            ("sc2", "u4"),
-            ("sc3", "u4"),
-            ("sc4", "u4"),
-            ("sc5", "u4"),
-            ("sc6", "u4"),
-        ]
+    data_parser.interpret_data(
+        BASE_PATH / "raw_data_test.h5", "interpreted_data_test.h5"
     )
 
-    interpreted_data_path = "interpreted_data.h5"
-    interpreted_test_data_path = "interpreted_data_test.h5"
+    interpreted_data_path = BASE_PATH / "interpreted_data.h5"
+    interpreted_test_data_path = BASE_PATH / "interpreted_data_test.h5"
 
-    with tb.open_file(interpreted_data_path, "r") as file:
-        table = file.root.interpreted_data
-        interpreted_data = np.array(table[:], dtype=features)
+    with tb.open_file(interpreted_data_path, "r") as h5_file:
+        interpreted_data = h5_file.root.interpreted_data[:]
 
-    with tb.open_file(interpreted_test_data_path, "r") as file:
-        table = file.root.interpreted_data
-        interpreted_test_data = np.array(table[:], dtype=features)
+    with tb.open_file(interpreted_test_data_path, "r") as h5_file:
+        interpreted_test_data = h5_file.root.interpreted_data[:]
 
     assert np.array_equal(interpreted_data, interpreted_test_data)
 
@@ -56,6 +40,5 @@ def test_load_config():
 
 
 if __name__ == "__main__":
-    test_data_parser()
-    test_interpreted_data()
+    test_interpretation()
     test_load_config()
