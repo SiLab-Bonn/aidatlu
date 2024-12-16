@@ -1,10 +1,11 @@
+import time
+
 from aidatlu import logger
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.utils import _set_bit
-import time
 
 
-class IOControl(object):
+class IOControl:
     """Main class for the control of the IO expander PCA9539PW.
     Four I/O expanders are in use, two for the 11 front panel LEDs. and two
     for the HDMI DUT interfaces.
@@ -55,7 +56,7 @@ class IOControl(object):
         self._set_ioexpander_direction(2, exp_id=2, cmd_byte=7, direction="output")
         self._set_ioexpander_output(2, exp_id=2, cmd_byte=3, value=0xB0)
 
-    """ LED Control """
+    ### LED Control ###
 
     def test_leds(self, single=True) -> None:
         """Test the 11 LEDs
@@ -149,8 +150,7 @@ class IOControl(object):
 
         if led_id == 5 and color not in ["r", "g", "off"]:
             raise ValueError("%s color not supported for Clock LED" % color)
-
-        elif color not in ["w", "r", "g", "b", "off"]:
+        if color not in ["w", "r", "g", "b", "off"]:
             raise ValueError("%s color not supported for LED" % color)
 
         # Clock LED has only two LEDs
@@ -241,7 +241,7 @@ class IOControl(object):
         if status_now[3] != status_next[3]:
             self._set_ioexpander_output(1, 2, 3, status_next[3])
 
-    """ Output Control """
+    ### Output Control ###
 
     def configure_hdmi(self, hdmi_channel: int, enable: int | str) -> None:
         """This enables the pins of one HDMI channel as input (0) or output (1).
@@ -258,7 +258,7 @@ class IOControl(object):
         if hdmi_channel < 1 or hdmi_channel > 4:
             raise ValueError("HDMI channel should be between 1 and 4")
 
-        if type(enable) == str:
+        if isinstance(enable, str):
             enable = int(enable, 2)
 
         if enable > 0b1111 or enable < 0b0000:
@@ -344,7 +344,7 @@ class IOControl(object):
             self.switch_led(5, "off")
         self.log.info("Clock LEMO output %s" % ("enabled" if enable else "disabled"))
 
-    """ General Expander Control """
+    ### General Expander Control ###
 
     def _set_ioexpander_polarity(
         self, io_exp: int, exp_id: int, cmd_byte: int, polarity: bool = False
