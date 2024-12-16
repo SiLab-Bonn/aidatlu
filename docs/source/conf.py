@@ -15,8 +15,8 @@ copyright = "2023, SiLab, Institute of Physics, University of Bonn"
 author = "Rasmus Partzsch"
 release = version
 
-import sys
 import os
+import sys
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the

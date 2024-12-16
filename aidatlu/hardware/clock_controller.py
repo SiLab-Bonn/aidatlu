@@ -1,6 +1,6 @@
+from aidatlu import logger
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.ioexpander_controller import IOControl
-from aidatlu import logger
 
 
 class ClockControl:
