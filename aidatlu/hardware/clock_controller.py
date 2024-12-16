@@ -3,7 +3,7 @@ from aidatlu.hardware.ioexpander_controller import IOControl
 from aidatlu import logger
 
 
-class ClockControl(object):
+class ClockControl:
     """The control class for the Si5344 clock chip.
     Main purpose is to read/write the clock configuration file to the chip.
     """

@@ -1,10 +1,8 @@
-from online_monitor.receiver.receiver import Receiver
-
 import pyqtgraph as pg
-from pyqtgraph.dockarea import DockArea, Dock
 from PyQt5 import QtWidgets
-import pyqtgraph as pg
-from pyqtgraph.dockarea import DockArea, Dock
+from pyqtgraph.dockarea import Dock, DockArea
+
+from online_monitor.receiver.receiver import Receiver
 from online_monitor.utils import utils
 
 

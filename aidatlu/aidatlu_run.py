@@ -1,5 +1,6 @@
-from main.tlu import AidaTLU
 import uhal
+
+from main.tlu import AidaTLU
 
 
 class AIDATLU:
