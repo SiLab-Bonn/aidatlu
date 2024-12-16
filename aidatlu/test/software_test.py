@@ -1,15 +1,24 @@
+from pathlib import Path
+
 import numpy as np
 import tables as tb
-from aidatlu.main.data_parser import DataParser
 from aidatlu.main.config_parser import TLUConfigure
+from aidatlu.main.data_parser import DataParser
+
+BASE_PATH = Path(__file__).parent
 
 
 def test_interpretation():
-    data_parser = DataParser()
-    data_parser.interpret_data("raw_data_test.h5", "interpreted_data_test.h5")
+    """Test data interpretation and compare to reference file
+    """
 
-    interpreted_data_path = "interpreted_data.h5"
-    interpreted_test_data_path = "interpreted_data_test.h5"
+    data_parser = DataParser()
+    data_parser.interpret_data(
+        BASE_PATH / "raw_data_test.h5", "interpreted_data_test.h5"
+    )
+
+    interpreted_data_path = BASE_PATH / "interpreted_data.h5"
+    interpreted_test_data_path = BASE_PATH / "interpreted_data_test.h5"
 
     with tb.open_file(interpreted_data_path, "r") as h5_file:
         interpreted_data = h5_file.root.interpreted_data[:]
