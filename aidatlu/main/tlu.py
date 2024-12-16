@@ -8,6 +8,7 @@ import numpy as np
 import tables as tb
 import uhal
 import zmq
+
 from aidatlu import logger
 from aidatlu.hardware.clock_controller import ClockControl
 from aidatlu.hardware.dac_controller import DacControl
@@ -19,7 +20,7 @@ from aidatlu.main.config_parser import TLUConfigure
 from aidatlu.main.data_parser import DataParser
 
 
-class AidaTLU():
+class AidaTLU:
     def __init__(self, hw, config_path, clock_config_path) -> None:
         self.log = logger.setup_main_logger(__class__.__name__)
 

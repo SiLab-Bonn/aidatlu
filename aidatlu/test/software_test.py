@@ -2,6 +2,7 @@ from pathlib import Path
 
 import numpy as np
 import tables as tb
+
 from aidatlu.main.config_parser import TLUConfigure
 from aidatlu.main.data_parser import DataParser
 
@@ -9,8 +10,7 @@ BASE_PATH = Path(__file__).parent
 
 
 def test_interpretation():
-    """Test data interpretation and compare to reference file
-    """
+    """Test data interpretation and compare to reference file"""
 
     data_parser = DataParser()
     data_parser.interpret_data(

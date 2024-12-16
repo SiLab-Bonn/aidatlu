@@ -1,6 +1,6 @@
+from aidatlu import logger
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.utils import _pack_bits
-from aidatlu import logger
 
 
 class TriggerLogic:

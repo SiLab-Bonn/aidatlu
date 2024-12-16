@@ -1,5 +1,5 @@
-from aidatlu.hardware.i2c import I2CCore
 from aidatlu import logger
+from aidatlu.hardware.i2c import I2CCore
 
 
 class DacControl:

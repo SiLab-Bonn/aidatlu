@@ -1,8 +1,9 @@
 import yaml
+
 from aidatlu import logger
 
 
-class TLUConfigure():
+class TLUConfigure:
     def __init__(self, TLU, io_control, config_path) -> None:
         self.log = logger.setup_main_logger(__class__.__name__)
 
