@@ -2,7 +2,7 @@ from aidatlu.hardware.i2c import I2CCore
 from aidatlu import logger
 
 
-class DacControl(object):
+class DacControl:
     """Control class for the three AD5665R. One controls the PMT control power (pwr_dac).
     Two set the trigger input thresholds (dac_1, dac_2).
     Each AD5665R has four parallel outputs.
@@ -56,10 +56,10 @@ class DacControl(object):
             self._set_dac_value(channel + 1, dac_value, 1)
             self._set_dac_value(channel + 1, dac_value, 2)
         # The DAC channels are connected in reverse order. The first two channels sit on DAC 1 in reverse order.
-        if channel < 2:
+        elif channel < 2:
             self._set_dac_value(1 - channel, dac_value, 1)
         # The last 4 channels sit on DAC 2 in reverse order.
-        if channel > 1 and channel < 6:
+        elif channel > 1 and channel < 6:
             self._set_dac_value(3 - (channel - 2), dac_value, 2)
         self.log.info(
             "Threshold of input %s set to %s V" % (trigger_channel, threshold_voltage)
@@ -123,16 +123,16 @@ class DacControl(object):
         """
         # There is a factor 2 in the output voltage between internal and external DAC reference. In general internal reference is a factor of 2 larger!
         if internal:
-            chr = [0x00, 0x01]
+            char = [0x00, 0x01]
         else:
-            chr = [0x00, 0x00]
+            char = [0x00, 0x00]
 
         if dac == 0:
-            self.i2c.write_array(self.i2c.modules["pwr_dac"], 0x38, chr)
+            self.i2c.write_array(self.i2c.modules["pwr_dac"], 0x38, char)
         if dac == 1:
-            self.i2c.write_array(self.i2c.modules["dac_1"], 0x38, chr)
+            self.i2c.write_array(self.i2c.modules["dac_1"], 0x38, char)
         if dac == 2:
-            self.i2c.write_array(self.i2c.modules["dac_2"], 0x38, chr)
+            self.i2c.write_array(self.i2c.modules["dac_2"], 0x38, char)
         self.log.info(
             "Set %s DAC reference of DAC %s"
             % (("internal" if internal else "external"), dac)
@@ -161,12 +161,12 @@ class DacControl(object):
             )
             value = 0xFFFF
 
-        chr = [(value >> 8) & 0xFF, value & 0xFF]
+        char = [(value >> 8) & 0xFF, value & 0xFF]
         mem_addr = 0x18 + (channel & 0x7)
 
         if dac == 0:
-            self.i2c.write_array(self.i2c.modules["pwr_dac"], mem_addr, chr)
+            self.i2c.write_array(self.i2c.modules["pwr_dac"], mem_addr, char)
         if dac == 1:
-            self.i2c.write_array(self.i2c.modules["dac_1"], mem_addr, chr)
+            self.i2c.write_array(self.i2c.modules["dac_1"], mem_addr, char)
         if dac == 2:
-            self.i2c.write_array(self.i2c.modules["dac_2"], mem_addr, chr)
+            self.i2c.write_array(self.i2c.modules["dac_2"], mem_addr, char)

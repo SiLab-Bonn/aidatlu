@@ -1,4 +1,4 @@
-def _set_bit(value: int, index: int, set: bool = True) -> int:
+def _set_bit(value: int, index: int, set_bool: bool = True) -> int:
     """sets bit at given index of given value to bool set
 
     Args:
@@ -10,10 +10,9 @@ def _set_bit(value: int, index: int, set: bool = True) -> int:
         int: value with a set bit at index
     """
 
-    if set:
+    if set_bool:
         return value | (1 << index)
-    else:
-        return value & ~(1 << index)
+    return value & ~(1 << index)
 
 
 def _pack_bits(vector: list) -> int:
@@ -27,8 +26,8 @@ def _pack_bits(vector: list) -> int:
     """
     packed_bits = 0
     temp_int = 0
-    for channel in range(len(vector)):
-        temp_int = int(vector[channel]) << channel * 5
+    for i, channel in enumerate(vector):
+        temp_int = int(channel) << i * 5
         packed_bits = packed_bits | temp_int
     return packed_bits
 
@@ -39,7 +38,7 @@ from pathlib import Path
 def find_latest_file(path: str, index: str):
     """Find latest file that includes a given subset of strings called index in directory.
     Args:
-        path (str): Path to directory. For same directory as python script use for e.q. './target_dir'.
+        path (str): Path to directory. For same directory as python script use e.g. './target_dir'.
         index (str): (Optional) Find if specific characters are in Pathfile
     Returns:
         path: Path to file in target Director. Use str(find_path(.)) to obtain path as string.
