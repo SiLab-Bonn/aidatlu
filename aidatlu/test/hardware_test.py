@@ -1,15 +1,16 @@
-from aidatlu.main.tlu import AidaTLU
+import time
+
+import numpy as np
+import uhal
+
+from aidatlu.hardware.clock_controller import ClockControl
+from aidatlu.hardware.dac_controller import DacControl
+from aidatlu.hardware.dut_controller import DUTLogic
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.ioexpander_controller import IOControl
-from aidatlu.hardware.dac_controller import DacControl
-from aidatlu.hardware.clock_controller import ClockControl
-from aidatlu.hardware.dut_controller import DUTLogic
 from aidatlu.hardware.trigger_controller import TriggerLogic
 from aidatlu.main.config_parser import TLUConfigure
-
-import uhal
-import time
-import numpy as np
+from aidatlu.main.tlu import AidaTLU
 
 
 class Test_IOCControl:

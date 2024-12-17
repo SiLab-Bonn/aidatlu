@@ -1,10 +1,11 @@
 #! /usr/bin/env python3
 # load binary lib/pyeudaq.so
-import pyeudaq
-from pyeudaq import EUDAQ_INFO, EUDAQ_ERROR
 import time
-from main.tlu import AidaTLU
+
+import pyeudaq
 import uhal
+from main.tlu import AidaTLU
+from pyeudaq import EUDAQ_ERROR, EUDAQ_INFO
 
 """
 Example Producer from EUDAQ

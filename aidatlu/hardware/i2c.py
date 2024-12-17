@@ -1,5 +1,6 @@
 import time
 from math import ceil
+
 from aidatlu import logger
 
 i2c_addr = {
@@ -18,7 +19,7 @@ i2c_addr = {
 }
 
 
-class I2CCore(object):
+class I2CCore:
     def __init__(self, hw_int):
         """hw_int: IPBus HwInterface instance"""
         self.log = logger.setup_derived_logger(__class__.__name__)
@@ -65,13 +66,13 @@ class I2CCore(object):
         register: str  Name of node in address file
         value:    int  Value to be written
         """
-        if type(value) != int:
+        if not isinstance(value, int):
             raise TypeError("Value must be integer")
         try:
             self.i2c_hw.getNode(register).write(value)
             self.i2c_hw.dispatch()
-        except Exception:
-            raise
+        except Exception as e:
+            raise e
 
     def read_register(self, register: str) -> int:
         """
@@ -82,10 +83,9 @@ class I2CCore(object):
             self.i2c_hw.dispatch()
             if ret.valid():
                 return ret.value()
-            else:
-                raise RuntimeError("Error reading register %s" % register)
-        except Exception:
-            raise
+            raise RuntimeError("Error reading register %s" % register)
+        except Exception as e:
+            raise e
 
     def get_i2c_status(self):
         return self.read_register("i2c_master.i2c_cmdstatus")

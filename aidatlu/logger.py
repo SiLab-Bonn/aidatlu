@@ -1,6 +1,6 @@
 import logging
+
 import coloredlogs
-import argparse
 
 FORMAT = "%(asctime)s [%(name)-18s] - %(levelname)-7s %(message)s"
 

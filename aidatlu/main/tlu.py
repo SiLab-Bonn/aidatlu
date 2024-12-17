@@ -1,25 +1,26 @@
 import logging
-import uhal
-import aidatlu.logger as logger
+import threading
+import time
+from datetime import datetime
+from pathlib import Path
+
 import numpy as np
 import tables as tb
-from datetime import datetime
+import uhal
 import zmq
-from pathlib import Path
-import time
-import threading
 
-from aidatlu.hardware.i2c import I2CCore
+from aidatlu import logger
 from aidatlu.hardware.clock_controller import ClockControl
-from aidatlu.hardware.ioexpander_controller import IOControl
 from aidatlu.hardware.dac_controller import DacControl
-from aidatlu.hardware.trigger_controller import TriggerLogic
 from aidatlu.hardware.dut_controller import DUTLogic
+from aidatlu.hardware.i2c import I2CCore
+from aidatlu.hardware.ioexpander_controller import IOControl
+from aidatlu.hardware.trigger_controller import TriggerLogic
 from aidatlu.main.config_parser import TLUConfigure
 from aidatlu.main.data_parser import DataParser
 
 
-class AidaTLU(object):
+class AidaTLU:
     def __init__(self, hw, config_path, clock_config_path) -> None:
         self.log = logger.setup_main_logger(__class__.__name__)
 
@@ -281,34 +282,25 @@ class AidaTLU(object):
 
     def init_raw_data_table(self) -> None:
         """Initializes the raw data table, where the raw FIFO data is found."""
-        self.data = np.dtype(
-            [
-                ("raw", "u4"),
-            ]
-        )
-
-        config = np.dtype(
-            [
-                ("attribute", "S32"),
-                ("value", "S32"),
-            ]
-        )
+        data_dtype = np.dtype([("raw", "u4")])
+        config_dtype = np.dtype([("attribute", "S32"), ("value", "S32")])
 
         Path(self.path).mkdir(parents=True, exist_ok=True)
-        self.filter_data = tb.Filters(complib="blosc", complevel=5)
+        hdf5_filter = tb.Filters(complib="blosc", complevel=5)
         self.h5_file = tb.open_file(self.raw_data_path, mode="w", title="TLU")
         self.data_table = self.h5_file.create_table(
             self.h5_file.root,
             name="raw_data",
-            description=self.data,
-            title="data",
-            filters=self.filter_data,
+            description=data_dtype,
+            title="Raw data",
+            filters=hdf5_filter,
         )
         config_table = self.h5_file.create_table(
             self.h5_file.root,
             name="conf",
-            description=config,
-            filters=self.filter_data,
+            description=config_dtype,
+            title="Configuration",
+            filters=hdf5_filter,
         )
         self.buffer = []
         config_table.append(self.conf_list)

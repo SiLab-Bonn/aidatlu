@@ -2,7 +2,7 @@ from aidatlu import logger
 from aidatlu.hardware.i2c import I2CCore
 
 
-class DUTLogic(object):
+class DUTLogic:
     def __init__(self, i2c: I2CCore):
         self.log = logger.setup_derived_logger(__class__.__name__)
         self.i2c = i2c
@@ -15,7 +15,7 @@ class DUTLogic(object):
         Args:
             value (int | str): 4-bit WORD to enable the the HDMI outputs. Can be an integer or binary string.
         """
-        if type(enable) == str:
+        if isinstance(enable, str):
             enable = int(enable, 2)
 
         if enable > 0b1111 or enable < 0b0000:
@@ -35,7 +35,7 @@ class DUTLogic(object):
             mode (int | str): 8-bit WORD to set the mode for each DUT. Can be an integer or binary string.
         """
 
-        if type(mode) == str:
+        if isinstance(mode, str):
             mode = int(mode, 2)
 
         if mode > 0b11111111 or mode < 0b00000000:
@@ -64,7 +64,7 @@ class DUTLogic(object):
         Args:
             channels (int | str): _description_#TODO
         """
-        if type(channels) == str:
+        if isinstance(channels, str):
             channels = int(channels, 2)
 
         if channels > 0b1111 or channels < 0b0000:

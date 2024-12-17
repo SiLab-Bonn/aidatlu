@@ -1,5 +1,4 @@
 from online_monitor.converter.transceiver import Transceiver
-import zmq
 from online_monitor.utils import utils
 
 
