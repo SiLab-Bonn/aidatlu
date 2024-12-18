@@ -4,12 +4,13 @@ from main.tlu import AidaTLU
 
 class AIDATLU:
     def __init__(self, config_path, clock_path):
-        print(r" ---------------------------------------")
+        print(r"----------------------------------------")
         print(r"    _   ___ ___   _     _____ _   _   _ ")
         print(r"   /_\ |_ _|   \ /_\   |_   _| | | | | |")
         print(r"  / _ \ | || |) / _ \ -- | | | |_| |_| |")
         print(r" /_/ \_\___|___/_/ \_\   |_| |____\___/ ")
-        print(r" ---------------------------------------")
+        print(r"                                        ")
+        print(r"----------------------------------------")
         print("tlu.help()\n")
 
         self.config_file = config_path

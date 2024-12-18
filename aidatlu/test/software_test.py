@@ -1,11 +1,11 @@
 import numpy as np
 import tables as tb
-import aidatlu.main.data_parser as DataParser
+from aidatlu.main.data_parser import interpret_data
 from aidatlu.main.config_parser import TLUConfigure
 
 
 def test_data_parser():
-    DataParser.interpret_data("raw_data_test.h5", "interpreted_data_test.h5")
+    interpret_data("raw_data_test.h5", "interpreted_data_test.h5")
 
 
 def test_interpreted_data():

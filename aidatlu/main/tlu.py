@@ -1,4 +1,3 @@
-import logging
 import threading
 import time
 from datetime import datetime
@@ -17,7 +16,7 @@ from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.ioexpander_controller import IOControl
 from aidatlu.hardware.trigger_controller import TriggerLogic
 from aidatlu.main.config_parser import TLUConfigure
-import aidatlu.main.data_parser as DataParser
+from aidatlu.main.data_parser import interpret_data
 
 
 class AidaTLU:
@@ -41,7 +40,6 @@ class AidaTLU:
 
         self.reset_configuration()
         self.config_parser = TLUConfigure(self, self.io_controller, config_path)
-        self.data_parser = DataParser
 
         self.log.success("TLU initialized")
 
@@ -424,7 +422,7 @@ class AidaTLU:
         first_event = True
         self.stop_condition = False
         # prepare data handling and zmq connection
-        save_data, interpret_data = self.config_parser.get_data_handling()
+        save_data, interpret_data_bool = self.config_parser.get_data_handling()
         self.zmq_address = self.config_parser.get_zmq_connection()
         self.max_trigger, self.timeout = self.config_parser.get_stop_condition()
 
@@ -491,13 +489,8 @@ class AidaTLU:
 
         if save_data:
             self.h5_file.close()
-        if interpret_data:
-            try:
-                self.data_parser.interpret_data(
-                    self.raw_data_path, self.interpreted_data_path
-                )
-            except:
-                self.log.warning("Cannot interpret data.")
+        if interpret_data_bool:
+            interpret_data(self.raw_data_path, self.interpreted_data_path)
         self.log.success("Run finished")
 
 
