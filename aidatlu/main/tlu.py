@@ -17,7 +17,7 @@ from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.ioexpander_controller import IOControl
 from aidatlu.hardware.trigger_controller import TriggerLogic
 from aidatlu.main.config_parser import TLUConfigure
-from aidatlu.main.data_parser import DataParser
+import aidatlu.main.data_parser as DataParser
 
 
 class AidaTLU:
@@ -41,7 +41,7 @@ class AidaTLU:
 
         self.reset_configuration()
         self.config_parser = TLUConfigure(self, self.io_controller, config_path)
-        self.data_parser = DataParser()
+        self.data_parser = DataParser
 
         self.log.success("TLU initialized")
 
