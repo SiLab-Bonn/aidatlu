@@ -95,7 +95,7 @@ class TLUConfigure:
             tuple: two bools, save and interpret data.
         """
 
-        return self.conf["save_data"], self.conf["save_data"]
+        return self.conf["save_data"]
 
     def get_stop_condition(self) -> tuple:
         """Information about tlu stop condition.

@@ -17,13 +17,15 @@ from aidatlu.hardware.ioexpander_controller import IOControl
 from aidatlu.hardware.trigger_controller import TriggerLogic
 from aidatlu.main.config_parser import TLUConfigure
 from aidatlu.main.data_parser import interpret_data
+from aidatlu.test.utils import MockI2C
 
 
 class AidaTLU:
     def __init__(self, hw, config_path, clock_config_path) -> None:
         self.log = logger.setup_main_logger(__class__.__name__)
 
-        self.i2c = I2CCore(hw)
+        # self.i2c = I2CCore(hw)
+        self.i2c = MockI2C(None)
         self.i2c_hw = hw
         self.log.info("Initializing IPbus interface")
         self.i2c.init()
@@ -422,7 +424,7 @@ class AidaTLU:
         first_event = True
         self.stop_condition = False
         # prepare data handling and zmq connection
-        save_data, interpret_data_bool = self.config_parser.get_data_handling()
+        save_data = self.config_parser.get_data_handling()
         self.zmq_address = self.config_parser.get_zmq_connection()
         self.max_trigger, self.timeout = self.config_parser.get_stop_condition()
 
@@ -489,8 +491,8 @@ class AidaTLU:
 
         if save_data:
             self.h5_file.close()
-        if interpret_data_bool:
             interpret_data(self.raw_data_path, self.interpreted_data_path)
+
         self.log.success("Run finished")
 
 
@@ -505,5 +507,4 @@ if __name__ == "__main__":
     tlu = AidaTLU(hw, config_path, clock_path)
 
     tlu.configure()
-
     tlu.run()

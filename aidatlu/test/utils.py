@@ -44,6 +44,10 @@ class MockI2C(I2CCore):
         """Mock I2C device memory write"""
         self.i2c_device_table[device_addr][mem_addr] = value
 
+    def write_array(self, device_addr: int, mem_addr: int, values: list) -> None:
+        """Mock I2C device memory array write"""
+        self.i2c_device_table[device_addr][mem_addr] = values
+
     def read(self, device_addr: int, mem_addr: int) -> int:
         """Mock I2C memory read"""
         return self.i2c_device_table[device_addr][mem_addr]

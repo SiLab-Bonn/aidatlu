@@ -1,44 +1,34 @@
-from pathlib import Path
-
 import numpy as np
 import tables as tb
+import yaml
+from pathlib import Path
 from aidatlu.main.data_parser import interpret_data
 from aidatlu.main.config_parser import TLUConfigure
 
-BASE_PATH = Path(__file__).parent
+
+FILEPATH = Path(__file__).parent
 
 
-def test_interpretation():
-    """Test data interpretation and compare to reference file
-    """
+def test_data_parser():
+    interpret_data("raw_data_test.h5", "interpreted_data_test.h5")
 
-    data_parser = DataParser()
-    data_parser.interpret_data(
-        BASE_PATH / "raw_data_test.h5", "interpreted_data_test.h5"
-    )
 
-    interpreted_data_path = BASE_PATH / "interpreted_data.h5"
-    interpreted_test_data_path = BASE_PATH / "interpreted_data_test.h5"
+def test_interpreted_data():
+    interpreted_data_path = FILEPATH / "interpreted_data.h5"
+    interpreted_test_data_path = FILEPATH / "interpreted_data_test.h5"
 
-    with tb.open_file(interpreted_data_path, "r") as h5_file:
-        interpreted_data = h5_file.root.interpreted_data[:]
+    with tb.open_file(interpreted_data_path, "r") as file:
+        interpreted_data = file.root.interpreted_data[:]
+        config_table = file.root.conf[:]
 
-    with tb.open_file(interpreted_test_data_path, "r") as h5_file:
-        interpreted_test_data = h5_file.root.interpreted_data[:]
+    with tb.open_file(interpreted_test_data_path, "r") as file:
+        interpreted_test_data = file.root.interpreted_data[:]
+        config_table_test = file.root.conf[:]
 
     assert np.array_equal(interpreted_data, interpreted_test_data)
-
-
-def test_load_config():
-    config_path = "../tlu_configuration.yaml"
-    config_parser = TLUConfigure(TLU=None, io_control=None, config_path=config_path)
-    _ = config_parser.get_configuration_table()
-    _ = config_parser.get_data_handling()
-    _ = config_parser.get_output_data_path()
-    _ = config_parser.get_stop_condition()
-    _ = config_parser.get_zmq_connection()
+    assert np.array_equal(config_table, config_table_test)
 
 
 if __name__ == "__main__":
-    test_interpretation()
-    test_load_config()
+    test_data_parser()
+    test_interpreted_data()
