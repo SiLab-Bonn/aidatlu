@@ -8,31 +8,32 @@ from aidatlu.main.tlu import AidaTLU
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.test.utils import MockI2C
 
-BASE_PATH = Path(__file__).parent
+FILEPATH = Path(__file__).parent
 
 MOCK = True
 
 if MOCK:
-    I2C_METHOD = MockI2C
-    I2C = I2C_METHOD(None)
+    I2CMETHOD = MockI2C
+    HW = None
+    I2C = I2CMETHOD(HW)
 elif not MOCK:
     import uhal
 
     uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
     manager = uhal.ConnectionManager("file://../misc/aida_tlu_connection.xml")
-    hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
-    I2C_METHOD = I2CCore
-    I2C = I2C_METHOD(hw)
+    HW = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
+    I2CMETHOD = I2CCore
+    I2C = I2CMETHOD(HW)
 
 I2C.init()
-IO_CONTROLLER = IOControl(I2C)
+IOCONTROLLER = IOControl(I2C)
 
 
 TLU = AidaTLU(
-    None,
-    BASE_PATH / "tlu_test_configuration.yaml",
-    BASE_PATH / "../misc/aida_tlu_clk_config.txt",
-    i2c=I2C_METHOD,
+    HW,
+    FILEPATH / "tlu_test_configuration.yaml",
+    FILEPATH / "../misc/aida_tlu_clk_config.txt",
+    i2c=I2CMETHOD,
 )
 
 
@@ -41,10 +42,10 @@ def test_config_parser():
 
     config_parser = TLUConfigure(
         TLU=TLU,
-        io_control=IO_CONTROLLER,
-        config_path=BASE_PATH / "tlu_test_configuration.yaml",
+        io_control=IOCONTROLLER,
+        config_path=FILEPATH / "tlu_test_configuration.yaml",
     )
-    with open(BASE_PATH / "tlu_test_configuration.yaml") as yaml_file:
+    with open(FILEPATH / "tlu_test_configuration.yaml") as yaml_file:
         test_config = yaml.safe_load(yaml_file)
     assert isinstance(config_parser.get_configuration_table(), list)
     assert test_config["save_data"] == config_parser.get_data_handling()
@@ -57,8 +58,8 @@ def test_dut_configuration():
     """Test configuration of the DUT interfaces"""
     config_parser = TLUConfigure(
         TLU=TLU,
-        io_control=IO_CONTROLLER,
-        config_path=BASE_PATH / "tlu_test_configuration.yaml",
+        io_control=IOCONTROLLER,
+        config_path=FILEPATH / "tlu_test_configuration.yaml",
     )
     config_parser.conf_dut()
 
@@ -67,8 +68,8 @@ def test_trigger_logic_configuration():
     """Test configuration of the trigger logic"""
     config_parser = TLUConfigure(
         TLU=TLU,
-        io_control=IO_CONTROLLER,
-        config_path=BASE_PATH / "tlu_test_configuration.yaml",
+        io_control=IOCONTROLLER,
+        config_path=FILEPATH / "tlu_test_configuration.yaml",
     )
     config_parser.conf_trigger_logic()
 
@@ -77,8 +78,8 @@ def test_trigger_input_configuration():
     """Test configuration of the trigger inputs"""
     config_parser = TLUConfigure(
         TLU=TLU,
-        io_control=IO_CONTROLLER,
-        config_path=BASE_PATH / "tlu_test_configuration.yaml",
+        io_control=IOCONTROLLER,
+        config_path=FILEPATH / "tlu_test_configuration.yaml",
     )
     config_parser.conf_trigger_inputs()
 

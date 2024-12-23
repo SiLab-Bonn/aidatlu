@@ -1,19 +1,17 @@
+from pathlib import Path
 import numpy as np
 import tables as tb
-import yaml
-from pathlib import Path
+import pytest
 from aidatlu.main.data_parser import interpret_data
-from aidatlu.main.config_parser import TLUConfigure
-
 
 FILEPATH = Path(__file__).parent
 
 
-def test_data_parser():
-    interpret_data("raw_data_test.h5", "interpreted_data_test.h5")
-
-
 def test_interpreted_data():
+    """Test interpreting and parsing data"""
+
+    interpret_data(FILEPATH / "raw_data_test.h5", FILEPATH / "interpreted_data_test.h5")
+
     interpreted_data_path = FILEPATH / "interpreted_data.h5"
     interpreted_test_data_path = FILEPATH / "interpreted_data_test.h5"
 
@@ -30,5 +28,4 @@ def test_interpreted_data():
 
 
 if __name__ == "__main__":
-    test_data_parser()
-    test_interpreted_data()
+    pytest.main()

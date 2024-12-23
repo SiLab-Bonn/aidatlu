@@ -1,13 +1,16 @@
 import yaml
+from pathlib import Path
 from aidatlu import logger
 from aidatlu.hardware.i2c import I2CCore, i2c_addr
+
+FILEPATH = Path(__file__).parent
 
 
 class MockI2C(I2CCore):
     """Class mocking the I2C interface and replacing the hardware with register dictionaries for testing."""
 
     def __init__(self, hw_int) -> None:  # noqa
-        with open("register_table.yaml", "r") as yaml_file:
+        with open(FILEPATH / "register_table.yaml", "r") as yaml_file:
             self.reg_table = yaml.safe_load(yaml_file)
         self.i2c_device_table = {
             0x21: {},
