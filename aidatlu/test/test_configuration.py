@@ -5,11 +5,25 @@ import pytest
 from aidatlu.main.config_parser import TLUConfigure
 from aidatlu.hardware.ioexpander_controller import IOControl
 from aidatlu.main.tlu import AidaTLU
+from aidatlu.hardware.i2c import I2CCore
 from aidatlu.test.utils import MockI2C
 
 BASE_PATH = Path(__file__).parent
 
-I2C = MockI2C(None)
+MOCK = True
+
+if MOCK:
+    I2C_METHOD = MockI2C
+    I2C = I2C_METHOD(None)
+elif not MOCK:
+    import uhal
+
+    uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
+    manager = uhal.ConnectionManager("file://../misc/aida_tlu_connection.xml")
+    hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
+    I2C_METHOD = I2CCore
+    I2C = I2C_METHOD(hw)
+
 I2C.init()
 IO_CONTROLLER = IOControl(I2C)
 
@@ -17,7 +31,8 @@ IO_CONTROLLER = IOControl(I2C)
 TLU = AidaTLU(
     None,
     BASE_PATH / "tlu_test_configuration.yaml",
-    BASE_PATH / "../misc/aida_tlu_connection.xml",
+    BASE_PATH / "../misc/aida_tlu_clk_config.txt",
+    i2c=I2C_METHOD,
 )
 
 
@@ -51,21 +66,21 @@ def test_dut_configuration():
 def test_trigger_logic_configuration():
     """Test configuration of the trigger logic"""
     config_parser = TLUConfigure(
-        TLU=None,
+        TLU=TLU,
         io_control=IO_CONTROLLER,
         config_path=BASE_PATH / "tlu_test_configuration.yaml",
     )
-    # config_parser.conf_trigger_logic()
+    config_parser.conf_trigger_logic()
 
 
 def test_trigger_input_configuration():
     """Test configuration of the trigger inputs"""
     config_parser = TLUConfigure(
-        TLU=None,
+        TLU=TLU,
         io_control=IO_CONTROLLER,
         config_path=BASE_PATH / "tlu_test_configuration.yaml",
     )
-    # config_parser.conf_trigger_inputs()
+    config_parser.conf_trigger_inputs()
 
 
 if __name__ == "__main__":

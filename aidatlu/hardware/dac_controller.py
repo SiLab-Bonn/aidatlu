@@ -191,21 +191,3 @@ class DacControl:
         # The last 4 channels sit on DAC 2 in reverse order.
         elif channel > 1 and channel < 6:
             return self._get_dac_value(3 - (channel - 2), 2)
-
-    def _get_dac_value(self, channel: int, dac: int = 0) -> int:
-        """Get the output value of the power DAC
-
-        Args:
-            channel (int): DAC channel
-            dac (int): 0 is the power dac, 1 and 2 are DAC 1 and DAC 2 for the thresholds. Defaults to 0.
-        """
-        if channel < 0 or channel > 7:
-            raise ValueError("Channel has to be between 0 and 7")
-
-        mem_addr = 0x18 + (channel & 0x7)
-        if dac == 0:
-            return self.i2c.read(self.i2c.modules["pwr_dac"], mem_addr)
-        if dac == 1:
-            return self.i2c.read(self.i2c.modules["dac_1"], mem_addr)
-        if dac == 2:
-            return self.i2c.read(self.i2c.modules["dac_2"], mem_addr)

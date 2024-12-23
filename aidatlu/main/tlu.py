@@ -5,7 +5,6 @@ from pathlib import Path
 
 import numpy as np
 import tables as tb
-import uhal
 import zmq
 
 from aidatlu import logger
@@ -17,18 +16,17 @@ from aidatlu.hardware.ioexpander_controller import IOControl
 from aidatlu.hardware.trigger_controller import TriggerLogic
 from aidatlu.main.config_parser import TLUConfigure
 from aidatlu.main.data_parser import interpret_data
-from aidatlu.test.utils import MockI2C
 
 
 class AidaTLU:
-    def __init__(self, hw, config_path, clock_config_path) -> None:
+    def __init__(self, hw, config_path, clock_config_path, i2c=I2CCore) -> None:
         self.log = logger.setup_main_logger(__class__.__name__)
 
-        # self.i2c = I2CCore(hw)
-        self.i2c = MockI2C(None)
+        self.i2c = i2c(hw)
         self.i2c_hw = hw
         self.log.info("Initializing IPbus interface")
         self.i2c.init()
+
         if self.i2c.modules["eeprom"]:
             self.log.info("Found device with ID %s" % hex(self.get_device_id()))
 
@@ -497,6 +495,8 @@ class AidaTLU:
 
 
 if __name__ == "__main__":
+    import uhal
+
     uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
     manager = uhal.ConnectionManager("file://../misc/aida_tlu_connection.xml")
     hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))

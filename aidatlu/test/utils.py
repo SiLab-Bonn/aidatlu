@@ -27,6 +27,7 @@ class MockI2C(I2CCore):
         self.modules = i2c_addr  # Use I2C device name to address translation
 
     def init(self):
+        self.log.info("Initializing Mock I2C")
         self.set_i2c_clock_prescale(0x30)
         self.set_i2c_control(0x80)
 
@@ -50,7 +51,11 @@ class MockI2C(I2CCore):
 
     def read(self, device_addr: int, mem_addr: int) -> int:
         """Mock I2C memory read"""
-        return self.i2c_device_table[device_addr][mem_addr]
+        try:
+            return self.i2c_device_table[device_addr][mem_addr]
+        except KeyError:
+            self.i2c_device_table[device_addr][mem_addr] = -1
+            return self.i2c_device_table[device_addr][mem_addr]
 
     def write_register(self, register: str, value: int) -> None:
         """Mock IPbus register write"""
@@ -65,8 +70,16 @@ class MockI2C(I2CCore):
     def read_register(self, register: str) -> int:
         """Mock IPbus register read"""
         reg_adressing = register.split(".")
-        if len(reg_adressing) == 2:
-            return self.reg_table[reg_adressing[0]][reg_adressing[1]]["value"]
-        if len(reg_adressing) == 2:
-            return self.reg_table[reg_adressing[0]]["value"]
-        raise ValueError("Invalid register addressing")
+        try:
+            if len(reg_adressing) == 2:
+                return self.reg_table[reg_adressing[0]][reg_adressing[1]]["value"]
+            if len(reg_adressing) == 1:
+                return self.reg_table[reg_adressing[0]]["value"]
+            raise ValueError("Invalid register addressing")
+        except KeyError:
+            if len(reg_adressing) == 2:
+                self.reg_table[reg_adressing[0]][reg_adressing[1]]["value"] = -1
+                return self.reg_table[reg_adressing[0]][reg_adressing[1]]["value"]
+            if len(reg_adressing) == 1:
+                self.reg_table[reg_adressing[0]]["value"] = -1
+                return self.reg_table[reg_adressing[0]]["value"]
