@@ -26,7 +26,7 @@ trigger_inputs: #threshold voltages for the trigger inputs in V.
   trigger_inputs_logic: CH2 & CH4
 
   trigger_polarity: #TLU triggers on rising (0) or falling (1) edge
-    polarity: 1
+    polarity: falling
 
   trigger_signal_shape: #Stretches and delays each trigger input signal for an number of clock cycles,
     stretch: [2, 2, 2, 2, 2, 2]

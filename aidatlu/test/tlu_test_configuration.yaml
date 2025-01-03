@@ -1,9 +1,11 @@
 ################################################
-#
-# This configuration is only used during tests
-#
-###############################################
+#                                              #
+# This configuration is only used during tests #
+#                                              #
+################################################
 
+# Use mock I2C
+MOCK: True # This setting is ignored outside of tests
 
 internal_trigger: #Generate TLU internal trigger with given rate in Hz
   internal_trigger_rate: 100000
@@ -33,7 +35,7 @@ trigger_inputs: #threshold voltages for the trigger inputs in V.
   trigger_inputs_logic: CH1
 
   trigger_polarity: #TLU triggers on rising (0) or falling (1) edge
-    polarity: 1
+    polarity: falling
 
   trigger_signal_shape: #Stretches and delays each trigger input signal for an number of clock cycles,
     stretch: [2, 2, 2, 2, 2, 2]
