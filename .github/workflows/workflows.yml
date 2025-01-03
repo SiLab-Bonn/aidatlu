@@ -3,7 +3,7 @@ name: standard tests
 on:
   pull_request:
   push:
-    branches: [main, development]
+    branches: [main, development, tests]
 
 jobs:
   pre-commit:
@@ -13,7 +13,7 @@ jobs:
     - uses: actions/setup-python@v5
     - uses: pre-commit/action@v3.0.1
 
-  installation:
+  tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,3 +21,11 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -e .
+          pip install pytest
+
+      - name: Test with pytest
+        run: |
+          coverage run -m pytest  -v -s
+      - name: Generate Coverage Report
+        run: |
+          coverage report -m
