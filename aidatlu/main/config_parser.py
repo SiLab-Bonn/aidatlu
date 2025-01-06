@@ -18,15 +18,7 @@ class TLUConfigure:
         self.conf_dut()
         self.conf_trigger_inputs()
         self.conf_trigger_logic()
-        self.tlu.io_controller.clock_lemo_output(
-            self.conf["clock_lemo"]["enable_clock_lemo_output"]
-        )
-        [
-            self.tlu.dac_controller.set_voltage(
-                i + 1, self.conf["pmt_control"]["pmt_%s" % (i + 1)]
-            )
-            for i in range(len(self.conf["pmt_control"]))
-        ]
+        self.conf_utils()
         self.tlu.set_enable_record_data(1)
         self.log.success("TLU configured")
 
@@ -130,6 +122,18 @@ class TLUConfigure:
             str: ZMQ Address
         """
         return self.conf["zmq_connection"]
+
+    def conf_utils(self):
+        """Configures PMT power outputs and clock LEMO I/O"""
+        self.tlu.io_controller.clock_lemo_output(
+            self.conf["clock_lemo"]["enable_clock_lemo_output"]
+        )
+        [
+            self.tlu.dac_controller.set_voltage(
+                i + 1, self.conf["pmt_control"]["pmt_%s" % (i + 1)]
+            )
+            for i in range(len(self.conf["pmt_control"]))
+        ]
 
     def conf_dut(self) -> None:
         """Parse the configuration for the DUT interface to the AIDATLU."""
