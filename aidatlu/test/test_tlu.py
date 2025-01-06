@@ -14,19 +14,22 @@ MOCK = test_config["MOCK"]
 
 if MOCK:
     I2CMETHOD = MockI2C
-    I2C = I2CMETHOD(None)
+    HW = None
+    I2C = I2CMETHOD(HW)
 elif not MOCK:
     import uhal
 
     uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
-    manager = uhal.ConnectionManager("file://../misc/aida_tlu_connection.xml")
-    hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
+    manager = uhal.ConnectionManager(
+        "file://" + str(FILEPATH / "../misc/aida_tlu_connection.xml")
+    )
+    HW = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
     I2CMETHOD = I2CCore
-    I2C = I2CMETHOD(hw)
+    I2C = I2CMETHOD(HW)
 
 
 TLU = AidaTLU(
-    None,
+    HW,
     FILEPATH / "tlu_test_configuration.yaml",
     FILEPATH / "../misc/aida_tlu_clk_config.txt",
     i2c=I2CMETHOD,
@@ -46,7 +49,10 @@ def test_check_ups():
         assert TLU.get_timestamp() == -0x100000001
         assert TLU.get_scalar() == (-1, -1, -1, -1, -1, -1)
     elif not MOCK:
-        pass  # #TODO Implement this
+        TLU.set_event_fifo_csr(0)
+        assert TLU.get_event_fifo_csr() == 3
+        assert TLU.get_run_active() == 0
+        assert TLU.get_event_fifo_fill_level() == 0
 
 
 def test_configuration():

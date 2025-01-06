@@ -324,13 +324,13 @@ But also the individual log outputs can be displayed.
 
 .. code-block:: console
 
-    pytest -o log_cli=True
+    pytest -sv
 
 Tests can be run individually.
-
-.. code-block:: console
-
-    pytest software_test.py
+There is also an implemented AIDA-TLU mock, to allow tests and software development without hardware.
+The tests load the configuration file ```tlu_test_configuration.yaml```.
+Here one can also switch between mock and hardware using the setting ```MOCK: True``` or ```MOCK: False```.
+Default setting is ```MOCK: True```.
 
 Log Level
 ------

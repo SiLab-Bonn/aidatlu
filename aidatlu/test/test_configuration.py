@@ -22,7 +22,9 @@ elif not MOCK:
     import uhal
 
     uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
-    manager = uhal.ConnectionManager("file://../misc/aida_tlu_connection.xml")
+    manager = uhal.ConnectionManager(
+        "file://" + str(FILEPATH / "../misc/aida_tlu_connection.xml")
+    )
     HW = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
     I2CMETHOD = I2CCore
     I2C = I2CMETHOD(HW)
