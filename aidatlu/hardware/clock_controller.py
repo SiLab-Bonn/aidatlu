@@ -1,9 +1,9 @@
+from aidatlu import logger
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.ioexpander_controller import IOControl
-from aidatlu import logger
 
 
-class ClockControl(object):
+class ClockControl:
     """The control class for the Si5344 clock chip.
     Main purpose is to read/write the clock configuration file to the chip.
     """
@@ -80,7 +80,7 @@ class ClockControl(object):
         self.i2c.write(self.i2c.modules["clk"], address, data)
 
     def parse_clock_conf(self, file_path: str) -> list:
-        """reads the clock config file and returns a panda dataframe with two rows Adress and Data
+        """reads the clock config file and returns a panda dataframe with two rows Address and Data
            The configuration file is produced by Clockbuilder Pro (Silicon Labs).
 
         Args:

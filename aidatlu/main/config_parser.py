@@ -1,16 +1,15 @@
 import yaml
-import logging
+
 from aidatlu import logger
 
 
-class TLUConfigure(object):
+class TLUConfigure:
     def __init__(self, TLU, io_control, config_path) -> None:
         self.log = logger.setup_main_logger(__class__.__name__)
 
         self.tlu = TLU
         self.io_control = io_control
 
-        config_path = config_path
         with open(config_path, "r") as file:
             self.conf = yaml.full_load(file)
 
@@ -67,6 +66,15 @@ class TLUConfigure(object):
                 % str(self.conf["trigger_inputs"]["trigger_signal_shape"]["delay"]),
             ),
             (
+                "trigger_polarity",
+                "%s"
+                % (
+                    "falling"
+                    if self.conf["trigger_inputs"]["trigger_polarity"]["polarity"] == 1
+                    else "rising"
+                ),
+            ),
+            (
                 "enable_clock_lemo_output",
                 self.conf["clock_lemo"]["enable_clock_lemo_output"],
             ),
@@ -98,12 +106,12 @@ class TLUConfigure(object):
         try:
             max_number = int(self.conf["max_trigger_number"])
             self.log.info("Stop condition maximum triggers: %s" % max_number)
-        except:
+        except KeyError:
             max_number = None
         try:
             timeout = float(self.conf["timeout"])
             self.log.info("Stop condition timeout: %s s" % timeout)
-        except:
+        except KeyError:
             timeout = None
         return max_number, timeout
 
@@ -223,7 +231,7 @@ class TLUConfigure(object):
 
         # Sets the Trigger Leds to green if the Input is enabled and to red if the input is set to VETO.
         # TODO this breaks when there are multiple enabled and veto statements.
-        if trigger_configuration != None:
+        if trigger_configuration is not None:
             for trigger_led in range(6):
                 if "~CH%i" % (trigger_led + 1) in trigger_configuration:
                     self.io_control.switch_led(trigger_led + 6, "r")

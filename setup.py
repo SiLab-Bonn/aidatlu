@@ -1,5 +1,4 @@
-from setuptools import setup
-from setuptools import find_packages
+from setuptools import find_packages, setup
 
 author = "Christian Bespin, Rasmus Partzsch"
 author_email = "bespin@physik.uni-bonn.de, rasmus.partzsch@uni-bonn.de"

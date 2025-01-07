@@ -1,4 +1,4 @@
-#debugging and data  files 
+#debugging and data  files
 test.ipynb
 *.h5
 !/aidatlu/test/interpreted_data.h5

@@ -1,11 +1,8 @@
+import pyqtgraph as pg
 from online_monitor.receiver.receiver import Receiver
-
-import pyqtgraph as pg
-from pyqtgraph.dockarea import DockArea, Dock
-from PyQt5 import QtWidgets
-import pyqtgraph as pg
-from pyqtgraph.dockarea import DockArea, Dock
 from online_monitor.utils import utils
+from PyQt5 import QtWidgets
+from pyqtgraph.dockarea import Dock, DockArea
 
 
 class AIDATLUReciever(Receiver):

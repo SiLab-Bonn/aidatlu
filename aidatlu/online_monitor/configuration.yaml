@@ -3,10 +3,10 @@ converter :
     AIDA_TLU_Converter :
         kind : tlu_converter
         frontend : tcp://127.0.0.1:6500
-        backend : tcp://127.0.0.1:7501
-        theshold: 10
+        backend : tcp://127.0.0.1:7500
+        threshold: 10
+
 receiver :
     AIDA_TLU :
         kind : tlu_receiver
-        frontend : tcp://127.0.0.1:7501
- 
+        frontend : tcp://127.0.0.1:7500

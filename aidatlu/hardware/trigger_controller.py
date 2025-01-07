@@ -1,14 +1,14 @@
+from aidatlu import logger
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.utils import _pack_bits
-from aidatlu import logger
 
 
-class TriggerLogic(object):
+class TriggerLogic:
     def __init__(self, i2c: I2CCore) -> None:
         self.log = logger.setup_derived_logger(__class__.__name__)
         self.i2c = i2c
 
-    """ Internal Trigger Generation """
+    ### Internal Trigger Generation ###
 
     def set_internal_trigger_frequency(self, frequency: int) -> None:
         """Sets the internal trigger frequency.
@@ -63,14 +63,14 @@ class TriggerLogic(object):
         """
         self.i2c.write_register("triggerLogic.InternalTriggerIntervalW", interval)
 
-    """ Trigger Logic """
+    ### Trigger Logic ###
 
     def set_trigger_veto(self, veto: bool) -> None:
         """Enables or disables new trigger. This can be used to reset the procession of new triggers.
         Args:
             veto (bool): Sets a veto to the trigger logic of the tlu.
         """
-        if type(veto) != bool:
+        if not isinstance(veto, bool):
             raise TypeError("Veto must be type bool")
 
         self.i2c.write_register("triggerLogic.TriggerVetoW", int(veto))
@@ -130,7 +130,7 @@ class TriggerLogic(object):
         self.i2c.write_register("triggerLogic.TriggerPattern_highW", mask_high)
         self.log.debug("Trigger mask: %s" % self.get_trigger_mask())
 
-    """ Trigger Pulse Length and Delay """
+    ### Trigger Pulse Length and Delay ###
 
     def set_pulse_stretch_pack(self, vector: list) -> None:
         """Stretch word for trigger pulses. Each element of the input vector is stretched by N clock cycles.

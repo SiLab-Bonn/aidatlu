@@ -4,7 +4,7 @@
 Repository for controlling the AIDA-2020 Trigger Logic Unit (TLU) with Python using uHAL bindings from [IPbus](https://ipbus.web.cern.ch/).
 The Python control software is based on [EUDAQ2](https://github.com/eudaq/eudaq/tree/master/user/tlu).
 The software is a lightweight version written in Python with a focus on readability and user-friendliness.
-Most user cases can be set with a .yaml configuration file and started by executing a single Python script. 
+Most user cases can be set with a .yaml configuration file and started by executing a single Python script.
 For a more in-depth look at the hardware components please take a look at the official [AIDA-2020 TLU project](https://ohwr.org/project/fmc-mtlu).
 # Installation
 ## IPbus
@@ -37,7 +37,7 @@ Then start the controlhub from ipbus-software/controlhub/scripts.
 ```bash
 ./controlhub_start
 ```
-The contolhub needs to run for the working of the AIDA TLU, so needs to be started again each time the controlhub is stopped. 
+The contolhub needs to run for the working of the AIDA TLU, so needs to be started again each time the controlhub is stopped.
 The default IP address of the TLU is:
 ```
 192.168.200.30
@@ -57,7 +57,7 @@ If one executes tlu.py in the main directory, the TLU is initialized, configured
 The TLU is configured with the standard tlu_configuration file. To stop the run use ctrl+c.
 
 
-While configuring the TLU outputs are powered on and off. 
+While configuring the TLU outputs are powered on and off.
 This leads to problems in AIDA mode where the clock is powered off shortly during configuration.
 To avoid this at the start of runs in AIDA mode the best way is to use the aidatlu_run.py script.
 This is started and controlled with the terminal input:

@@ -1,25 +1,25 @@
-import logging
-import uhal
-import aidatlu.logger as logger
+import threading
+import time
+from datetime import datetime
+from pathlib import Path
+
 import numpy as np
 import tables as tb
-from datetime import datetime
+import uhal
 import zmq
-from pathlib import Path
-import time
-import threading
 
-from aidatlu.hardware.i2c import I2CCore
+from aidatlu import logger
 from aidatlu.hardware.clock_controller import ClockControl
-from aidatlu.hardware.ioexpander_controller import IOControl
 from aidatlu.hardware.dac_controller import DacControl
-from aidatlu.hardware.trigger_controller import TriggerLogic
 from aidatlu.hardware.dut_controller import DUTLogic
+from aidatlu.hardware.i2c import I2CCore
+from aidatlu.hardware.ioexpander_controller import IOControl
+from aidatlu.hardware.trigger_controller import TriggerLogic
 from aidatlu.main.config_parser import TLUConfigure
-from aidatlu.main.data_parser import DataParser
+from aidatlu.main.data_parser import interpret_data
 
 
-class AidaTLU(object):
+class AidaTLU:
     def __init__(self, hw, config_path, clock_config_path) -> None:
         self.log = logger.setup_main_logger(__class__.__name__)
 
@@ -40,7 +40,6 @@ class AidaTLU(object):
 
         self.reset_configuration()
         self.config_parser = TLUConfigure(self, self.io_controller, config_path)
-        self.data_parser = DataParser()
 
         self.log.success("TLU initialized")
 
@@ -213,7 +212,7 @@ class AidaTLU(object):
         self.run_number += 1
 
     def set_enable_record_data(self, value: int) -> None:
-        """#TODO not sure what this does. Looks like a seperate internal event buffer to the FIFO.
+        """#TODO not sure what this does. Looks like a separate internal event buffer to the FIFO.
 
         Args:
             value (int): #TODO I think this does not work
@@ -281,34 +280,25 @@ class AidaTLU(object):
 
     def init_raw_data_table(self) -> None:
         """Initializes the raw data table, where the raw FIFO data is found."""
-        self.data = np.dtype(
-            [
-                ("raw", "u4"),
-            ]
-        )
-
-        config = np.dtype(
-            [
-                ("attribute", "S32"),
-                ("value", "S32"),
-            ]
-        )
+        data_dtype = np.dtype([("raw", "u4")])
+        config_dtype = np.dtype([("attribute", "S32"), ("value", "S32")])
 
         Path(self.path).mkdir(parents=True, exist_ok=True)
-        self.filter_data = tb.Filters(complib="blosc", complevel=5)
+        hdf5_filter = tb.Filters(complib="blosc", complevel=5)
         self.h5_file = tb.open_file(self.raw_data_path, mode="w", title="TLU")
         self.data_table = self.h5_file.create_table(
             self.h5_file.root,
             name="raw_data",
-            description=self.data,
-            title="data",
-            filters=self.filter_data,
+            description=data_dtype,
+            title="Raw data",
+            filters=hdf5_filter,
         )
         config_table = self.h5_file.create_table(
             self.h5_file.root,
             name="conf",
-            description=config,
-            filters=self.filter_data,
+            description=config_dtype,
+            title="Configuration",
+            filters=hdf5_filter,
         )
         self.buffer = []
         config_table.append(self.conf_list)
@@ -432,7 +422,7 @@ class AidaTLU(object):
         first_event = True
         self.stop_condition = False
         # prepare data handling and zmq connection
-        save_data, interpret_data = self.config_parser.get_data_handling()
+        save_data, interpret_data_bool = self.config_parser.get_data_handling()
         self.zmq_address = self.config_parser.get_zmq_connection()
         self.max_trigger, self.timeout = self.config_parser.get_stop_condition()
 
@@ -482,8 +472,7 @@ class AidaTLU(object):
                     self.log_trigger_inputs(current_event[0:6])
                     first_event = False
 
-            except:
-                KeyboardInterrupt
+            except KeyboardInterrupt:
                 run_active = False
                 t.do_run = False
                 self.stop_run()
@@ -492,22 +481,16 @@ class AidaTLU(object):
         try:
             while np.size(current_event) > 1:
                 current_event = self.pull_fifo_event()
-        except:
-            KeyboardInterrupt
-            self.log.warning("Interupted FIFO cleanup")
+        except KeyboardInterrupt:
+            self.log.warning("Interrupted FIFO cleanup")
 
         if self.zmq_address not in [None, "off"]:
             self.socket.close()
 
         if save_data:
             self.h5_file.close()
-        if interpret_data:
-            try:
-                self.data_parser.interpret_data(
-                    self.raw_data_path, self.interpreted_data_path
-                )
-            except:
-                self.log.warning("Cannot interpret data.")
+        if interpret_data_bool:
+            interpret_data(self.raw_data_path, self.interpreted_data_path)
         self.log.success("Run finished")
 
 

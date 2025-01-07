@@ -8,7 +8,7 @@ Welcome to AIDA-TLU's documentation!
 
 .. toctree::
    :maxdepth: 2
-   
+
    Introduction
    Configuration
    Documentation

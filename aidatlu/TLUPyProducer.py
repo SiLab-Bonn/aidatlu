@@ -1,12 +1,13 @@
 #! /usr/bin/env python3
 # load binary lib/pyeudaq.so
-import pyeudaq
-from pyeudaq import EUDAQ_INFO, EUDAQ_ERROR
 import time
-from main.tlu import AidaTLU
-import uhal
 
-""" 
+import pyeudaq
+import uhal
+from main.tlu import AidaTLU
+from pyeudaq import EUDAQ_ERROR, EUDAQ_INFO
+
+"""
 Example Producer from EUDAQ
 This is not well tested. But something like this should work.
 Prob. one needs to work a bit on the run loop.

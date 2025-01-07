@@ -1,5 +1,5 @@
 
-Hardware Level 
+Hardware Level
 ========================
 
 Clock Control
@@ -37,4 +37,3 @@ Trigger Control
 
 .. autoclass:: aidatlu.hardware.trigger_controller.TriggerLogic
     :members:
-
