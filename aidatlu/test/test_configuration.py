@@ -15,10 +15,9 @@ with open(FILEPATH / "tlu_test_configuration.yaml") as yaml_file:
 MOCK = test_config["MOCK"]
 
 if MOCK:
-    I2CMETHOD = MockI2C
     HW = None
-    I2C = I2CMETHOD(HW)
-elif not MOCK:
+    I2CMETHOD = MockI2C
+else:
     import uhal
 
     uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
@@ -27,11 +26,6 @@ elif not MOCK:
     )
     HW = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
     I2CMETHOD = I2CCore
-    I2C = I2CMETHOD(HW)
-
-I2C.init()
-IOCONTROLLER = IOControl(I2C)
-
 
 TLU = AidaTLU(
     HW,
@@ -46,7 +40,6 @@ def test_config_parser():
 
     config_parser = TLUConfigure(
         TLU=TLU,
-        io_control=IOCONTROLLER,
         config_path=FILEPATH / "tlu_test_configuration.yaml",
     )
     with open(FILEPATH / "tlu_test_configuration.yaml") as yaml_file:
@@ -62,31 +55,9 @@ def test_dut_configuration():
     """Test configuration of the DUT interfaces"""
     config_parser = TLUConfigure(
         TLU=TLU,
-        io_control=IOCONTROLLER,
         config_path=FILEPATH / "tlu_test_configuration.yaml",
     )
     config_parser.conf_dut()
-    if MOCK:
-        # Read register does not have the same value as the write register for the mock
-        TLU.i2c.write_register(
-            "DUTInterfaces.DUTMaskR", TLU.i2c.read_register("DUTInterfaces.DUTMaskW")
-        )
-        TLU.i2c.write_register(
-            "DUTInterfaces.DUTInterfaceModeR",
-            TLU.i2c.read_register("DUTInterfaces.DUTInterfaceModeW"),
-        )
-        TLU.i2c.write_register(
-            "DUTInterfaces.DUTInterfaceModeModifierR",
-            TLU.i2c.read_register("DUTInterfaces.DUTInterfaceModeModifierW"),
-        )
-        TLU.i2c.write_register(
-            "DUTInterfaces.IgnoreDUTBusyR",
-            TLU.i2c.read_register("DUTInterfaces.IgnoreDUTBusyW"),
-        )
-        TLU.i2c.write_register(
-            "DUTInterfaces.IgnoreShutterVetoR",
-            TLU.i2c.read_register("DUTInterfaces.IgnoreShutterVetoW"),
-        )
 
     assert TLU.i2c.read_register("DUTInterfaces.DUTMaskR") == 0x7
     assert TLU.i2c.read_register("DUTInterfaces.DUTInterfaceModeR") == 0x13
@@ -112,7 +83,6 @@ def test_trigger_logic_configuration():
     """Test configuration of the trigger logic"""
     config_parser = TLUConfigure(
         TLU=TLU,
-        io_control=IOCONTROLLER,
         config_path=FILEPATH / "tlu_test_configuration.yaml",
     )
     config_parser.conf_trigger_logic()
@@ -129,7 +99,7 @@ def test_trigger_logic_configuration():
             TLU.i2c.read_register("triggerLogic.PulseDelayW"),
         )
 
-    elif not MOCK:
+    else:
         # Rounding error in TLU when calculating trigger frequency
         assert TLU.i2c.read_register("triggerLogic.InternalTriggerIntervalR") == 0x63E
 
@@ -155,7 +125,6 @@ def test_trigger_input_configuration():
     """Test configuration of the trigger inputs"""
     config_parser = TLUConfigure(
         TLU=TLU,
-        io_control=IOCONTROLLER,
         config_path=FILEPATH / "tlu_test_configuration.yaml",
     )
     config_parser.conf_trigger_inputs()
@@ -169,17 +138,7 @@ def test_trigger_input_configuration():
         assert TLU.i2c.read(TLU.i2c.modules["dac_1"], mem_addr) == [0x76, 0x26]
         assert TLU.i2c.read(TLU.i2c.modules["dac_2"], mem_addr) == [0x4E, 0xC4]
 
-        # Read register does not have the same value as the write register for the mock
-        TLU.i2c.write_register(
-            "triggerLogic.TriggerPattern_lowR",
-            TLU.i2c.read_register("triggerLogic.TriggerPattern_lowW"),
-        )
-        TLU.i2c.write_register(
-            "triggerLogic.TriggerPattern_highR",
-            TLU.i2c.read_register("triggerLogic.TriggerPattern_highW"),
-        )
-
-    elif not MOCK:
+    else:
         mem_addr = 0x18 + (0 & 0x7)
         assert TLU.i2c.read(TLU.i2c.modules["dac_1"], mem_addr) == 0xD8
         assert TLU.i2c.read(TLU.i2c.modules["dac_2"], mem_addr) == 0x89
@@ -191,14 +150,13 @@ def test_trigger_input_configuration():
     assert TLU.i2c.read_register("triggerLogic.TriggerPattern_highR") == 0xF8F8F8F8
 
 
-def test_conf_utils():
+def test_conf_auxillary():
     """Test PMT power and LEMO clock I/O"""
     config_parser = TLUConfigure(
         TLU=TLU,
-        io_control=IOCONTROLLER,
         config_path=FILEPATH / "tlu_test_configuration.yaml",
     )
-    config_parser.conf_utils()
+    config_parser.conf_auxillary()
 
     if MOCK:
         # Write array concatenates array bitwise, this is not implemented in the mock
@@ -211,7 +169,7 @@ def test_conf_utils():
         mem_addr = 0x18 + (3 & 0x7)
         assert TLU.i2c.read(TLU.i2c.modules["pwr_dac"], mem_addr) == [0xCC, 0xCC]
 
-    elif not MOCK:
+    else:
         mem_addr = 0x18 + (0 & 0x7)
         assert TLU.i2c.read(TLU.i2c.modules["pwr_dac"], mem_addr) == 0
         mem_addr = 0x18 + (1 & 0x7)

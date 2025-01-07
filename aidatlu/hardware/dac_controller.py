@@ -170,24 +170,3 @@ class DacControl:
             self.i2c.write_array(self.i2c.modules["dac_1"], mem_addr, char)
         if dac == 2:
             self.i2c.write_array(self.i2c.modules["dac_2"], mem_addr, char)
-
-    def _get_thresholds_dac_value(self, trigger_channel: int) -> tuple | list:
-        """Returns the values of the threshold DACs
-
-        Returns:
-            list | tuple: Threshold DAC values of the two threshold DACs
-        """
-        channel = trigger_channel - 1  # shift channel number by 1
-        # calculates the DAC value for the threshold DAC
-
-        # Get threshold for the different channels. The different handling of the channels comes from the weird connections of the ADC.
-        if channel == 6:
-            return self._get_dac_value(channel + 1, 1), self._get_dac_value(
-                channel + 1, 2
-            )
-        # The DAC channels are connected in reverse order. The first two channels sit on DAC 1 in reverse order.
-        elif channel < 2:
-            return self._get_dac_value(1 - channel, 1)
-        # The last 4 channels sit on DAC 2 in reverse order.
-        elif channel > 1 and channel < 6:
-            return self._get_dac_value(3 - (channel - 2), 2)

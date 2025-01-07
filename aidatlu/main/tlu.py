@@ -39,7 +39,7 @@ class AidaTLU:
         self.dut_logic = DUTLogic(self.i2c)
 
         self.reset_configuration()
-        self.config_parser = TLUConfigure(self, self.io_controller, config_path)
+        self.config_parser = TLUConfigure(self, config_path)
 
         self.log.success("TLU initialized")
 
@@ -338,7 +338,7 @@ class AidaTLU:
         self.total_trigger_number = self.trigger_logic.get_pre_veto_trigger()
         s0, s1, s2, s3, s4, s5 = self.get_scalar()
 
-        if self.zmq_address not in [None, "off"]:
+        if self.zmq_address:
             self.socket.send_string(
                 str(
                     [
@@ -442,7 +442,7 @@ class AidaTLU:
             )
             self.init_raw_data_table()
 
-        if self.zmq_address not in [None, "off"]:
+        if self.zmq_address:
             self.setup_zmq()
 
         t = threading.Thread(target=self.handle_status)
@@ -484,7 +484,7 @@ class AidaTLU:
         except KeyboardInterrupt:
             self.log.warning("Interrupted FIFO cleanup")
 
-        if self.zmq_address not in [None, "off"]:
+        if self.zmq_address:
             self.socket.close()
 
         if save_data:

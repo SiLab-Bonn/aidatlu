@@ -4,11 +4,10 @@ from aidatlu import logger
 
 
 class TLUConfigure:
-    def __init__(self, TLU, io_control, config_path) -> None:
+    def __init__(self, TLU, config_path) -> None:
         self.log = logger.setup_main_logger(__class__.__name__)
 
         self.tlu = TLU
-        self.io_control = io_control
 
         with open(config_path, "r") as file:
             self.conf = yaml.full_load(file)
@@ -18,7 +17,7 @@ class TLUConfigure:
         self.conf_dut()
         self.conf_trigger_inputs()
         self.conf_trigger_logic()
-        self.conf_utils()
+        self.conf_auxillary()
         self.tlu.set_enable_record_data(1)
         self.log.success("TLU configured")
 
@@ -123,7 +122,7 @@ class TLUConfigure:
         """
         return self.conf["zmq_connection"]
 
-    def conf_utils(self):
+    def conf_auxillary(self):
         """Configures PMT power outputs and clock LEMO I/O"""
         self.tlu.io_controller.clock_lemo_output(
             self.conf["clock_lemo"]["enable_clock_lemo_output"]
@@ -247,9 +246,9 @@ class TLUConfigure:
         if trigger_configuration is not None:
             for trigger_led in range(6):
                 if "~CH%i" % (trigger_led + 1) in trigger_configuration:
-                    self.io_control.switch_led(trigger_led + 6, "r")
+                    self.tlu.io_controller.switch_led(trigger_led + 6, "r")
                 elif "CH%i" % (trigger_led + 1) in trigger_configuration:
-                    self.io_control.switch_led(trigger_led + 6, "g")
+                    self.tlu.io_controller.switch_led(trigger_led + 6, "g")
 
             long_word = 0x0
             # Goes through all possible trigger combinations and checks if the combination is valid with the trigger logic.

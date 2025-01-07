@@ -3,7 +3,7 @@ name: standard tests
 on:
   pull_request:
   push:
-    branches: [main, development, tests]
+    branches: [main, development]
 
 jobs:
   pre-commit:
@@ -25,4 +25,4 @@ jobs:
 
       - name: Test with pytest
         run: |
-          pytest -sv
+          pytest

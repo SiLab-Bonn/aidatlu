@@ -72,12 +72,19 @@ class MockI2C(I2CCore):
 
     def read_register(self, register: str) -> int:
         """Mock IPbus register read"""
+        # Read register does not have the same value as the write register for the mock
+        register_read_write = register[:-1] + register[-1].replace("R", "W")
+        if register == "eventBuffer.EventFifoCSR":
+            register_read_write = register
         reg_adressing = register.split(".")
+        reg_adressing_read_write = register_read_write.split(".")
         try:
             if len(reg_adressing) == 2:
-                return self.reg_table[reg_adressing[0]][reg_adressing[1]]["value"]
+                return self.reg_table[reg_adressing_read_write[0]][
+                    reg_adressing_read_write[1]
+                ]["value"]
             if len(reg_adressing) == 1:
-                return self.reg_table[reg_adressing[0]]["value"]
+                return self.reg_table[reg_adressing_read_write[0]]["value"]
             raise ValueError("Invalid register addressing")
         except KeyError:
             if len(reg_adressing) == 2:
