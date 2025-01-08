@@ -34,7 +34,7 @@ trigger_inputs:
   trigger_polarity:
     polarity: falling
 
-# Stretches and delays each trigger input signal for an number of clock cycles,
+# Stretches and delays each trigger input signal for an number of clock cycles (corresponds to 6.25ns steps),
 # The stretch and delay of all inputs is given as a list,
 # each entry corresponding to an individual trigger input.
   trigger_signal_shape:

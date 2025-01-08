@@ -309,10 +309,7 @@ Tests
 ------
 With pytest (https://docs.pytest.org/en/7.4.x/) the AIDA TLU control program can be tested.
 In the test directory different testing scripts can be found.
-The easiest way to test the whole setup it to navigate to the directory and type pytest into the terminal.
-This starts a series of testing functions that start and stop different aspects of the control software.
 The test setup helps to find bugs when further developing the TLU program and also to check for depreciated functions.
-For now this testing needs a functioning connection to a AIDA TLU.
 The command:
 
 .. code-block:: console
@@ -328,9 +325,14 @@ But also the individual log outputs can be displayed.
 
 Tests can be run individually.
 There is also an implemented AIDA-TLU mock, to allow tests and software development without hardware.
+This mock is used as a default.
+To test with connected hardware set an environment variable ```HW=True````:
+.. code-block:: console
+
+    HW=True pytest -sv
+
 The tests load the configuration file ```tlu_test_configuration.yaml```.
-Here one can also switch between mock and hardware using the setting ```MOCK: True``` or ```MOCK: False```.
-Default setting is ```MOCK: True```.
+Individual settings in the test configuration file can not be changed.
 
 Log Level
 ------

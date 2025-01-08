@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import os
 import yaml
 import pytest
 from aidatlu.main.config_parser import TLUConfigure
@@ -10,9 +10,10 @@ from aidatlu.test.utils import MockI2C
 
 FILEPATH = Path(__file__).parent
 
-with open(FILEPATH / "tlu_test_configuration.yaml") as yaml_file:
-    test_config = yaml.safe_load(yaml_file)
-MOCK = test_config["MOCK"]
+try:
+    MOCK = not bool(os.environ["HW"])
+except KeyError:
+    MOCK = True
 
 if MOCK:
     HW = None
