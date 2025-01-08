@@ -92,3 +92,9 @@ To test with connected hardware set an environment variable ```HW=True````:
 ```bash
     HW=True pytest -sv
 ```
+
+You can also set the variable ```HW=False```` to test the mock TLU:
+
+```bash
+    HW=False pytest -sv
+```

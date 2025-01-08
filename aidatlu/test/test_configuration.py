@@ -11,7 +11,7 @@ from aidatlu.test.utils import MockI2C
 FILEPATH = Path(__file__).parent
 
 try:
-    MOCK = not bool(os.environ["HW"])
+    MOCK = not os.environ["HW"] == "True"
 except KeyError:
     MOCK = True
 
