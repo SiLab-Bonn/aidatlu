@@ -152,59 +152,6 @@ class AidaTLU:
         """
         return bool(self.i2c.read_register("Shutter.RunActiveRW"))
 
-    def test_configuration(self) -> None:
-        """Configure DUT 1 to run in a default test configuration.
-        Runs in EUDET mode with internal generated triggers.
-        This is just for testing and bugfixing.
-        """
-        self.log.info("Configure DUT 1 in EUDET test mode")
-
-        test_stretch = [1, 1, 1, 1, 1, 1]
-        test_delay = [0, 0, 0, 0, 0, 0]
-
-        self.io_controller.configure_hdmi(1, "0111")
-        self.io_controller.clock_hdmi_output(1, "off")
-        self.trigger_logic.set_pulse_stretch_pack(test_stretch)
-        self.trigger_logic.set_pulse_delay_pack(test_delay)
-        self.trigger_logic.set_trigger_mask(mask_high=0x00000000, mask_low=0x00000002)
-        self.trigger_logic.set_trigger_polarity(1)
-        self.dut_logic.set_dut_mask("0001")
-        self.dut_logic.set_dut_mask_mode("00000000")
-        self.trigger_logic.set_internal_trigger_frequency(500)
-
-    def default_configuration(self) -> None:
-        """Default configuration. Configures DUT 1 to run in EUDET mode.
-        This is just for testing and bugfixing.
-        """
-        test_stretch = [1, 1, 1, 1, 1, 1]
-        test_delay = [0, 0, 0, 0, 0, 0]
-
-        self.io_controller.configure_hdmi(1, "0111")
-        self.io_controller.configure_hdmi(2, "0111")
-        self.io_controller.configure_hdmi(3, "0111")
-        self.io_controller.configure_hdmi(4, "0111")
-        self.io_controller.clock_hdmi_output(1, "off")
-        self.io_controller.clock_hdmi_output(2, "off")
-        self.io_controller.clock_hdmi_output(3, "off")
-        self.io_controller.clock_hdmi_output(4, "off")
-        self.io_controller.clock_lemo_output(False)
-        self.dac_controller.set_threshold(1, -0.04)
-        self.dac_controller.set_threshold(2, -0.04)
-        self.dac_controller.set_threshold(3, -0.04)
-        self.dac_controller.set_threshold(4, -0.04)
-        self.dac_controller.set_threshold(5, -0.2)
-        self.dac_controller.set_threshold(6, -0.2)
-        self.trigger_logic.set_pulse_stretch_pack(test_stretch)
-        self.trigger_logic.set_pulse_delay_pack(test_delay)
-        self.trigger_logic.set_trigger_mask(mask_high=0, mask_low=2)
-        self.trigger_logic.set_trigger_polarity(1)
-        self.dut_logic.set_dut_mask("0001")
-        self.dut_logic.set_dut_mask_mode("00000000")
-        self.dut_logic.set_dut_mask_mode_modifier(0)
-        self.dut_logic.set_dut_ignore_busy(0)
-        self.dut_logic.set_dut_ignore_shutter(0x1)
-        self.trigger_logic.set_internal_trigger_frequency(0)
-
     def start_run(self) -> None:
         """Start run configurations"""
         self.reset_counters()
@@ -276,7 +223,12 @@ class AidaTLU:
             return np.array(fifo_content)
         pass
 
-    def get_scalar(self):
+    def get_scalar(self) -> list:
+        """reads current sc values from registers
+
+        Returns:
+            list: all 6 trigger sc values
+        """
         s0 = self.i2c.read_register("triggerInputs.ThrCount0R")
         s1 = self.i2c.read_register("triggerInputs.ThrCount1R")
         s2 = self.i2c.read_register("triggerInputs.ThrCount2R")
@@ -311,6 +263,7 @@ class AidaTLU:
         config_table.append(self.conf_list)
 
     def handle_status(self) -> None:
+        """Status message handling in separate thread. Calculates run time and obtain trigger information and sent it out every second."""
         t = threading.current_thread()
         while getattr(t, "do_run", True):
             time.sleep(0.5)
@@ -410,6 +363,7 @@ class AidaTLU:
         )
 
     def setup_zmq(self) -> None:
+        """Setup the zmq connection, this connection receives status messages."""
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.PUB)
         self.socket.bind(self.zmq_address)
