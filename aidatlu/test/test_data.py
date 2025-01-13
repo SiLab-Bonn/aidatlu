@@ -10,10 +10,12 @@ FILEPATH = Path(__file__).parent
 def test_interpreted_data():
     """Test interpreting and parsing data"""
 
-    interpret_data(FILEPATH / "raw_data_test.h5", FILEPATH / "interpreted_data_test.h5")
+    interpret_data(
+        FILEPATH / "fixtures" / "raw_data_test.h5", FILEPATH / "interpreted_data.h5"
+    )
 
     interpreted_data_path = FILEPATH / "interpreted_data.h5"
-    interpreted_test_data_path = FILEPATH / "interpreted_data_test.h5"
+    interpreted_test_data_path = FILEPATH / "fixtures" / "interpreted_data_test.h5"
 
     with tb.open_file(interpreted_data_path, "r") as file:
         interpreted_data = file.root.interpreted_data[:]

@@ -7,13 +7,12 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 
-with open("../../VERSION") as version_file:
-    version = version_file.read().strip()
+from importlib.metadata import version as get_version
 
 project = "AIDA-TLU"
 copyright = "2023, SiLab, Institute of Physics, University of Bonn"
 author = "Rasmus Partzsch"
-release = version
+version = get_version("aidatlu")
 
 import os
 import sys

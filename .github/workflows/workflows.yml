@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-python@v5
       - name: Install dependencies
         run: |
-          pip install -e .
+          pip install -e .[test]
           pip install pytest
 
       - name: Test with pytest
