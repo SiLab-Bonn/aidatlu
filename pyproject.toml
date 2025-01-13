@@ -27,7 +27,7 @@ dependencies = [
 
 [project.optional-dependencies]
 test = ["pytest", "coverage"]
-hw = ["uhal", "online_monitor"]
+hw = ["online_monitor"]  # uhal package needs to be installed manually!
 
 [tool.setuptools.dynamic]
 version = {attr = "aidatlu.__version__"}
