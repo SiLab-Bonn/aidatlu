@@ -5,7 +5,6 @@ from pathlib import Path
 
 import numpy as np
 import tables as tb
-import uhal
 import zmq
 
 from aidatlu import logger
@@ -18,15 +17,23 @@ from aidatlu.hardware.trigger_controller import TriggerLogic
 from aidatlu.main.config_parser import TLUConfigure
 from aidatlu.main.data_parser import interpret_data
 
+try:
+    import uhal
+except ImportError:
+    logger.logging.exception(
+        "Import uhal failed, only TLU-mock for testing purposes available."
+    )
+
 
 class AidaTLU:
-    def __init__(self, hw, config_path, clock_config_path) -> None:
+    def __init__(self, hw, config_path, clock_config_path, i2c=I2CCore) -> None:
         self.log = logger.setup_main_logger(__class__.__name__)
 
-        self.i2c = I2CCore(hw)
+        self.i2c = i2c(hw)
         self.i2c_hw = hw
         self.log.info("Initializing IPbus interface")
         self.i2c.init()
+
         if self.i2c.modules["eeprom"]:
             self.log.info("Found device with ID %s" % hex(self.get_device_id()))
 
@@ -39,7 +46,7 @@ class AidaTLU:
         self.dut_logic = DUTLogic(self.i2c)
 
         self.reset_configuration()
-        self.config_parser = TLUConfigure(self, self.io_controller, config_path)
+        self.config_parser = TLUConfigure(self, config_path)
 
         self.log.success("TLU initialized")
 
@@ -145,59 +152,6 @@ class AidaTLU:
         """
         return bool(self.i2c.read_register("Shutter.RunActiveRW"))
 
-    def test_configuration(self) -> None:
-        """Configure DUT 1 to run in a default test configuration.
-        Runs in EUDET mode with internal generated triggers.
-        This is just for testing and bugfixing.
-        """
-        self.log.info("Configure DUT 1 in EUDET test mode")
-
-        test_stretch = [1, 1, 1, 1, 1, 1]
-        test_delay = [0, 0, 0, 0, 0, 0]
-
-        self.io_controller.configure_hdmi(1, "0111")
-        self.io_controller.clock_hdmi_output(1, "off")
-        self.trigger_logic.set_pulse_stretch_pack(test_stretch)
-        self.trigger_logic.set_pulse_delay_pack(test_delay)
-        self.trigger_logic.set_trigger_mask(mask_high=0x00000000, mask_low=0x00000002)
-        self.trigger_logic.set_trigger_polarity(1)
-        self.dut_logic.set_dut_mask("0001")
-        self.dut_logic.set_dut_mask_mode("00000000")
-        self.trigger_logic.set_internal_trigger_frequency(500)
-
-    def default_configuration(self) -> None:
-        """Default configuration. Configures DUT 1 to run in EUDET mode.
-        This is just for testing and bugfixing.
-        """
-        test_stretch = [1, 1, 1, 1, 1, 1]
-        test_delay = [0, 0, 0, 0, 0, 0]
-
-        self.io_controller.configure_hdmi(1, "0111")
-        self.io_controller.configure_hdmi(2, "0111")
-        self.io_controller.configure_hdmi(3, "0111")
-        self.io_controller.configure_hdmi(4, "0111")
-        self.io_controller.clock_hdmi_output(1, "off")
-        self.io_controller.clock_hdmi_output(2, "off")
-        self.io_controller.clock_hdmi_output(3, "off")
-        self.io_controller.clock_hdmi_output(4, "off")
-        self.io_controller.clock_lemo_output(False)
-        self.dac_controller.set_threshold(1, -0.04)
-        self.dac_controller.set_threshold(2, -0.04)
-        self.dac_controller.set_threshold(3, -0.04)
-        self.dac_controller.set_threshold(4, -0.04)
-        self.dac_controller.set_threshold(5, -0.2)
-        self.dac_controller.set_threshold(6, -0.2)
-        self.trigger_logic.set_pulse_stretch_pack(test_stretch)
-        self.trigger_logic.set_pulse_delay_pack(test_delay)
-        self.trigger_logic.set_trigger_mask(mask_high=0, mask_low=2)
-        self.trigger_logic.set_trigger_polarity(1)
-        self.dut_logic.set_dut_mask("0001")
-        self.dut_logic.set_dut_mask_mode("00000000")
-        self.dut_logic.set_dut_mask_mode_modifier(0)
-        self.dut_logic.set_dut_ignore_busy(0)
-        self.dut_logic.set_dut_ignore_shutter(0x1)
-        self.trigger_logic.set_internal_trigger_frequency(0)
-
     def start_run(self) -> None:
         """Start run configurations"""
         self.reset_counters()
@@ -269,7 +223,12 @@ class AidaTLU:
             return np.array(fifo_content)
         pass
 
-    def get_scalar(self):
+    def get_scalar(self) -> list:
+        """reads current sc values from registers
+
+        Returns:
+            list: all 6 trigger sc values
+        """
         s0 = self.i2c.read_register("triggerInputs.ThrCount0R")
         s1 = self.i2c.read_register("triggerInputs.ThrCount1R")
         s2 = self.i2c.read_register("triggerInputs.ThrCount2R")
@@ -304,6 +263,7 @@ class AidaTLU:
         config_table.append(self.conf_list)
 
     def handle_status(self) -> None:
+        """Status message handling in separate thread. Calculates run time and obtain trigger information and sent it out every second."""
         t = threading.current_thread()
         while getattr(t, "do_run", True):
             time.sleep(0.5)
@@ -338,7 +298,7 @@ class AidaTLU:
         self.total_trigger_number = self.trigger_logic.get_pre_veto_trigger()
         s0, s1, s2, s3, s4, s5 = self.get_scalar()
 
-        if self.zmq_address not in [None, "off"]:
+        if self.zmq_address:
             self.socket.send_string(
                 str(
                     [
@@ -403,6 +363,7 @@ class AidaTLU:
         )
 
     def setup_zmq(self) -> None:
+        """Setup the zmq connection, this connection receives status messages."""
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.PUB)
         self.socket.bind(self.zmq_address)
@@ -422,7 +383,7 @@ class AidaTLU:
         first_event = True
         self.stop_condition = False
         # prepare data handling and zmq connection
-        save_data, interpret_data_bool = self.config_parser.get_data_handling()
+        save_data = self.config_parser.get_data_handling()
         self.zmq_address = self.config_parser.get_zmq_connection()
         self.max_trigger, self.timeout = self.config_parser.get_stop_condition()
 
@@ -442,7 +403,7 @@ class AidaTLU:
             )
             self.init_raw_data_table()
 
-        if self.zmq_address not in [None, "off"]:
+        if self.zmq_address:
             self.setup_zmq()
 
         t = threading.Thread(target=self.handle_status)
@@ -484,17 +445,18 @@ class AidaTLU:
         except KeyboardInterrupt:
             self.log.warning("Interrupted FIFO cleanup")
 
-        if self.zmq_address not in [None, "off"]:
+        if self.zmq_address:
             self.socket.close()
 
         if save_data:
             self.h5_file.close()
-        if interpret_data_bool:
             interpret_data(self.raw_data_path, self.interpreted_data_path)
+
         self.log.success("Run finished")
 
 
 if __name__ == "__main__":
+
     uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
     manager = uhal.ConnectionManager("file://../misc/aida_tlu_connection.xml")
     hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
@@ -505,5 +467,4 @@ if __name__ == "__main__":
     tlu = AidaTLU(hw, config_path, clock_path)
 
     tlu.configure()
-
     tlu.run()
