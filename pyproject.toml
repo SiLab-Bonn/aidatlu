@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aidatlu"
+dynamic = ["version"]
+license = { "text" = "AGPL-3.0" }
+description = "Control software for AIDA-2020 TLU"
+readme = {file = "README.md", content-type = "text/markdown"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Rasmus Partzsch", email="rasmus.partzsch@uni-bonn.de"},
+    {name = "Christian Bespin", email="cbespin@uni-bonn.de"}
+]
+dependencies = [
+    "numpy",
+    "tables",
+    "coloredlogs",
+    "pyzmq",
+    "tqdm"
+
+]
+[project.urls]
+"Documentation" = "https://silab-bonn.github.io/aidatlu/"
+"Repository" = "https://github.com/SiLab-Bonn/aidatlu/"
+
+[project.optional-dependencies]
+test = ["pytest", "coverage"]
+hw = ["uhal", "online_monitor"]
+
+[tool.setuptools.dynamic]
+version = {attr = "aidatlu.__version__"}
