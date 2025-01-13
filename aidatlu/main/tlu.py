@@ -17,13 +17,6 @@ from aidatlu.hardware.trigger_controller import TriggerLogic
 from aidatlu.main.config_parser import TLUConfigure
 from aidatlu.main.data_parser import interpret_data
 
-try:
-    import uhal
-except ImportError:
-    logger.logging.exception(
-        "Import uhal failed, only TLU-mock for testing purposes available."
-    )
-
 
 class AidaTLU:
     def __init__(self, hw, config_path, clock_config_path, i2c=I2CCore) -> None:
@@ -456,6 +449,7 @@ class AidaTLU:
 
 
 if __name__ == "__main__":
+    import uhal
 
     uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
     manager = uhal.ConnectionManager("file://../misc/aida_tlu_connection.xml")
