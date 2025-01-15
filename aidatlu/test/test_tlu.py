@@ -7,6 +7,7 @@ from aidatlu.hardware.i2c import I2CCore
 from aidatlu.test.utils import MockI2C
 
 FILEPATH = Path(__file__).parent
+CONFIG_FILE = FILEPATH / "fixtures" / "tlu_test_configuration.yaml"
 
 try:
     MOCK = not os.environ["HW"] == "True"
@@ -28,7 +29,7 @@ else:
 
 TLU = AidaTLU(
     HW,
-    FILEPATH / "tlu_test_configuration.yaml",
+    CONFIG_FILE,
     FILEPATH / "../misc/aida_tlu_clk_config.txt",
     i2c=I2CMETHOD,
 )
