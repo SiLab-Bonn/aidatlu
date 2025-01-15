@@ -1,7 +1,7 @@
 Documentation
 ==================
 
-.. image:: img/structure.png
+.. image:: _static/img/structure.png
     :width: 600
 
 Introduction
@@ -78,7 +78,7 @@ Pin 1 is used for 12 V general power, pin 2 is not connected.
 The control voltage is on pin 3 and has the range [0; 1] V.
 At last pin 4 is connected to ground.
 
-.. image:: img/4_pin_lemo.png
+.. image:: _static/img/4_pin_lemo.png
     :width: 300
 
 Three green LEDs on the front panel indicate the correct functioning of the power module.
@@ -113,7 +113,7 @@ Through the trigger line not only trigger signals are issued but also trigger wo
 Setting the correct polarity to these pins is essential for correct operation working of the TLU.
 One should also note that DUT interface should not be used in AIDA mode according to higher sources.
 
-.. image:: img/hdmi.png
+.. image:: _static/img/hdmi.png
     :width: 400
 
 .. table::
@@ -335,7 +335,7 @@ The tests load the configuration file ```tlu_test_configuration.yaml```.
 Individual settings in the test configuration file can not be changed.
 
 Log Level
-------
+---------
 To set different log levels change the default log level in logger.py 'setup_main_logger' and 'setup_derived_logger'.
 
 Integration into EUDAQ2
@@ -351,5 +351,5 @@ With this pseudo scintillator pulses are generated.
 The TLU then processes these pulses and sends them to one or multiple BDAQ boards.
 One can then compare the Data recorded inside the TLU with the one recorded on the BDAQ boards.
 
-.. image:: img/test_setup_2.png
+.. image:: _static/img/test_setup_2.png
     :width: 650
