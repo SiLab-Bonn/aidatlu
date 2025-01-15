@@ -9,6 +9,7 @@ from aidatlu.hardware.i2c import I2CCore
 from aidatlu.test.utils import MockI2C
 
 FILEPATH = Path(__file__).parent
+CONFIG_FILE = FILEPATH / "fixtures" / "tlu_test_configuration.yaml"
 
 try:
     MOCK = not os.environ["HW"] == "True"
@@ -30,7 +31,7 @@ else:
 
 TLU = AidaTLU(
     HW,
-    FILEPATH / "tlu_test_configuration.yaml",
+    CONFIG_FILE,
     FILEPATH / "../misc/aida_tlu_clk_config.txt",
     i2c=I2CMETHOD,
 )
@@ -41,9 +42,9 @@ def test_config_parser():
 
     config_parser = TLUConfigure(
         TLU=TLU,
-        config_path=FILEPATH / "tlu_test_configuration.yaml",
+        config_path=CONFIG_FILE,
     )
-    with open(FILEPATH / "tlu_test_configuration.yaml") as yaml_file:
+    with open(CONFIG_FILE) as yaml_file:
         test_config = yaml.safe_load(yaml_file)
     assert isinstance(config_parser.get_configuration_table(), list)
     assert test_config["save_data"] == config_parser.get_data_handling()
@@ -56,7 +57,7 @@ def test_dut_configuration():
     """Test configuration of the DUT interfaces"""
     config_parser = TLUConfigure(
         TLU=TLU,
-        config_path=FILEPATH / "tlu_test_configuration.yaml",
+        config_path=CONFIG_FILE,
     )
     config_parser.conf_dut()
 
@@ -84,7 +85,7 @@ def test_trigger_logic_configuration():
     """Test configuration of the trigger logic"""
     config_parser = TLUConfigure(
         TLU=TLU,
-        config_path=FILEPATH / "tlu_test_configuration.yaml",
+        config_path=CONFIG_FILE,
     )
     config_parser.conf_trigger_logic()
     if MOCK:
@@ -126,7 +127,7 @@ def test_trigger_input_configuration():
     """Test configuration of the trigger inputs"""
     config_parser = TLUConfigure(
         TLU=TLU,
-        config_path=FILEPATH / "tlu_test_configuration.yaml",
+        config_path=CONFIG_FILE,
     )
     config_parser.conf_trigger_inputs()
 
@@ -155,7 +156,7 @@ def test_conf_auxillary():
     """Test PMT power and LEMO clock I/O"""
     config_parser = TLUConfigure(
         TLU=TLU,
-        config_path=FILEPATH / "tlu_test_configuration.yaml",
+        config_path=CONFIG_FILE,
     )
     config_parser.conf_auxillary()
 
