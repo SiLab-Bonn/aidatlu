@@ -378,7 +378,6 @@ class AidaTLU:
         self.last_time = 0
         self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
         self.last_particle_freq = self.trigger_logic.get_pre_veto_trigger()
-        self.first_event = True
         self.stop_condition = False
         # prepare data handling and zmq connection
         save_data = self.config_parser.get_data_handling()
