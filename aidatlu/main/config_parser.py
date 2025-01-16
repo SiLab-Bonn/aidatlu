@@ -184,7 +184,11 @@ class TLUConfigure:
         self.tlu.dut_logic.set_dut_mask_mode(
             dut_mode[0] | dut_mode[1] | dut_mode[2] | dut_mode[3]
         )
-
+        self.log.debug("Set DUT mask: %s" % (dut[0] | dut[1] | dut[2] | dut[3]))
+        self.log.debug(
+            "Set DUT mask mode: %s"
+            % (dut_mode[0] | dut_mode[1] | dut_mode[2] | dut_mode[3])
+        )
         # Special configs
         self.tlu.dut_logic.set_dut_mask_mode_modifier(0)
         self.tlu.dut_logic.set_dut_ignore_busy(0)

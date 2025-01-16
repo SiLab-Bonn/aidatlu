@@ -207,8 +207,6 @@ class AidaTLU:
         """
         event_numb = self.get_event_fifo_fill_level()
         if event_numb:
-            if event_numb * 6 == 0xFEA:
-                self.log.warning("FIFO is full")
             fifo_content = self.i2c_hw.getNode("eventBuffer.EventFifoData").readBlock(
                 event_numb
             )
@@ -325,7 +323,7 @@ class AidaTLU:
         self.log.debug("FIFO level 2: %s" % self.get_event_fifo_csr())
         self.log.debug(
             "fifo csr: %s fifo fill level: %s"
-            % (self.get_event_fifo_csr(), self.get_event_fifo_csr())
+            % (self.get_event_fifo_fill_level(), self.get_event_fifo_csr())
         )
         self.log.debug(
             "post: %s pre: %s"
@@ -335,6 +333,14 @@ class AidaTLU:
             )
         )
         self.log.debug("time stamp: %s" % (self.get_timestamp()))
+        if (
+            self.run_time < 10
+        ):  # Logs trigger configuration when logging level is debug for the first 10s
+            current_event = self.pull_fifo_event()
+            if np.size(current_event) > 1:
+                self.log_trigger_inputs(current_event[0:6])
+        if self.get_event_fifo_csr() == 0x10:
+            self.log.warning("FIFO is full")
 
     def log_trigger_inputs(self, event_vector: list) -> None:
         """Logs which inputs triggered the event corresponding to the event vector.
@@ -349,8 +355,7 @@ class AidaTLU:
         input_4 = (w0 >> 19) & 0x1
         input_5 = (w0 >> 20) & 0x1
         input_6 = (w0 >> 21) & 0x1
-        self.log.info("Event triggered:")
-        self.log.info(
+        self.log.debug(
             "Input 1: %s, Input 2: %s, Input 3: %s, Input 4: %s, Input 5: %s, Input 6: %s"
             % (input_1, input_2, input_3, input_4, input_5, input_6)
         )
@@ -373,7 +378,7 @@ class AidaTLU:
         self.last_time = 0
         self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
         self.last_particle_freq = self.trigger_logic.get_pre_veto_trigger()
-        first_event = True
+        self.first_event = True
         self.stop_condition = False
         # prepare data handling and zmq connection
         save_data = self.config_parser.get_data_handling()
@@ -403,7 +408,6 @@ class AidaTLU:
         t.start()
         while run_active:
             try:
-                time.sleep(0.000001)
                 current_event = self.pull_fifo_event()
                 try:
                     if save_data and np.size(current_event) > 1:
@@ -418,13 +422,6 @@ class AidaTLU:
                     else:
                         # If this happens: poss. Hitrate to high for FIFO and or Data handling.
                         self.log.warning("Incomplete Event handling...")
-
-                # This loop sents which inputs produced the trigger signal for the first event.
-                if (
-                    np.size(current_event) > 1
-                ) and first_event:  # TODO only first event?
-                    self.log_trigger_inputs(current_event[0:6])
-                    first_event = False
 
             except KeyboardInterrupt:
                 run_active = False
