@@ -167,7 +167,7 @@ class AidaTLU:
         self.i2c.write_register("Event_Formatter.Enable_Record_Data", value)
 
     def get_event_fifo_csr(self) -> int:
-        """Reads value from 'EventFifoCSR'
+        """Reads value from 'EventFifoCSR', corresponds to status flags of the FIFO.
 
         Returns:
             int: number of events
@@ -176,6 +176,8 @@ class AidaTLU:
 
     def get_event_fifo_fill_level(self) -> int:
         """Reads value from 'EventFifoFillLevel'
+           Returns the number of words written in
+           the FIFO. The lowest 14-bits are the actual data.
 
         Returns:
             int: buffer level of the fifi
