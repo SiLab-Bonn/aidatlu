@@ -24,7 +24,9 @@ class AidaTLuSatellite(Satellite):
         file_path = Path(__file__).parent
 
         uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
-        manager = uhal.ConnectionManager("file://" + str(file_path) + "/../misc/aida_tlu_connection.xml")
+        manager = uhal.ConnectionManager(
+            "file://" + str(file_path) + "/../misc/aida_tlu_connection.xml"
+        )
         hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
 
         clock_path = str(file_path) + "/../misc/aida_tlu_clk_config.txt"
@@ -47,9 +49,11 @@ class AidaTLuSatellite(Satellite):
         file_path = Path(__file__).parent
 
         uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
-        manager = uhal.ConnectionManager("file://" + str(file_path) + "/../misc/aida_tlu_connection.xml")
+        manager = uhal.ConnectionManager(
+            "file://" + str(file_path) + "/../misc/aida_tlu_connection.xml"
+        )
         hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
-        
+
         self.aidatlu = AidaTLU(hw, self.config_file, self.clock_file)
         self.aidatlu.configure()
         return "Do reconfigure complete"
@@ -69,9 +73,10 @@ class AidaTLuSatellite(Satellite):
     def do_stopping(self) -> str:
         self.aidatlu.stopping()
         return "Do stopping complete"
-    
+
     def do_landing(self) -> str:
         return "Do Stop"
+
 
 def main(args=None):
 

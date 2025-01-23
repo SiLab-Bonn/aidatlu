@@ -445,7 +445,6 @@ class AidaTLU:
 
         self.log.success("Run finished")
 
-
     def start_run_configuration(self) -> None:
         self.start_run()
         self.get_fw_version()
@@ -481,7 +480,6 @@ class AidaTLU:
         if self.zmq_address:
             self.setup_zmq()
 
-
     def run_loop(self):
         try:
             current_event = self.pull_fifo_event()
@@ -511,7 +509,8 @@ class AidaTLU:
             self.h5_file.close()
             interpret_data(self.raw_data_path, self.interpreted_data_path)
 
-        self.log.success("Run finished")        
+        self.log.success("Run finished")
+
 
 if __name__ == "__main__":
     import uhal
