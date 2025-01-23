@@ -371,85 +371,30 @@ class AidaTLU:
 
     def run(self) -> None:
         """Start run of the TLU."""
-        self.start_run()
-        self.get_fw_version()
-        self.get_device_id()
-        run_active = True
-        # reset starting parameter
-        self.start_time = self.get_timestamp()
-        self.last_time = 0
-        self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
-        self.last_particle_freq = self.trigger_logic.get_pre_veto_trigger()
-        self.stop_condition = False
-        # prepare data handling and zmq connection
-        save_data = self.config_parser.get_data_handling()
-        self.zmq_address = self.config_parser.get_zmq_connection()
-        self.max_trigger, self.timeout = self.config_parser.get_stop_condition()
-
-        if save_data:
-            self.path = self.config_parser.get_output_data_path()
-            if self.path == None:
-                self.path = "tlu_data/"
-                if __name__ == "__main__":
-                    self.path = "../tlu_data/"
-            self.raw_data_path = self.path + "tlu_raw_run%s_%s.h5" % (
-                self.run_number,
-                datetime.now().strftime("%Y_%m_%d_%H_%M_%S"),
-            )
-            self.interpreted_data_path = self.path + "tlu_interpreted_run%s_%s.h5" % (
-                self.run_number,
-                datetime.now().strftime("%Y_%m_%d_%H_%M_%S"),
-            )
-            self.init_raw_data_table()
-
-        if self.zmq_address:
-            self.setup_zmq()
-
+        self.start_run_configuration()
+        self.run_active = True
         t = threading.Thread(target=self.handle_status)
         t.start()
-        while run_active:
+        while self.run_active:
             try:
-                current_event = self.pull_fifo_event()
-                try:
-                    if save_data and np.size(current_event) > 1:
-                        self.data_table.append(current_event)
-                    if self.stop_condition == True:
-                        raise KeyboardInterrupt
-                except:
-                    if KeyboardInterrupt:
-                        run_active = False
-                        t.do_run = False
-                        self.stop_run()
-                    else:
-                        # If this happens: poss. Hitrate to high for FIFO and or Data handling.
-                        self.log.warning("Incomplete Event handling...")
+                self.run_loop()
+                if self.stop_condition == True:
+                    raise KeyboardInterrupt
+            except:
+                if KeyboardInterrupt:
+                    self.run_active = False
+                else:
+                    # If this happens: poss. Hitrate to high for FIFO and or Data handling.
+                    self.log.warning("Incomplete Event handling...")
 
-            except KeyboardInterrupt:
-                run_active = False
-                t.do_run = False
-                self.stop_run()
-
-        # Cleanup of FIFO
-        try:
-            while np.size(current_event) > 1:
-                current_event = self.pull_fifo_event()
-        except KeyboardInterrupt:
-            self.log.warning("Interrupted FIFO cleanup")
-
-        if self.zmq_address:
-            self.socket.close()
-
-        if save_data:
-            self.h5_file.close()
-            interpret_data(self.raw_data_path, self.interpreted_data_path)
-
-        self.log.success("Run finished")
+        self.stop_run()
+        t.do_run = False
+        self.stopping()
 
     def start_run_configuration(self) -> None:
         self.start_run()
         self.get_fw_version()
         self.get_device_id()
-        run_active = True
         # reset starting parameter
         self.start_time = self.get_timestamp()
         self.last_time = 0
@@ -490,13 +435,13 @@ class AidaTLU:
                     raise KeyboardInterrupt
             except:
                 if KeyboardInterrupt:
-                    self.stop_run()
+                    self.run_active = False
                 else:
                     # If this happens: poss. Hitrate to high for FIFO and or Data handling.
                     self.log.warning("Incomplete Event handling...")
 
         except KeyboardInterrupt:
-            self.stop_run()
+            self.run_active = False
 
     def stopping(self):
         # Cleanup of FIFO

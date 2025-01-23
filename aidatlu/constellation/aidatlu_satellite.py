@@ -68,6 +68,7 @@ class AidaTLuSatellite(Satellite):
         while not self._state_thread_evt.is_set():
             self.aidatlu.run_loop()
         t.do_run = False
+        self.aidatlu.stop_run()
         return "Do running complete"
 
     def do_stopping(self) -> str:
