@@ -445,9 +445,73 @@ class AidaTLU:
 
         self.log.success("Run finished")
 
-    def stop_run(self) -> None:
-        raise KeyboardInterrupt
 
+    def start_run_configuration(self) -> None:
+        self.start_run()
+        self.get_fw_version()
+        self.get_device_id()
+        run_active = True
+        # reset starting parameter
+        self.start_time = self.get_timestamp()
+        self.last_time = 0
+        self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
+        self.last_particle_freq = self.trigger_logic.get_pre_veto_trigger()
+        self.stop_condition = False
+        # prepare data handling and zmq connection
+        self.save_data = self.config_parser.get_data_handling()
+        self.zmq_address = self.config_parser.get_zmq_connection()
+        self.max_trigger, self.timeout = self.config_parser.get_stop_condition()
+
+        if self.save_data:
+            self.path = self.config_parser.get_output_data_path()
+            if self.path == None:
+                self.path = "tlu_data/"
+                if __name__ == "__main__":
+                    self.path = "../tlu_data/"
+            self.raw_data_path = self.path + "tlu_raw_run%s_%s.h5" % (
+                self.run_number,
+                datetime.now().strftime("%Y_%m_%d_%H_%M_%S"),
+            )
+            self.interpreted_data_path = self.path + "tlu_interpreted_run%s_%s.h5" % (
+                self.run_number,
+                datetime.now().strftime("%Y_%m_%d_%H_%M_%S"),
+            )
+            self.init_raw_data_table()
+
+        if self.zmq_address:
+            self.setup_zmq()
+
+
+    def run_loop(self):
+        try:
+            current_event = self.pull_fifo_event()
+            try:
+                if self.save_data and np.size(current_event) > 1:
+                    self.data_table.append(current_event)
+                if self.stop_condition == True:
+                    raise KeyboardInterrupt
+            except:
+                if KeyboardInterrupt:
+                    self.stop_run()
+                else:
+                    # If this happens: poss. Hitrate to high for FIFO and or Data handling.
+                    self.log.warning("Incomplete Event handling...")
+
+        except KeyboardInterrupt:
+            self.stop_run()
+
+    def stopping(self):
+        # Cleanup of FIFO
+        _ = self.pull_fifo_event()
+
+        if self.zmq_address:
+            self.socket.close()
+
+        if self.save_data:
+            self.h5_file.close()
+            interpret_data(self.raw_data_path, self.interpreted_data_path)
+
+        self.log.success("Run finished")        
 
 if __name__ == "__main__":
     import uhal
