@@ -445,6 +445,9 @@ class AidaTLU:
 
         self.log.success("Run finished")
 
+    def stop_run(self) -> None:
+        raise KeyboardInterrupt
+
 
 if __name__ == "__main__":
     import uhal
