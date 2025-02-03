@@ -378,23 +378,21 @@ class AidaTLU:
         while self.run_active:
             try:
                 self.run_loop()
-                if self.stop_condition == True:
+                if self.stop_condition is True:
                     raise KeyboardInterrupt
             except:
                 if KeyboardInterrupt:
                     self.run_active = False
                 else:
-                    # If this happens: poss. Hitrate to high for FIFO and or Data handling.
-                    self.log.warning("Incomplete Event handling...")
+                    # If this happens: poss. Hitrate to high for FIFO and or data handling.
+                    self.log.warning("Incomplete event handling...")
 
         self.stop_run()
         t.do_run = False
         self.stop_run_configuration()
 
     def start_run_configuration(self) -> None:
-        """Start of the run configurations,
-        consists of timestamp resetes, data preparations and zmq connections initialization.
-        """
+        """Start of the run configurations, consists of timestamp resets, data preparations and zmq connections initialization."""
         self.start_run()
         self.get_fw_version()
         self.get_device_id()
@@ -439,7 +437,7 @@ class AidaTLU:
             try:
                 if self.save_data and np.size(current_event) > 1:
                     self.data_table.append(current_event)
-                if self.stop_condition == True:
+                if self.stop_condition is True:
                     raise KeyboardInterrupt
             except:
                 if KeyboardInterrupt:
@@ -454,7 +452,7 @@ class AidaTLU:
     def stop_run_configuration(self) -> None:
         """Cleans remaining FIFO data and closes data files and zmq connections after a run."""
         # Cleanup of FIFO
-        _ = self.pull_fifo_event()
+        self.pull_fifo_event()
 
         if self.zmq_address:
             self.socket.close()
