@@ -1,5 +1,7 @@
 # AIDA-TLU
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![tests](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/tests.yml/badge.svg)](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/tests.yml)
+[![pre-commit](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/pre-commit.yml)
+[![documentation](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/documentation.yml/badge.svg)](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/documentation.yml)
 
 Repository for controlling the AIDA-2020 Trigger Logic Unit (TLU) with Python using uHAL bindings from [IPbus](https://ipbus.web.cern.ch/).
 The Python control software is based on [EUDAQ2](https://github.com/eudaq/eudaq/tree/master/user/tlu).
