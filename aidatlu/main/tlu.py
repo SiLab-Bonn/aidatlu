@@ -371,10 +371,31 @@ class AidaTLU:
 
     def run(self) -> None:
         """Start run of the TLU."""
+        self.start_run_configuration()
+        self.run_active = True
+        t = threading.Thread(target=self.handle_status)
+        t.start()
+        while self.run_active:
+            try:
+                self.run_loop()
+                if self.stop_condition is True:
+                    raise KeyboardInterrupt
+            except:
+                if KeyboardInterrupt:
+                    self.run_active = False
+                else:
+                    # If this happens: poss. Hitrate to high for FIFO and or data handling.
+                    self.log.warning("Incomplete event handling...")
+
+        self.stop_run()
+        t.do_run = False
+        self.stop_run_configuration()
+
+    def start_run_configuration(self) -> None:
+        """Start of the run configurations, consists of timestamp resets, data preparations and zmq connections initialization."""
         self.start_run()
         self.get_fw_version()
         self.get_device_id()
-        run_active = True
         # reset starting parameter
         self.start_time = self.get_timestamp()
         self.last_time = 0
@@ -382,11 +403,11 @@ class AidaTLU:
         self.last_particle_freq = self.trigger_logic.get_pre_veto_trigger()
         self.stop_condition = False
         # prepare data handling and zmq connection
-        save_data = self.config_parser.get_data_handling()
+        self.save_data = self.config_parser.get_data_handling()
         self.zmq_address = self.config_parser.get_zmq_connection()
         self.max_trigger, self.timeout = self.config_parser.get_stop_condition()
 
-        if save_data:
+        if self.save_data:
             self.path = self.config_parser.get_output_data_path()
             if self.path == None:
                 self.path = "tlu_data/"
@@ -405,41 +426,38 @@ class AidaTLU:
         if self.zmq_address:
             self.setup_zmq()
 
-        t = threading.Thread(target=self.handle_status)
-        t.start()
-        while run_active:
-            try:
-                current_event = self.pull_fifo_event()
-                try:
-                    if save_data and np.size(current_event) > 1:
-                        self.data_table.append(current_event)
-                    if self.stop_condition == True:
-                        raise KeyboardInterrupt
-                except:
-                    if KeyboardInterrupt:
-                        run_active = False
-                        t.do_run = False
-                        self.stop_run()
-                    else:
-                        # If this happens: poss. Hitrate to high for FIFO and or Data handling.
-                        self.log.warning("Incomplete Event handling...")
+    def run_loop(self) -> None:
+        """A single instance of the run loop. In a TLU run this function needs to be called repeatedly.
 
-            except KeyboardInterrupt:
-                run_active = False
-                t.do_run = False
-                self.stop_run()
-
-        # Cleanup of FIFO
+        Raises:
+            KeyboardInterrupt: The run loop can be interrupted when raising a KeyboardInterrupt.
+        """
         try:
-            while np.size(current_event) > 1:
-                current_event = self.pull_fifo_event()
+            current_event = self.pull_fifo_event()
+            try:
+                if self.save_data and np.size(current_event) > 1:
+                    self.data_table.append(current_event)
+                if self.stop_condition is True:
+                    raise KeyboardInterrupt
+            except:
+                if KeyboardInterrupt:
+                    self.run_active = False
+                else:
+                    # If this happens: poss. Hitrate to high for FIFO and or Data handling.
+                    self.log.warning("Incomplete Event handling...")
+
         except KeyboardInterrupt:
-            self.log.warning("Interrupted FIFO cleanup")
+            self.run_active = False
+
+    def stop_run_configuration(self) -> None:
+        """Cleans remaining FIFO data and closes data files and zmq connections after a run."""
+        # Cleanup of FIFO
+        self.pull_fifo_event()
 
         if self.zmq_address:
             self.socket.close()
 
-        if save_data:
+        if self.save_data:
             self.h5_file.close()
             interpret_data(self.raw_data_path, self.interpreted_data_path)
 
