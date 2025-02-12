@@ -8,14 +8,13 @@ Trigger Logic Unit
 .. autoclass:: aidatlu.main.tlu.AidaTLU
     :members:
 
-Configuration Parser
+Configuration parser
 ####################
 
 .. autoclass:: aidatlu.main.config_parser.TLUConfigure
     :members:
 
-Data Parser
+Data interpretation
 ####################
 
-.. autoclass:: aidatlu.main.data_parser.DataParser
-    :members:
+.. autofunction:: aidatlu.main.data_parser.interpret_data

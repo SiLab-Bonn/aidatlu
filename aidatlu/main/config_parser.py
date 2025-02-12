@@ -4,11 +4,10 @@ from aidatlu import logger
 
 
 class TLUConfigure:
-    def __init__(self, TLU, io_control, config_path) -> None:
+    def __init__(self, TLU, config_path) -> None:
         self.log = logger.setup_main_logger(__class__.__name__)
 
         self.tlu = TLU
-        self.io_control = io_control
 
         with open(config_path, "r") as file:
             self.conf = yaml.full_load(file)
@@ -18,15 +17,7 @@ class TLUConfigure:
         self.conf_dut()
         self.conf_trigger_inputs()
         self.conf_trigger_logic()
-        self.tlu.io_controller.clock_lemo_output(
-            self.conf["clock_lemo"]["enable_clock_lemo_output"]
-        )
-        [
-            self.tlu.dac_controller.set_voltage(
-                i + 1, self.conf["pmt_control"]["pmt_%s" % (i + 1)]
-            )
-            for i in range(len(self.conf["pmt_control"]))
-        ]
+        self.conf_auxillary()
         self.tlu.set_enable_record_data(1)
         self.log.success("TLU configured")
 
@@ -95,7 +86,7 @@ class TLUConfigure:
             tuple: two bools, save and interpret data.
         """
 
-        return self.conf["save_data"], self.conf["save_data"]
+        return self.conf["save_data"]
 
     def get_stop_condition(self) -> tuple:
         """Information about tlu stop condition.
@@ -130,6 +121,18 @@ class TLUConfigure:
             str: ZMQ Address
         """
         return self.conf["zmq_connection"]
+
+    def conf_auxillary(self):
+        """Configures PMT power outputs and clock LEMO I/O"""
+        self.tlu.io_controller.clock_lemo_output(
+            self.conf["clock_lemo"]["enable_clock_lemo_output"]
+        )
+        [
+            self.tlu.dac_controller.set_voltage(
+                i + 1, self.conf["pmt_control"]["pmt_%s" % (i + 1)]
+            )
+            for i in range(len(self.conf["pmt_control"]))
+        ]
 
     def conf_dut(self) -> None:
         """Parse the configuration for the DUT interface to the AIDATLU."""
@@ -181,7 +184,11 @@ class TLUConfigure:
         self.tlu.dut_logic.set_dut_mask_mode(
             dut_mode[0] | dut_mode[1] | dut_mode[2] | dut_mode[3]
         )
-
+        self.log.debug("Set DUT mask: %s" % (dut[0] | dut[1] | dut[2] | dut[3]))
+        self.log.debug(
+            "Set DUT mask mode: %s"
+            % (dut_mode[0] | dut_mode[1] | dut_mode[2] | dut_mode[3])
+        )
         # Special configs
         self.tlu.dut_logic.set_dut_mask_mode_modifier(0)
         self.tlu.dut_logic.set_dut_ignore_busy(0)
@@ -190,9 +197,18 @@ class TLUConfigure:
     def conf_trigger_logic(self) -> None:
         """Configures the trigger logic. So the trigger polarity and the trigger pulse length and stretch."""
 
-        self.tlu.trigger_logic.set_trigger_polarity(
-            self.conf["trigger_inputs"]["trigger_polarity"]["polarity"]
-        )
+        if self.conf["trigger_inputs"]["trigger_polarity"]["polarity"] in [
+            0,
+            "0",
+            "rising",
+        ]:
+            self.tlu.trigger_logic.set_trigger_polarity(0)
+        elif self.conf["trigger_inputs"]["trigger_polarity"]["polarity"] in [
+            1,
+            "1",
+            "falling",
+        ]:
+            self.tlu.trigger_logic.set_trigger_polarity(1)
 
         self.tlu.trigger_logic.set_pulse_stretch_pack(
             self.conf["trigger_inputs"]["trigger_signal_shape"]["stretch"]
@@ -234,9 +250,9 @@ class TLUConfigure:
         if trigger_configuration is not None:
             for trigger_led in range(6):
                 if "~CH%i" % (trigger_led + 1) in trigger_configuration:
-                    self.io_control.switch_led(trigger_led + 6, "r")
+                    self.tlu.io_controller.switch_led(trigger_led + 6, "r")
                 elif "CH%i" % (trigger_led + 1) in trigger_configuration:
-                    self.io_control.switch_led(trigger_led + 6, "g")
+                    self.tlu.io_controller.switch_led(trigger_led + 6, "g")
 
             long_word = 0x0
             # Goes through all possible trigger combinations and checks if the combination is valid with the trigger logic.

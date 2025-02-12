@@ -29,7 +29,8 @@ These operators are used in conjunction with the input channels CH1-CH6 and inte
 For example "(CH1 & ~CH2) & (CH3 | CH4 | CH5 | CH6)" produces a valid trigger, when CH1 and not CH2 triggers and when one of CH3, CH4, CH5 or CH6 triggers.
 An input channel that is not explicitly set to 'veto' or 'enabled' is automatically set to 'do not care'.
 
-Trigger polarity controls if the TLU should trigger on a rising (0) or falling (1) edge of an incoming trigger signal.
+TLU can trigger on a rising or falling edge. Trigger polarity is set using a string or boolean,
+'rising' corresponds to false (0) and 'falling' to true (1)
 
 Each trigger input signal can be delayed and stretched by a given number of clock cycles.
 This is set with a list containing the number of clock cycles for every different trigger input.

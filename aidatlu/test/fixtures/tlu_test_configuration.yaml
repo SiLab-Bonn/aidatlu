@@ -1,6 +1,14 @@
+################################################
+#                                              #
+# This configuration is only used during tests #
+# Changing settings besides MOCK lead to fails #
+#                                              #
+################################################
+
+
 # Generate TLU internal trigger with given rate in Hz
 internal_trigger:
-  internal_trigger_rate: 0
+  internal_trigger_rate: 100000
 
 # Set operating mode of the DUT, supported are three operating modes 'aida', 'aidatrig' and 'eudet'
 # Set unused DUT interfaces to off, false or None
@@ -8,9 +16,9 @@ dut_module:
   dut_1:
     mode: aida
   dut_2:
-    mode: aida
-  dut_3:
     mode: eudet
+  dut_3:
+    mode: aidatrig
   dut_4:
     mode: off
 
@@ -18,50 +26,50 @@ trigger_inputs:
   # Threshold voltages for the trigger inputs in V.
   threshold:
     threshold_1: -0.1
-    threshold_2: -0.1
-    threshold_3: -0.1
-    threshold_4: -0.1
-    threshold_5: -0.1
-    threshold_6: -0.1
+    threshold_2: -0.2
+    threshold_3: -0.3
+    threshold_4: -0.4
+    threshold_5: -0.5
+    threshold_6: -0.6
 
   # Trigger Logic configuration accept a python expression for the trigger inputs.
   # The logic is set by using the variables for the input channels 'CH1', 'CH2', 'CH3', 'CH4', 'CH5' and 'CH6'
   # and the Python bitwise operators AND: '&', OR: '|', NOT: '~' and so on. Dont forget to use brackets...
-  trigger_inputs_logic: CH2 & CH4
+  trigger_inputs_logic: (CH1 & CH2) | CH3
 
   # TLU can trigger on a rising or falling edge. Trigger polarity is set using a string or boolean,
-  # 'rising' corresponds to false (0) and 'falling' to true (1)
+  # 'rising' corresponds to false and 'falling' to true
   trigger_polarity:
     polarity: falling
 
-# Stretches and delays each trigger input signal for an number of clock cycles (corresponds to 6.25ns steps),
-# The stretch and delay of all inputs is given as a list,
-# each entry corresponding to an individual trigger input.
+  # Stretches and delays each trigger input signal for an number of clock cycles (corresponds to 6.25ns steps),
+  # The stretch and delay of all inputs is given as a list,
+  # each entry corresponding to an individual trigger input.
   trigger_signal_shape:
-    stretch: [2, 2, 2, 2, 2, 2]
-    delay: [0, 0, 0, 0, 0, 0]
+    stretch: [2, 2, 3, 2, 2, 2]
+    delay: [0, 1, 0, 0, 3, 0]
 
 # Enable the LEMO clock output using a boolean.
 clock_lemo:
-  enable_clock_lemo_output: on
+  enable_clock_lemo_output: True
 
 # Set the four PMT control voltages in V
 pmt_control:
   pmt_1: 0.8
   pmt_2: 0.8
   pmt_3: 0
-  pmt_4: 0
+  pmt_4: -0.2
 
 # Save and generate interpreted data from the raw data set. Set to 'True' or 'False'.
 # If no specific output path is provided, the data is saved in the default output data path (aidatlu/aidatlu/tlu_data).
 save_data: True
-output_data_path:
+output_data_path: 'test_output_data/'
 
 # zmq connection for status messages, leave it blank or set to off if not needed
-zmq_connection: off  #"tcp://127.0.0.1:6500"
+zmq_connection: off #"tcp://:7500"
 
 # Optional stop conditions can also be added to the configuration.
-# These can be a timeout in seconds or a maximum output trigger number.
+# These can be by timeout in seconds or a maximum output trigger number.
 # If needed just uncomment the required stop condition in the example below:
 # max_trigger_number: 1000000
-# timeout: 60
+timeout: 5

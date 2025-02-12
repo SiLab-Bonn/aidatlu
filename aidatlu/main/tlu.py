@@ -5,7 +5,6 @@ from pathlib import Path
 
 import numpy as np
 import tables as tb
-import uhal
 import zmq
 
 from aidatlu import logger
@@ -20,13 +19,14 @@ from aidatlu.main.data_parser import interpret_data
 
 
 class AidaTLU:
-    def __init__(self, hw, config_path, clock_config_path) -> None:
+    def __init__(self, hw, config_path, clock_config_path, i2c=I2CCore) -> None:
         self.log = logger.setup_main_logger(__class__.__name__)
 
-        self.i2c = I2CCore(hw)
+        self.i2c = i2c(hw)
         self.i2c_hw = hw
         self.log.info("Initializing IPbus interface")
         self.i2c.init()
+
         if self.i2c.modules["eeprom"]:
             self.log.info("Found device with ID %s" % hex(self.get_device_id()))
 
@@ -39,7 +39,7 @@ class AidaTLU:
         self.dut_logic = DUTLogic(self.i2c)
 
         self.reset_configuration()
-        self.config_parser = TLUConfigure(self, self.io_controller, config_path)
+        self.config_parser = TLUConfigure(self, config_path)
 
         self.log.success("TLU initialized")
 
@@ -145,59 +145,6 @@ class AidaTLU:
         """
         return bool(self.i2c.read_register("Shutter.RunActiveRW"))
 
-    def test_configuration(self) -> None:
-        """Configure DUT 1 to run in a default test configuration.
-        Runs in EUDET mode with internal generated triggers.
-        This is just for testing and bugfixing.
-        """
-        self.log.info("Configure DUT 1 in EUDET test mode")
-
-        test_stretch = [1, 1, 1, 1, 1, 1]
-        test_delay = [0, 0, 0, 0, 0, 0]
-
-        self.io_controller.configure_hdmi(1, "0111")
-        self.io_controller.clock_hdmi_output(1, "off")
-        self.trigger_logic.set_pulse_stretch_pack(test_stretch)
-        self.trigger_logic.set_pulse_delay_pack(test_delay)
-        self.trigger_logic.set_trigger_mask(mask_high=0x00000000, mask_low=0x00000002)
-        self.trigger_logic.set_trigger_polarity(1)
-        self.dut_logic.set_dut_mask("0001")
-        self.dut_logic.set_dut_mask_mode("00000000")
-        self.trigger_logic.set_internal_trigger_frequency(500)
-
-    def default_configuration(self) -> None:
-        """Default configuration. Configures DUT 1 to run in EUDET mode.
-        This is just for testing and bugfixing.
-        """
-        test_stretch = [1, 1, 1, 1, 1, 1]
-        test_delay = [0, 0, 0, 0, 0, 0]
-
-        self.io_controller.configure_hdmi(1, "0111")
-        self.io_controller.configure_hdmi(2, "0111")
-        self.io_controller.configure_hdmi(3, "0111")
-        self.io_controller.configure_hdmi(4, "0111")
-        self.io_controller.clock_hdmi_output(1, "off")
-        self.io_controller.clock_hdmi_output(2, "off")
-        self.io_controller.clock_hdmi_output(3, "off")
-        self.io_controller.clock_hdmi_output(4, "off")
-        self.io_controller.clock_lemo_output(False)
-        self.dac_controller.set_threshold(1, -0.04)
-        self.dac_controller.set_threshold(2, -0.04)
-        self.dac_controller.set_threshold(3, -0.04)
-        self.dac_controller.set_threshold(4, -0.04)
-        self.dac_controller.set_threshold(5, -0.2)
-        self.dac_controller.set_threshold(6, -0.2)
-        self.trigger_logic.set_pulse_stretch_pack(test_stretch)
-        self.trigger_logic.set_pulse_delay_pack(test_delay)
-        self.trigger_logic.set_trigger_mask(mask_high=0, mask_low=2)
-        self.trigger_logic.set_trigger_polarity(1)
-        self.dut_logic.set_dut_mask("0001")
-        self.dut_logic.set_dut_mask_mode("00000000")
-        self.dut_logic.set_dut_mask_mode_modifier(0)
-        self.dut_logic.set_dut_ignore_busy(0)
-        self.dut_logic.set_dut_ignore_shutter(0x1)
-        self.trigger_logic.set_internal_trigger_frequency(0)
-
     def start_run(self) -> None:
         """Start run configurations"""
         self.reset_counters()
@@ -220,7 +167,7 @@ class AidaTLU:
         self.i2c.write_register("Event_Formatter.Enable_Record_Data", value)
 
     def get_event_fifo_csr(self) -> int:
-        """Reads value from 'EventFifoCSR'
+        """Reads value from 'EventFifoCSR', corresponds to status flags of the FIFO.
 
         Returns:
             int: number of events
@@ -229,6 +176,8 @@ class AidaTLU:
 
     def get_event_fifo_fill_level(self) -> int:
         """Reads value from 'EventFifoFillLevel'
+           Returns the number of words written in
+           the FIFO. The lowest 14-bits are the actual data.
 
         Returns:
             int: buffer level of the fifi
@@ -260,8 +209,6 @@ class AidaTLU:
         """
         event_numb = self.get_event_fifo_fill_level()
         if event_numb:
-            if event_numb * 6 == 0xFEA:
-                self.log.warning("FIFO is full")
             fifo_content = self.i2c_hw.getNode("eventBuffer.EventFifoData").readBlock(
                 event_numb
             )
@@ -269,7 +216,12 @@ class AidaTLU:
             return np.array(fifo_content)
         pass
 
-    def get_scalar(self):
+    def get_scalar(self) -> list:
+        """reads current sc values from registers
+
+        Returns:
+            list: all 6 trigger sc values
+        """
         s0 = self.i2c.read_register("triggerInputs.ThrCount0R")
         s1 = self.i2c.read_register("triggerInputs.ThrCount1R")
         s2 = self.i2c.read_register("triggerInputs.ThrCount2R")
@@ -304,6 +256,7 @@ class AidaTLU:
         config_table.append(self.conf_list)
 
     def handle_status(self) -> None:
+        """Status message handling in separate thread. Calculates run time and obtain trigger information and sent it out every second."""
         t = threading.current_thread()
         while getattr(t, "do_run", True):
             time.sleep(0.5)
@@ -338,7 +291,7 @@ class AidaTLU:
         self.total_trigger_number = self.trigger_logic.get_pre_veto_trigger()
         s0, s1, s2, s3, s4, s5 = self.get_scalar()
 
-        if self.zmq_address not in [None, "off"]:
+        if self.zmq_address:
             self.socket.send_string(
                 str(
                     [
@@ -372,7 +325,7 @@ class AidaTLU:
         self.log.debug("FIFO level 2: %s" % self.get_event_fifo_csr())
         self.log.debug(
             "fifo csr: %s fifo fill level: %s"
-            % (self.get_event_fifo_csr(), self.get_event_fifo_csr())
+            % (self.get_event_fifo_fill_level(), self.get_event_fifo_csr())
         )
         self.log.debug(
             "post: %s pre: %s"
@@ -382,6 +335,14 @@ class AidaTLU:
             )
         )
         self.log.debug("time stamp: %s" % (self.get_timestamp()))
+        if (
+            self.run_time < 10
+        ):  # Logs trigger configuration when logging level is debug for the first 10s
+            current_event = self.pull_fifo_event()
+            if np.size(current_event) > 1:
+                self.log_trigger_inputs(current_event[0:6])
+        if self.get_event_fifo_csr() == 0x10:
+            self.log.warning("FIFO is full")
 
     def log_trigger_inputs(self, event_vector: list) -> None:
         """Logs which inputs triggered the event corresponding to the event vector.
@@ -396,13 +357,13 @@ class AidaTLU:
         input_4 = (w0 >> 19) & 0x1
         input_5 = (w0 >> 20) & 0x1
         input_6 = (w0 >> 21) & 0x1
-        self.log.info("Event triggered:")
-        self.log.info(
+        self.log.debug(
             "Input 1: %s, Input 2: %s, Input 3: %s, Input 4: %s, Input 5: %s, Input 6: %s"
             % (input_1, input_2, input_3, input_4, input_5, input_6)
         )
 
     def setup_zmq(self) -> None:
+        """Setup the zmq connection, this connection receives status messages."""
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.PUB)
         self.socket.bind(self.zmq_address)
@@ -410,23 +371,43 @@ class AidaTLU:
 
     def run(self) -> None:
         """Start run of the TLU."""
+        self.start_run_configuration()
+        self.run_active = True
+        t = threading.Thread(target=self.handle_status)
+        t.start()
+        while self.run_active:
+            try:
+                self.run_loop()
+                if self.stop_condition is True:
+                    raise KeyboardInterrupt
+            except:
+                if KeyboardInterrupt:
+                    self.run_active = False
+                else:
+                    # If this happens: poss. Hitrate to high for FIFO and or data handling.
+                    self.log.warning("Incomplete event handling...")
+
+        self.stop_run()
+        t.do_run = False
+        self.stop_run_configuration()
+
+    def start_run_configuration(self) -> None:
+        """Start of the run configurations, consists of timestamp resets, data preparations and zmq connections initialization."""
         self.start_run()
         self.get_fw_version()
         self.get_device_id()
-        run_active = True
         # reset starting parameter
         self.start_time = self.get_timestamp()
         self.last_time = 0
         self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
         self.last_particle_freq = self.trigger_logic.get_pre_veto_trigger()
-        first_event = True
         self.stop_condition = False
         # prepare data handling and zmq connection
-        save_data, interpret_data_bool = self.config_parser.get_data_handling()
+        self.save_data = self.config_parser.get_data_handling()
         self.zmq_address = self.config_parser.get_zmq_connection()
         self.max_trigger, self.timeout = self.config_parser.get_stop_condition()
 
-        if save_data:
+        if self.save_data:
             self.path = self.config_parser.get_output_data_path()
             if self.path == None:
                 self.path = "tlu_data/"
@@ -442,59 +423,50 @@ class AidaTLU:
             )
             self.init_raw_data_table()
 
-        if self.zmq_address not in [None, "off"]:
+        if self.zmq_address:
             self.setup_zmq()
 
-        t = threading.Thread(target=self.handle_status)
-        t.start()
-        while run_active:
-            try:
-                time.sleep(0.000001)
-                current_event = self.pull_fifo_event()
-                try:
-                    if save_data and np.size(current_event) > 1:
-                        self.data_table.append(current_event)
-                    if self.stop_condition == True:
-                        raise KeyboardInterrupt
-                except:
-                    if KeyboardInterrupt:
-                        run_active = False
-                        t.do_run = False
-                        self.stop_run()
-                    else:
-                        # If this happens: poss. Hitrate to high for FIFO and or Data handling.
-                        self.log.warning("Incomplete Event handling...")
+    def run_loop(self) -> None:
+        """A single instance of the run loop. In a TLU run this function needs to be called repeatedly.
 
-                # This loop sents which inputs produced the trigger signal for the first event.
-                if (
-                    np.size(current_event) > 1
-                ) and first_event:  # TODO only first event?
-                    self.log_trigger_inputs(current_event[0:6])
-                    first_event = False
-
-            except KeyboardInterrupt:
-                run_active = False
-                t.do_run = False
-                self.stop_run()
-
-        # Cleanup of FIFO
+        Raises:
+            KeyboardInterrupt: The run loop can be interrupted when raising a KeyboardInterrupt.
+        """
         try:
-            while np.size(current_event) > 1:
-                current_event = self.pull_fifo_event()
-        except KeyboardInterrupt:
-            self.log.warning("Interrupted FIFO cleanup")
+            current_event = self.pull_fifo_event()
+            try:
+                if self.save_data and np.size(current_event) > 1:
+                    self.data_table.append(current_event)
+                if self.stop_condition is True:
+                    raise KeyboardInterrupt
+            except:
+                if KeyboardInterrupt:
+                    self.run_active = False
+                else:
+                    # If this happens: poss. Hitrate to high for FIFO and or Data handling.
+                    self.log.warning("Incomplete Event handling...")
 
-        if self.zmq_address not in [None, "off"]:
+        except KeyboardInterrupt:
+            self.run_active = False
+
+    def stop_run_configuration(self) -> None:
+        """Cleans remaining FIFO data and closes data files and zmq connections after a run."""
+        # Cleanup of FIFO
+        self.pull_fifo_event()
+
+        if self.zmq_address:
             self.socket.close()
 
-        if save_data:
+        if self.save_data:
             self.h5_file.close()
-        if interpret_data_bool:
             interpret_data(self.raw_data_path, self.interpreted_data_path)
+
         self.log.success("Run finished")
 
 
 if __name__ == "__main__":
+    import uhal
+
     uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
     manager = uhal.ConnectionManager("file://../misc/aida_tlu_connection.xml")
     hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
@@ -505,5 +477,4 @@ if __name__ == "__main__":
     tlu = AidaTLU(hw, config_path, clock_path)
 
     tlu.configure()
-
     tlu.run()

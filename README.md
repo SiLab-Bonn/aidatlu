@@ -1,11 +1,14 @@
 # AIDA-TLU
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![tests](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/tests.yml/badge.svg)](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/tests.yml)
+[![pre-commit](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/pre-commit.yml)
+[![documentation](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/documentation.yml/badge.svg)](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/documentation.yml)
 
 Repository for controlling the AIDA-2020 Trigger Logic Unit (TLU) with Python using uHAL bindings from [IPbus](https://ipbus.web.cern.ch/).
 The Python control software is based on [EUDAQ2](https://github.com/eudaq/eudaq/tree/master/user/tlu).
 The software is a lightweight version written in Python with a focus on readability and user-friendliness.
 Most user cases can be set with a .yaml configuration file and started by executing a single Python script.
 For a more in-depth look at the hardware components please take a look at the official [AIDA-2020 TLU project](https://ohwr.org/project/fmc-mtlu).
+Additionally, take a look at the [documentation](https://silab-bonn.github.io/aidatlu/) for this software.
 # Installation
 ## IPbus
 You need to install [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html) and its Python bindings to the desired interpreter.
@@ -77,5 +80,23 @@ For more commands take a look at the python script aidatlu.py.
 
 All configurations are done by the use of a yaml file (tlu_configuration.yaml).
 
+# Tests
+With pytest (https://docs.pytest.org/en/7.4.x/) the AIDA TLU control program can be tested.
+There is also an implemented AIDA-TLU mock, to allow tests and software development without hardware,
+which also allows software development and testing without a working IPbus installation.
+The mock is used as a default.
 
-Additionally, take a look at the [documentation](https://silab-bonn.github.io/aidatlu/).
+```bash
+    pytest -sv
+```
+To test with connected hardware set an environment variable ```HW=True````:
+
+```bash
+    HW=True pytest -sv
+```
+
+You can also set the variable ```HW=False```` to test the mock TLU:
+
+```bash
+    HW=False pytest -sv
+```

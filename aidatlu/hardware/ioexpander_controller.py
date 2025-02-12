@@ -58,46 +58,6 @@ class IOControl:
 
     ### LED Control ###
 
-    def test_leds(self, single=True) -> None:
-        """Test the 11 LEDs
-
-        Args:
-            single (bool, optional): Test all possible RGB combinations for all LEDs. Defaults to True.
-        """
-        self.log.info("Testing LEDs colors")
-        if single:
-            for color in [
-                [0, 1, 1],
-                [1, 0, 1],
-                [1, 1, 0],
-                [1, 0, 0],
-                [0, 1, 0],
-                [0, 0, 1],
-                [0, 0, 0],
-            ]:
-                for i in range(11):
-                    if i + 1 == 5:
-                        pass
-                    else:
-                        self._set_led(i + 1, color)
-                        time.sleep(0.1)
-                        self.all_off()
-                        time.sleep(0.05)
-            for color in [[0, 0, 1], [0, 1, 1], [1, 0, 1]]:
-                self._set_led(5, color)
-                time.sleep(0.15)
-                self.all_off()
-                time.sleep(0.1)
-
-        else:
-            for color in ["w", "r", "g", "b"]:
-                self.log.info("Testing LEDs color: %s" % color)
-
-                self.all_on(color)
-                time.sleep(1)
-                self.all_off()
-                time.sleep(1)
-
     def all_on(self, color: str = "w") -> None:
         """Set all LEDs to same color
 
