@@ -81,7 +81,7 @@ For more commands take a look at the python script aidatlu.py.
 All configurations are done by the use of a yaml file (tlu_configuration.yaml).
 
 # Tests
-With pytest (https://docs.pytest.org/en/stable/) the AIDA TLU control program can be tested.
+With [pytest](https://docs.pytest.org/en/stable/) the AIDA TLU control program can be tested.
 There is also an implemented AIDA-TLU mock, to allow tests and software development without hardware,
 which also allows software development and testing without a working IPbus installation.
 The mock is used as a default.
