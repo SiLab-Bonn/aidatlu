@@ -24,9 +24,9 @@ The threshold for each trigger input can be tuned individually between [-1.3; 1.
 Another setting controls the trigger input logic.
 Each trigger input can have one of three settings. The input can act as 'active', 'veto' or 'do not care'.
 Between each trigger input, there is also the possibility to set 'AND' or 'OR'.
-A desired trigger configuration is set with the use of the [Python bitwise operators](https://wiki.python.org/moin/BitwiseOperators).
+A desired trigger configuration is set with the use of the Python boolean operators.
 These operators are used in conjunction with the input channels CH1-CH6 and interpreted as a literal logic expression.
-For example "(CH1 & ~CH2) & (CH3 | CH4 | CH5 | CH6)" produces a valid trigger, when CH1 and not CH2 triggers and when one of CH3, CH4, CH5 or CH6 triggers.
+For example "(CH1 & (not CH2)) & (CH3 | CH4 | CH5 | CH6)" produces a valid trigger, when CH1 and not CH2 triggers and when one of CH3, CH4, CH5 or CH6 triggers.
 An input channel that is not explicitly set to 'veto' or 'enabled' is automatically set to 'do not care'.
 
 TLU can trigger on a rising or falling edge. Trigger polarity is set using a string or boolean,

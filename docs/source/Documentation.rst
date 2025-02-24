@@ -307,7 +307,7 @@ Another command reliable stops all instances of the running online monitor:
 
 Tests
 ------
-With pytest (https://docs.pytest.org/en/7.4.x/) the AIDA TLU control program can be tested.
+With pytest (https://docs.pytest.org/en/stable/) the AIDA TLU control program can be tested.
 In the test directory different testing scripts can be found.
 The test setup helps to find bugs when further developing the TLU program and also to check for depreciated functions.
 The command:
