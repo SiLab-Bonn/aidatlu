@@ -58,12 +58,7 @@ class TLUConfigure:
             ),
             (
                 "trigger_polarity",
-                "%s"
-                % (
-                    "falling"
-                    if self.conf["trigger_inputs"]["trigger_polarity"]["polarity"] == 1
-                    else "rising"
-                ),
+                "%s" % (self.conf["trigger_inputs"]["trigger_polarity"]["polarity"]),
             ),
             (
                 "enable_clock_lemo_output",
