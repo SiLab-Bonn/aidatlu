@@ -149,6 +149,7 @@ class AidaTLU:
         """Start run configurations"""
         self.reset_counters()
         self.reset_fifo()
+        self.reset_timestamp()
         self.set_run_active(True)
         self.trigger_logic.set_trigger_veto(False)
 
@@ -183,10 +184,6 @@ class AidaTLU:
             int: buffer level of the fifi
         """
         return self.i2c.read_register("eventBuffer.EventFifoFillLevel")
-
-    def reset_timestamp(self) -> None:
-        """Resets the internal timestamp by asserting a bit in 'ResetTimestampW'."""
-        self.i2c.write_register("Event_Formatter.ResetTimestampW", 1)
 
     def get_timestamp(self) -> int:
         """Get current time stamp.
