@@ -240,11 +240,11 @@ class TLUConfigure:
 
         self.log.info("Trigger Configuration: %s" % (trigger_configuration))
 
-        # Sets the Trigger Leds to green if the Input is enabled and to red if the input is set to VETO.
-        # TODO this breaks when there are multiple enabled and veto statements.
         if trigger_configuration is not None:
+            # Sets the Trigger Leds to green if the Input is enabled and to red if the input is set to VETO.
+            # TODO this breaks when there are multiple enabled and veto statements for the same trigger input.
             for trigger_led in range(6):
-                if "~CH%i" % (trigger_led + 1) in trigger_configuration:
+                if "not CH%i" % (trigger_led + 1) in trigger_configuration:
                     self.tlu.io_controller.switch_led(trigger_led + 6, "r")
                 elif "CH%i" % (trigger_led + 1) in trigger_configuration:
                     self.tlu.io_controller.switch_led(trigger_led + 6, "g")
