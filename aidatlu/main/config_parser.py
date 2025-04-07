@@ -30,7 +30,7 @@ class TLUConfigure:
         conf = [
             (
                 "internal_trigger_rate",
-                self.conf["internal_trigger"]["internal_trigger_rate"],
+                self.conf["internal_trigger_rate"],
             ),
             ("DUT_1", self.conf["dut_module"]["dut_1"]["mode"]),
             ("DUT_2", self.conf["dut_module"]["dut_2"]["mode"]),
@@ -58,11 +58,11 @@ class TLUConfigure:
             ),
             (
                 "trigger_polarity",
-                "%s" % (self.conf["trigger_inputs"]["trigger_polarity"]["polarity"]),
+                "%s" % (self.conf["trigger_inputs"]["trigger_polarity"]),
             ),
             (
                 "enable_clock_lemo_output",
-                self.conf["clock_lemo"]["enable_clock_lemo_output"],
+                self.conf["enable_clock_lemo_output"],
             ),
             ("pmt_control_1", self.conf["pmt_control"]["pmt_1"]),
             ("pmt_control_2", self.conf["pmt_control"]["pmt_2"]),
@@ -119,9 +119,7 @@ class TLUConfigure:
 
     def conf_auxillary(self):
         """Configures PMT power outputs and clock LEMO I/O"""
-        self.tlu.io_controller.clock_lemo_output(
-            self.conf["clock_lemo"]["enable_clock_lemo_output"]
-        )
+        self.tlu.io_controller.clock_lemo_output(self.conf["enable_clock_lemo_output"])
         [
             self.tlu.dac_controller.set_voltage(
                 i + 1, self.conf["pmt_control"]["pmt_%s" % (i + 1)]
@@ -192,13 +190,13 @@ class TLUConfigure:
     def conf_trigger_logic(self) -> None:
         """Configures the trigger logic. So the trigger polarity and the trigger pulse length and stretch."""
 
-        if self.conf["trigger_inputs"]["trigger_polarity"]["polarity"] in [
+        if self.conf["trigger_inputs"]["trigger_polarity"] in [
             0,
             "0",
             "rising",
         ]:
             self.tlu.trigger_logic.set_trigger_polarity(0)
-        elif self.conf["trigger_inputs"]["trigger_polarity"]["polarity"] in [
+        elif self.conf["trigger_inputs"]["trigger_polarity"] in [
             1,
             "1",
             "falling",
@@ -221,7 +219,7 @@ class TLUConfigure:
         )
 
         self.tlu.trigger_logic.set_internal_trigger_frequency(
-            self.conf["internal_trigger"]["internal_trigger_rate"]
+            self.conf["internal_trigger_rate"]
         )
 
     def conf_trigger_inputs(self) -> None:

@@ -7,8 +7,7 @@
 
 
 # Generate TLU internal trigger with given rate in Hz
-internal_trigger:
-  internal_trigger_rate: 100000
+internal_trigger_rate: 100000
 
 # Set operating mode of the DUT, supported are three operating modes 'aida', 'aidatrig' and 'eudet'
 # Set unused DUT interfaces to off, false or None
@@ -39,8 +38,7 @@ trigger_inputs:
 
   # TLU can trigger on a rising or falling edge. Trigger polarity is set using a string or boolean,
   # 'rising' corresponds to false and 'falling' to true
-  trigger_polarity:
-    polarity: falling
+  trigger_polarity: falling
 
   # Stretches and delays each trigger input signal for an number of clock cycles (corresponds to 6.25ns steps),
   # The stretch and delay of all inputs is given as a list,
@@ -50,8 +48,7 @@ trigger_inputs:
     delay: [0, 1, 0, 0, 3, 0]
 
 # Enable the LEMO clock output using a boolean.
-clock_lemo:
-  enable_clock_lemo_output: True
+enable_clock_lemo_output: True
 
 # Set the four PMT control voltages in V
 pmt_control:
