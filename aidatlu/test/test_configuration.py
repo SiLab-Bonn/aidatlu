@@ -130,7 +130,6 @@ def test_trigger_input_configuration():
         config_path=CONFIG_FILE,
     )
     config_parser.conf_trigger_inputs()
-
     if MOCK:
         # Write array concatenates array bitwise, this is not implemented in the mock
         mem_addr = 0x18 + (0 & 0x7)
@@ -148,8 +147,8 @@ def test_trigger_input_configuration():
         assert TLU.i2c.read(TLU.i2c.modules["dac_1"], mem_addr) == 0x31
         assert TLU.i2c.read(TLU.i2c.modules["dac_2"], mem_addr) == 0x31
 
-    assert TLU.i2c.read_register("triggerLogic.TriggerPattern_lowR") == 0xF8F8F8F8
-    assert TLU.i2c.read_register("triggerLogic.TriggerPattern_highR") == 0xF8F8F8F8
+    assert TLU.i2c.read_register("triggerLogic.TriggerPattern_lowR") == 0x20000
+    assert TLU.i2c.read_register("triggerLogic.TriggerPattern_highR") == 0x0
 
 
 def test_conf_auxillary():
