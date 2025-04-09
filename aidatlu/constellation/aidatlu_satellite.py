@@ -49,7 +49,14 @@ class AidaTLuSatellite(Satellite):
         self.clock_file = clock_path
         self.ready = False
         self.aidatlu = AidaTLU(hw, self.config_file, self.clock_file, i2c=I2CMETHOD)
-        self.log = self.aidatlu.log
+
+        # this is stupid is there a better way
+        self.aidatlu.log = self.log
+        self.aidatlu.io_controller.log = self.log
+        self.aidatlu.dac_controller.log = self.log
+        self.aidatlu.clock_controller.log = self.log
+        self.aidatlu.trigger_logic.log = self.log
+        self.aidatlu.dut_logic.log = self.log
 
     def do_launching(self, payload: Any = None) -> str:
         self.aidatlu.configure()
