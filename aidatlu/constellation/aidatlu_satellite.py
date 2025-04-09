@@ -15,11 +15,17 @@ from constellation.core.commandmanager import cscp_requestable
 from constellation.core.cscp import CSCPMessage
 import time
 from constellation.core.logging import setup_cli_logging
+from constellation.core.monitoring import schedule_metric
+from constellation.core.cmdp import MetricsType
 
 TEST = True
 
 
 class AidaTLuSatellite(Satellite):
+
+    def __init__(self, *args, **kwargs):
+        self.start_flag = False
+        super().__init__(*args, **kwargs)
 
     def do_initializing(self, config: Configuration) -> str:
         self.log.info(
@@ -51,6 +57,7 @@ class AidaTLuSatellite(Satellite):
         self.aidatlu = AidaTLU(hw, self.config_file, self.clock_file, i2c=I2CMETHOD)
 
         # this is stupid is there a better way
+        logger._reset_all_loggers()
         self.aidatlu.log = self.log
         self.aidatlu.io_controller.log = self.log
         self.aidatlu.dac_controller.log = self.log
@@ -109,10 +116,12 @@ class AidaTLuSatellite(Satellite):
     def do_run(self, run_identifier: str) -> str:
         t = threading.Thread(target=self.aidatlu.handle_status)
         t.start()
+        self.start_flag = True
         while not self._state_thread_evt.is_set():
             self.aidatlu.run_loop()
         t.do_run = False
         self.aidatlu.stop_run()
+        self.start_flag = False
         return "Do running complete"
 
     def do_stopping(self) -> str:
@@ -121,17 +130,23 @@ class AidaTLuSatellite(Satellite):
     def do_landing(self) -> str:
         return "Do Stop"
 
+    @schedule_metric("Hz", MetricsType.LAST_VALUE, 1)
+    def trigger_in_rate(self) -> Any:
+        if self.start_flag and hasattr(self.aidatlu, "particle_rate"):
+            return self.aidatlu.particle_rate
+        else:
+            return None
 
-def main(args=None):
+    @schedule_metric("Hz", MetricsType.LAST_VALUE, 1)
+    def trigger_out_rate(self) -> Any:
+        if self.start_flag and hasattr(self.aidatlu, "hit_rate"):
+            return self.aidatlu.hit_rate
+        else:
+            return None
 
-    parser = SatelliteArgumentParser(
-        description=main.__doc__,
-        epilog="This is a 3rd-party component of Constellation.",
-    )
-    parser.set_defaults(name="aidatlu")
-    args = vars(parser.parse_args(args))
-
-    setup_cli_logging(args["name"], args.pop("log_level"))
-
-    s = AidaTLuSatellite(**args)
-    s.run_satellite()
+    @schedule_metric("", MetricsType.LAST_VALUE, 1)
+    def trigger_total_trigger_nr(self) -> Any:
+        if self.start_flag and hasattr(self.aidatlu, "total_trigger_number"):
+            return self.aidatlu.total_trigger_number
+        else:
+            return None
