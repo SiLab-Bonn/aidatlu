@@ -6,6 +6,25 @@ SPDX-License-Identifier: CC-BY-4.0
 This is the entry point for the example satellite.
 """
 
-from .aidatlu_satellite import main
+
+from constellation.core.logging import setup_cli_logging
+from constellation.core.satellite import SatelliteArgumentParser
+
+from .aidatlu_satellite import AidaTLuSatellite
+
+
+def main(args=None):
+    """Satellite controlling a Satellite for the AIDA-2020 TLU"""
+
+    parser = SatelliteArgumentParser(description=main.__doc__)
+    args = vars(parser.parse_args(args))
+
+    # set up logging
+    setup_cli_logging(args.pop("log_level"))
+
+    # start server with remaining args
+    s = AidaTLuSatellite(**args)
+    s.run_satellite()
+
 
 main()
