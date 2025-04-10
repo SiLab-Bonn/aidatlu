@@ -18,7 +18,8 @@ dependencies = [
     "tables",
     "coloredlogs",
     "pyzmq",
-    "tqdm"
+    "tqdm",
+    "PyYAML",
 ]
 
 [project.urls]
