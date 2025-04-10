@@ -7,7 +7,7 @@ import threading
 from constellation.core.satellite import Satellite, SatelliteArgumentParser
 from constellation.core.configuration import ConfigError, Configuration
 from constellation.core.fsm import SatelliteState
-from aidatlu.main.tlu import AidaTLU
+from aidatlu.main.tlu import AidaTLU as TLU
 from aidatlu.test.utils import MockI2C
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu import logger
@@ -21,7 +21,7 @@ from constellation.core.cmdp import MetricsType
 TEST = True
 
 
-class AidaTLuSatellite(Satellite):
+class AidaTLU(Satellite):
 
     def __init__(self, *args, **kwargs):
         self.start_flag = False
@@ -54,7 +54,7 @@ class AidaTLuSatellite(Satellite):
         self.config_file = config_path
         self.clock_file = clock_path
         self.ready = False
-        self.aidatlu = AidaTLU(hw, self.config_file, self.clock_file, i2c=I2CMETHOD)
+        self.aidatlu = TLU(hw, self.config_file, self.clock_file, i2c=I2CMETHOD)
 
         # this is stupid is there a better way
         logger._reset_all_loggers()
@@ -88,7 +88,7 @@ class AidaTLuSatellite(Satellite):
             I2CMETHOD = MockI2C
             hw = None
 
-        self.aidatlu = AidaTLU(hw, self.config_file, self.clock_file, i2c=I2CMETHOD)
+        self.aidatlu = TLU(hw, self.config_file, self.clock_file, i2c=I2CMETHOD)
         logger._reset_all_loggers()
         self.aidatlu.log = self.log
         self.aidatlu.io_controller.log = self.log

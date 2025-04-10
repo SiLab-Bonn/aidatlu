@@ -10,7 +10,7 @@ This is the entry point for the example satellite.
 from constellation.core.logging import setup_cli_logging
 from constellation.core.satellite import SatelliteArgumentParser
 
-from .aidatlu_satellite import AidaTLuSatellite
+from .aidatlu_satellite import AidaTLU
 
 
 def main(args=None):
@@ -23,7 +23,7 @@ def main(args=None):
     setup_cli_logging(args.pop("log_level"))
 
     # start server with remaining args
-    s = AidaTLuSatellite(**args)
+    s = AidaTLU(**args)
     s.run_satellite()
 
 
