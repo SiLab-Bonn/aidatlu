@@ -1,5 +1,5 @@
 [satellites]
-[satellites.AidaTLUSatellite]
+[satellites.AidaTLU]
 
 internal_trigger_rate = 0
 dut_interfaces = ['off', 'aida', 'eudet', 'aida']
