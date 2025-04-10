@@ -64,6 +64,7 @@ class AidaTLuSatellite(Satellite):
         self.aidatlu.clock_controller.log = self.log
         self.aidatlu.trigger_logic.log = self.log
         self.aidatlu.dut_logic.log = self.log
+        return "Initializing complete"
 
     def do_launching(self, payload: Any = None) -> str:
         self.aidatlu.configure()
@@ -88,6 +89,13 @@ class AidaTLuSatellite(Satellite):
             hw = None
 
         self.aidatlu = AidaTLU(hw, self.config_file, self.clock_file, i2c=I2CMETHOD)
+        logger._reset_all_loggers()
+        self.aidatlu.log = self.log
+        self.aidatlu.io_controller.log = self.log
+        self.aidatlu.dac_controller.log = self.log
+        self.aidatlu.clock_controller.log = self.log
+        self.aidatlu.trigger_logic.log = self.log
+        self.aidatlu.dut_logic.log = self.log
         self.aidatlu.configure()
         return "Do reconfigure complete"
 
