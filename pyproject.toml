@@ -27,9 +27,13 @@ dependencies = [
 "Repository" = "https://github.com/SiLab-Bonn/aidatlu/"
 
 [project.optional-dependencies]
+constellation = ["ConstellationDAQ"]
 hw = ["online_monitor"]  # uhal package needs to be installed manually!
 test = ["pytest", "coverage"]
 doc = ["sphinx", "myst_parser", "sphinx_mdinclude", "pydata-sphinx-theme"]
 
 [tool.setuptools.dynamic]
 version = {attr = "aidatlu.__version__"}
+
+[project.scripts]
+SatelliteAidaTLU = "aidatlu.constellation.__main__:main"
