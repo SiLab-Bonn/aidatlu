@@ -3,14 +3,12 @@ import yaml
 from aidatlu import logger
 
 
-class TLUConfigure:
-    def __init__(self, TLU, config_path) -> None:
+class Configure:
+    def __init__(self, tlu, config_dict):
         self.log = logger.setup_main_logger(__class__.__name__)
 
-        self.tlu = TLU
-
-        with open(config_path, "r") as file:
-            self.conf = yaml.full_load(file)
+        self.tlu = tlu
+        self.conf = config_dict
 
     def configure(self) -> None:
         """Loads configuration file and configures the TLU accordingly."""
@@ -20,59 +18,6 @@ class TLUConfigure:
         self.conf_auxillary()
         self.tlu.set_enable_record_data(1)
         self.log.success("TLU configured")
-
-    def get_configuration_table(self) -> list:
-        """Creates the configuration list to save in the data files
-
-        Returns:
-            list: configuration list
-        """
-        conf = [
-            (
-                "internal_trigger_rate",
-                self.conf["internal_trigger_rate"],
-            ),
-            ("DUT_1", self.conf["dut_module"]["dut_1"]["mode"]),
-            ("DUT_2", self.conf["dut_module"]["dut_2"]["mode"]),
-            ("DUT_3", self.conf["dut_module"]["dut_3"]["mode"]),
-            ("DUT_4", self.conf["dut_module"]["dut_4"]["mode"]),
-            ("threshold_1", self.conf["trigger_inputs"]["threshold"]["threshold_1"]),
-            ("threshold_2", self.conf["trigger_inputs"]["threshold"]["threshold_2"]),
-            ("threshold_3", self.conf["trigger_inputs"]["threshold"]["threshold_3"]),
-            ("threshold_4", self.conf["trigger_inputs"]["threshold"]["threshold_4"]),
-            ("threshold_5", self.conf["trigger_inputs"]["threshold"]["threshold_3"]),
-            ("threshold_6", self.conf["trigger_inputs"]["threshold"]["threshold_4"]),
-            (
-                "trigger_inputs_logic",
-                "%s" % (self.conf["trigger_inputs"]["trigger_inputs_logic"]),
-            ),
-            (
-                "trigger_signal_shape_stretch",
-                "%s"
-                % str(self.conf["trigger_inputs"]["trigger_signal_shape"]["stretch"]),
-            ),
-            (
-                "trigger_signal_shape_delay",
-                "%s"
-                % str(self.conf["trigger_inputs"]["trigger_signal_shape"]["delay"]),
-            ),
-            (
-                "trigger_polarity",
-                "%s" % (self.conf["trigger_inputs"]["trigger_polarity"]),
-            ),
-            (
-                "enable_clock_lemo_output",
-                self.conf["enable_clock_lemo_output"],
-            ),
-            ("pmt_control_1", self.conf["pmt_control"]["pmt_1"]),
-            ("pmt_control_2", self.conf["pmt_control"]["pmt_2"]),
-            ("pmt_control_3", self.conf["pmt_control"]["pmt_3"]),
-            ("pmt_control_4", self.conf["pmt_control"]["pmt_4"]),
-            ("save_data", self.conf["save_data"]),
-            ("output_data_path", self.conf["output_data_path"]),
-            ("zmq_connection", self.conf["zmq_connection"]),
-        ]
-        return conf
 
     def get_data_handling(self) -> tuple:
         """Information about data handling.
@@ -89,17 +34,15 @@ class TLUConfigure:
         Returns:
             tuple: maximum trigger number and timeout in seconds.
         """
-        try:
-            max_number = int(self.conf["max_trigger_number"])
-            self.log.info("Stop condition maximum triggers: %s" % max_number)
-        except KeyError:
-            max_number = None
-        try:
-            timeout = float(self.conf["timeout"])
-            self.log.info("Stop condition timeout: %s s" % timeout)
-        except KeyError:
-            timeout = None
-        return max_number, timeout
+        max_trigger_number = (
+            None
+            if self.conf["max_trigger_number"] in ["None", "off"]
+            else self.conf["max_trigger_number"]
+        )
+        timeout = (
+            None if self.conf["timeout"] in ["None", "off"] else self.conf["timeout"]
+        )
+        return max_trigger_number, timeout
 
     def get_output_data_path(self) -> str:
         """Parses the output data path
@@ -122,9 +65,9 @@ class TLUConfigure:
         self.tlu.io_controller.clock_lemo_output(self.conf["enable_clock_lemo_output"])
         [
             self.tlu.dac_controller.set_voltage(
-                i + 1, self.conf["pmt_control"]["pmt_%s" % (i + 1)]
+                i + 1, self.conf["pmt_control_%s" % (i + 1)]
             )
-            for i in range(len(self.conf["pmt_control"]))
+            for i in range(4)
         ]
 
     def conf_dut(self) -> None:
@@ -132,27 +75,18 @@ class TLUConfigure:
         dut = [0, 0, 0, 0]
         dut_mode = [0, 0, 0, 0]
         for i in range(4):
-            if (
-                self.tlu.config_parser.conf["dut_module"]["dut_%s" % (i + 1)]["mode"]
-                == "eudet"
-            ):
+            if self.tlu.config_parser.conf["DUT_%s" % (i + 1)] == "eudet":
                 self.tlu.io_controller.switch_led(i + 1, "g")
                 dut[i] = 2**i
                 # Clock output needs to be disabled for EUDET mode.
                 self.tlu.io_controller.clock_hdmi_output(i + 1, "off")
-            if (
-                self.tlu.config_parser.conf["dut_module"]["dut_%s" % (i + 1)]["mode"]
-                == "aidatrig"
-            ):
+            if self.tlu.config_parser.conf["DUT_%s" % (i + 1)] == "aidatrig":
                 self.tlu.io_controller.switch_led(i + 1, "w")
                 dut[i] = 2**i
                 dut_mode[i] = 2 ** (2 * i)
                 # In AIDA mode the clock output is needed.
                 self.tlu.io_controller.clock_hdmi_output(i + 1, "chip")
-            if (
-                self.tlu.config_parser.conf["dut_module"]["dut_%s" % (i + 1)]["mode"]
-                == "aida"
-            ):
+            if self.tlu.config_parser.conf["DUT_%s" % (i + 1)] == "aida":
                 self.tlu.io_controller.switch_led(i + 1, "b")
                 dut[i] = 2**i
                 dut_mode[i] = 3 * (2) ** (2 * i)
@@ -164,9 +98,7 @@ class TLUConfigure:
                 "DUT %i configured in %s"
                 % (
                     (i + 1),
-                    self.tlu.config_parser.conf["dut_module"]["dut_%s" % (i + 1)][
-                        "mode"
-                    ],
+                    self.tlu.config_parser.conf["DUT_%s" % (i + 1)],
                 )
             )
             for i in range(4)
@@ -190,13 +122,13 @@ class TLUConfigure:
     def conf_trigger_logic(self) -> None:
         """Configures the trigger logic. So the trigger polarity and the trigger pulse length and stretch."""
 
-        if self.conf["trigger_inputs"]["trigger_polarity"] in [
+        if self.conf["trigger_polarity"] in [
             0,
             "0",
             "rising",
         ]:
             self.tlu.trigger_logic.set_trigger_polarity(0)
-        elif self.conf["trigger_inputs"]["trigger_polarity"] in [
+        elif self.conf["trigger_polarity"] in [
             1,
             "1",
             "falling",
@@ -204,18 +136,16 @@ class TLUConfigure:
             self.tlu.trigger_logic.set_trigger_polarity(1)
 
         self.tlu.trigger_logic.set_pulse_stretch_pack(
-            self.conf["trigger_inputs"]["trigger_signal_shape"]["stretch"]
+            self.conf["trigger_signal_shape_stretch"]
         )
         self.tlu.trigger_logic.set_pulse_delay_pack(
-            self.conf["trigger_inputs"]["trigger_signal_shape"]["delay"]
+            self.conf["trigger_signal_shape_delay"]
         )
         self.log.info(
-            "Trigger input stretch: %s"
-            % self.conf["trigger_inputs"]["trigger_signal_shape"]["stretch"]
+            "Trigger input stretch: %s" % self.conf["trigger_signal_shape_stretch"]
         )
         self.log.info(
-            "Trigger input delay  : %s"
-            % self.conf["trigger_inputs"]["trigger_signal_shape"]["delay"]
+            "Trigger input delay  : %s" % self.conf["trigger_signal_shape_delay"]
         )
 
         self.tlu.trigger_logic.set_internal_trigger_frequency(
@@ -229,12 +159,12 @@ class TLUConfigure:
         [
             self.tlu.dac_controller.set_threshold(
                 i + 1,
-                self.conf["trigger_inputs"]["threshold"]["threshold_%s" % (i + 1)],
+                self.conf["threshold_%s" % (i + 1)],
             )
             for i in range(6)
         ]
 
-        trigger_configuration = self.conf["trigger_inputs"]["trigger_inputs_logic"]
+        trigger_configuration = self.conf["trigger_inputs_logic"]
 
         self.log.info("Trigger Configuration: %s" % (trigger_configuration))
 
@@ -295,3 +225,69 @@ class TLUConfigure:
         mask_low = 0xFFFFFFFF & word
         mask_high = word >> 32
         return (mask_low, mask_high)
+
+    def get_configuration_table(self) -> list:
+        """Creates a list of tuples from the configuration file for the output data files
+
+        Returns:
+            list: configuration list
+        """
+        conf_table = self.conf.copy()
+        conf_table["trigger_signal_shape_stretch"] = str(
+            self.conf["trigger_signal_shape_stretch"]
+        )
+        conf_table["trigger_signal_shape_delay"] = str(
+            self.conf["trigger_signal_shape_delay"]
+        )
+        conf_table["trigger_polarity"] = str(self.conf["trigger_polarity"])
+        conf_table["trigger_inputs_logic"] = str(self.conf["trigger_inputs_logic"])
+        self.log.debug(f"Configuration table: {conf_table}")
+        return list(conf_table.items())
+
+
+def yaml_parser(conf_file_path) -> list:
+    """Parses a yaml configuration file to a configuration dictionary.
+
+    Returns:
+        conf: configuration dictionary
+    """
+
+    with open(conf_file_path, "r") as file:
+        yaml_conf = yaml.full_load(file)
+
+    conf = {
+        "internal_trigger_rate": yaml_conf["internal_trigger_rate"],
+        "DUT_1": yaml_conf["dut_module"]["dut_1"]["mode"],
+        "DUT_2": yaml_conf["dut_module"]["dut_2"]["mode"],
+        "DUT_3": yaml_conf["dut_module"]["dut_3"]["mode"],
+        "DUT_4": yaml_conf["dut_module"]["dut_4"]["mode"],
+        "threshold_1": yaml_conf["trigger_inputs"]["threshold"]["threshold_1"],
+        "threshold_2": yaml_conf["trigger_inputs"]["threshold"]["threshold_2"],
+        "threshold_3": yaml_conf["trigger_inputs"]["threshold"]["threshold_3"],
+        "threshold_4": yaml_conf["trigger_inputs"]["threshold"]["threshold_4"],
+        "threshold_5": yaml_conf["trigger_inputs"]["threshold"]["threshold_5"],
+        "threshold_6": yaml_conf["trigger_inputs"]["threshold"]["threshold_6"],
+        "trigger_inputs_logic": yaml_conf["trigger_inputs"]["trigger_inputs_logic"],
+        "trigger_signal_shape_stretch": yaml_conf["trigger_inputs"][
+            "trigger_signal_shape"
+        ]["stretch"],
+        "trigger_signal_shape_delay": yaml_conf["trigger_inputs"][
+            "trigger_signal_shape"
+        ]["delay"],
+        "trigger_polarity": yaml_conf["trigger_inputs"]["trigger_polarity"],
+        "enable_clock_lemo_output": yaml_conf["enable_clock_lemo_output"],
+        "pmt_control_1": yaml_conf["pmt_control"]["pmt_1"],
+        "pmt_control_2": yaml_conf["pmt_control"]["pmt_2"],
+        "pmt_control_3": yaml_conf["pmt_control"]["pmt_3"],
+        "pmt_control_4": yaml_conf["pmt_control"]["pmt_4"],
+        "save_data": yaml_conf["save_data"],
+        "output_data_path": yaml_conf["output_data_path"],
+        "zmq_connection": yaml_conf["zmq_connection"],
+        "max_trigger_number": yaml_conf["max_trigger_number"],
+        "timeout": yaml_conf["timeout"],
+    }
+    return conf
+
+
+def toml_parser():
+    pass

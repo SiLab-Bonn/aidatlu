@@ -2,14 +2,15 @@ from pathlib import Path
 import os
 import yaml
 import pytest
-from aidatlu.main.config_parser import TLUConfigure
+from aidatlu.main.config_parser import Configure, yaml_parser
 from aidatlu.hardware.ioexpander_controller import IOControl
 from aidatlu.main.tlu import AidaTLU
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.test.utils import MockI2C
 
 FILEPATH = Path(__file__).parent
-CONFIG_FILE = FILEPATH / "fixtures" / "tlu_test_configuration.yaml"
+CONFIG_FILE_PATH = FILEPATH / "fixtures" / "tlu_test_configuration.yaml"
+CONFIG_FILE = yaml_parser(CONFIG_FILE_PATH)
 
 try:
     MOCK = not os.environ["HW"] == "True"
@@ -40,12 +41,12 @@ TLU = AidaTLU(
 def test_config_parser():
     """Test parsing the configuration file"""
 
-    config_parser = TLUConfigure(
-        TLU=TLU,
-        config_path=CONFIG_FILE,
+    config_parser = Configure(
+        tlu=TLU,
+        config_dict=CONFIG_FILE,
     )
-    with open(CONFIG_FILE) as yaml_file:
-        test_config = yaml.safe_load(yaml_file)
+    test_config = yaml_parser(CONFIG_FILE_PATH)
+
     assert isinstance(config_parser.get_configuration_table(), list)
     assert test_config["save_data"] == config_parser.get_data_handling()
     assert test_config["output_data_path"] == config_parser.get_output_data_path()
@@ -55,9 +56,9 @@ def test_config_parser():
 
 def test_dut_configuration():
     """Test configuration of the DUT interfaces"""
-    config_parser = TLUConfigure(
-        TLU=TLU,
-        config_path=CONFIG_FILE,
+    config_parser = Configure(
+        tlu=TLU,
+        config_dict=CONFIG_FILE,
     )
     config_parser.conf_dut()
 
@@ -83,9 +84,9 @@ def test_dut_configuration():
 
 def test_trigger_logic_configuration():
     """Test configuration of the trigger logic"""
-    config_parser = TLUConfigure(
-        TLU=TLU,
-        config_path=CONFIG_FILE,
+    config_parser = Configure(
+        tlu=TLU,
+        config_dict=CONFIG_FILE,
     )
     config_parser.conf_trigger_logic()
     if MOCK:
@@ -125,9 +126,9 @@ def test_trigger_logic_configuration():
 
 def test_trigger_input_configuration():
     """Test configuration of the trigger inputs"""
-    config_parser = TLUConfigure(
-        TLU=TLU,
-        config_path=CONFIG_FILE,
+    config_parser = Configure(
+        tlu=TLU,
+        config_dict=CONFIG_FILE,
     )
     config_parser.conf_trigger_inputs()
     if MOCK:
@@ -153,9 +154,9 @@ def test_trigger_input_configuration():
 
 def test_conf_auxillary():
     """Test PMT power and LEMO clock I/O"""
-    config_parser = TLUConfigure(
-        TLU=TLU,
-        config_path=CONFIG_FILE,
+    config_parser = Configure(
+        tlu=TLU,
+        config_dict=CONFIG_FILE,
     )
     config_parser.conf_auxillary()
 

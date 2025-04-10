@@ -14,12 +14,12 @@ from aidatlu.hardware.dut_controller import DUTLogic
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.ioexpander_controller import IOControl
 from aidatlu.hardware.trigger_controller import TriggerLogic
-from aidatlu.main.config_parser import TLUConfigure
+from aidatlu.main.config_parser import Configure, yaml_parser
 from aidatlu.main.data_parser import interpret_data
 
 
 class AidaTLU:
-    def __init__(self, hw, config_path, clock_config_path, i2c=I2CCore) -> None:
+    def __init__(self, hw, config_dict, clock_config_path, i2c=I2CCore) -> None:
         self.log = logger.setup_main_logger(__class__.__name__)
 
         self.i2c = i2c(hw)
@@ -39,7 +39,7 @@ class AidaTLU:
         self.dut_logic = DUTLogic(self.i2c)
 
         self.reset_configuration()
-        self.config_parser = TLUConfigure(self, config_path)
+        self.config_parser = Configure(self, config_dict)
 
         self.log.success("TLU initialized")
 
@@ -471,6 +471,7 @@ if __name__ == "__main__":
     clock_path = "../misc/aida_tlu_clk_config.txt"
     config_path = "../tlu_configuration.yaml"
 
+    conf_dict = yaml_parser(config_path)
     tlu = AidaTLU(hw, config_path, clock_path)
 
     tlu.configure()
