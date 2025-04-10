@@ -46,7 +46,9 @@ def test_check_ups():
         assert TLU.get_run_active() == 0
         assert TLU.get_event_fifo_fill_level() == -1
         assert TLU.get_timestamp() == -0x100000001
-        assert TLU.get_scalar() == (-1, -1, -1, -1, -1, -1)
+        assert TLU.get_scalars() == [-1, -1, -1, -1, -1, -1]
+        with pytest.raises(ValueError):
+            TLU.get_scalar(6)
     else:
         TLU.set_event_fifo_csr(0)
         assert TLU.get_event_fifo_csr() == 3
