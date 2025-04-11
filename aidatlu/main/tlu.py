@@ -49,7 +49,7 @@ class AidaTLU:
         self.conf_list = self.config_parser.get_configuration_table()
         self.get_event_fifo_fill_level()
         self.get_event_fifo_csr()
-        self.get_scalar()
+        self.get_scalars()
 
     def reset_configuration(self) -> None:
         """Switch off all outputs, reset all counters and set threshold to 1.2V"""
@@ -213,19 +213,19 @@ class AidaTLU:
             return np.array(fifo_content)
         pass
 
-    def get_scalar(self) -> list:
+    def get_scalar(self, channel: int) -> int:
+        """reads current scalar value from register"""
+        if channel < 0 or channel > 5:
+            raise ValueError("Only channels 0 to 5 are valid")
+        return self.i2c.read_register(f"triggerInputs.ThrCount{channel:d}R")
+
+    def get_scalars(self) -> list:
         """reads current sc values from registers
 
         Returns:
             list: all 6 trigger sc values
         """
-        s0 = self.i2c.read_register("triggerInputs.ThrCount0R")
-        s1 = self.i2c.read_register("triggerInputs.ThrCount1R")
-        s2 = self.i2c.read_register("triggerInputs.ThrCount2R")
-        s3 = self.i2c.read_register("triggerInputs.ThrCount3R")
-        s4 = self.i2c.read_register("triggerInputs.ThrCount4R")
-        s5 = self.i2c.read_register("triggerInputs.ThrCount5R")
-        return s0, s1, s2, s3, s4, s5
+        return [self.get_scalar(n) for n in range(6)]
 
     def init_raw_data_table(self) -> None:
         """Initializes the raw data table, where the raw FIFO data is found."""
@@ -286,7 +286,7 @@ class AidaTLU:
         self.run_time = time
         self.event_number = self.trigger_logic.get_post_veto_trigger()
         self.total_trigger_number = self.trigger_logic.get_pre_veto_trigger()
-        s0, s1, s2, s3, s4, s5 = self.get_scalar()
+        s0, s1, s2, s3, s4, s5 = self.get_scalars()
 
         if self.zmq_address:
             self.socket.send_string(
