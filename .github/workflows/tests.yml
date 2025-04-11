@@ -23,4 +23,4 @@ jobs:
 
       - name: Test with pytest
         run: |
-          pytest -sv
+          pytest -sv --force-sugar --cov
