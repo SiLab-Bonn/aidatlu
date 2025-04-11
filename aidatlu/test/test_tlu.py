@@ -5,10 +5,11 @@ import pytest
 from aidatlu.main.tlu import AidaTLU
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.test.utils import MockI2C
+from aidatlu.main.config_parser import yaml_parser
 
 FILEPATH = Path(__file__).parent
-CONFIG_FILE = FILEPATH / "fixtures" / "tlu_test_configuration.yaml"
-
+CONFIG_FILE_PATH = FILEPATH / "fixtures" / "tlu_test_configuration.yaml"
+CONFIG_FILE = yaml_parser(CONFIG_FILE_PATH)
 try:
     MOCK = not os.environ["HW"] == "True"
 except KeyError:

@@ -1,6 +1,5 @@
 # Generate TLU internal trigger with given rate in Hz
-internal_trigger:
-  internal_trigger_rate: 0
+internal_trigger_rate: 0
 
 # Set operating mode of the DUT, supported are three operating modes 'aida', 'aidatrig' and 'eudet'
 # Set unused DUT interfaces to off, false or None
@@ -27,23 +26,21 @@ trigger_inputs:
   # Trigger Logic configuration accept a python expression for the trigger inputs.
   # The logic is set by using the variables for the input channels 'CH1', 'CH2', 'CH3', 'CH4', 'CH5' and 'CH6'
   # and the Python bitwise operators AND: '&', OR: '|', NOT: 'not' and so on. Dont forget to use brackets...
-  trigger_inputs_logic: CH2 & CH4
+  trigger_inputs_logic: 'CH1 & CH2'
 
   # TLU can trigger on a rising or falling edge. Trigger polarity is set using a string or boolean,
-  # 'rising' corresponds to false (0) and 'falling' to true (1)
-  trigger_polarity:
-    polarity: falling
+  # 'rising' corresponds to false and 'falling' to true
+  trigger_polarity: falling
 
-# Stretches and delays each trigger input signal for an number of clock cycles (corresponds to 6.25ns steps),
-# The stretch and delay of all inputs is given as a list,
-# each entry corresponding to an individual trigger input.
+  # Stretches and delays each trigger input signal for an number of clock cycles (corresponds to 6.25ns steps),
+  # The stretch and delay of all inputs is given as a list,
+  # each entry corresponding to an individual trigger input.
   trigger_signal_shape:
     stretch: [2, 2, 2, 2, 2, 2]
     delay: [0, 0, 0, 0, 0, 0]
 
 # Enable the LEMO clock output using a boolean.
-clock_lemo:
-  enable_clock_lemo_output: on
+enable_clock_lemo_output: True
 
 # Set the four PMT control voltages in V
 pmt_control:
@@ -58,10 +55,8 @@ save_data: True
 output_data_path:
 
 # zmq connection for status messages, leave it blank or set to off if not needed
-zmq_connection: off  #"tcp://127.0.0.1:6500"
+zmq_connection: off #"tcp://:7500"
 
-# Optional stop conditions can also be added to the configuration.
-# These can be a timeout in seconds or a maximum output trigger number.
-# If needed just uncomment the required stop condition in the example below:
-# max_trigger_number: 1000000
-# timeout: 60
+# Optional stop conditions these can be by timeout in seconds or a maximum output trigger number.
+max_trigger_number: None
+timeout: None
