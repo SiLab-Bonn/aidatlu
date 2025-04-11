@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from typing import Any, Tuple
 from pathlib import Path
-
+import time
 import threading
 
 from constellation.core.satellite import Satellite, SatelliteArgumentParser
@@ -13,10 +13,10 @@ from aidatlu.hardware.i2c import I2CCore
 from aidatlu import logger
 from constellation.core.commandmanager import cscp_requestable
 from constellation.core.cscp import CSCPMessage
-import time
 from constellation.core.logging import setup_cli_logging
 from constellation.core.monitoring import schedule_metric
 from constellation.core.cmdp import MetricsType
+from constellation.core.fsm import SatelliteState
 
 TEST = True
 
@@ -24,7 +24,6 @@ TEST = True
 class AidaTLU(Satellite):
 
     def __init__(self, *args, **kwargs):
-        self.start_flag = False
         super().__init__(*args, **kwargs)
 
     def do_initializing(self, config: Configuration) -> str:
@@ -124,12 +123,10 @@ class AidaTLU(Satellite):
     def do_run(self, run_identifier: str) -> str:
         t = threading.Thread(target=self.aidatlu.handle_status)
         t.start()
-        self.start_flag = True
         while not self._state_thread_evt.is_set():
             self.aidatlu.run_loop()
         t.do_run = False
         self.aidatlu.stop_run()
-        self.start_flag = False
         return "Do running complete"
 
     def do_stopping(self) -> str:
@@ -140,21 +137,27 @@ class AidaTLU(Satellite):
 
     @schedule_metric("Hz", MetricsType.LAST_VALUE, 1)
     def trigger_in_rate(self) -> Any:
-        if self.start_flag and hasattr(self.aidatlu, "particle_rate"):
+        if self.fsm.current_state_value == SatelliteState.RUN and hasattr(
+            self.aidatlu, "particle_rate"
+        ):
             return self.aidatlu.particle_rate
         else:
             return None
 
     @schedule_metric("Hz", MetricsType.LAST_VALUE, 1)
     def trigger_out_rate(self) -> Any:
-        if self.start_flag and hasattr(self.aidatlu, "hit_rate"):
+        if self.fsm.current_state_value == SatelliteState.RUN and hasattr(
+            self.aidatlu, "hit_rate"
+        ):
             return self.aidatlu.hit_rate
         else:
             return None
 
     @schedule_metric("", MetricsType.LAST_VALUE, 1)
     def trigger_total_trigger_nr(self) -> Any:
-        if self.start_flag and hasattr(self.aidatlu, "total_trigger_number"):
+        if self.fsm.current_state_value == SatelliteState.RUN and hasattr(
+            self.aidatlu, "total_trigger_number"
+        ):
             return self.aidatlu.total_trigger_number
         else:
             return None
