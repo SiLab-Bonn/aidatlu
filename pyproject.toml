@@ -8,7 +8,7 @@ dynamic = ["version"]
 license = { "text" = "AGPL-3.0" }
 description = "Control software for AIDA-2020 TLU"
 readme = {file = "README.md", content-type = "text/markdown"}
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 authors = [
     {name = "Rasmus Partzsch", email="rasmus.partzsch@uni-bonn.de"},
     {name = "Christian Bespin", email="cbespin@uni-bonn.de"}
