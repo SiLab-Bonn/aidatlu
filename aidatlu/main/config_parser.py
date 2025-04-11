@@ -1,4 +1,5 @@
 import yaml
+import tomllib
 
 from aidatlu import logger
 
@@ -289,5 +290,73 @@ def yaml_parser(conf_file_path) -> list:
     return conf
 
 
-def toml_parser():
-    pass
+def toml_parser(conf_file_path):
+    """Parses a toml configuration file to a configuration dictionary.
+
+    Returns:
+        conf: configuration dictionary
+    """
+    with open(conf_file_path, "rb") as file:
+        toml_conf = tomllib.load(file)
+    conf = {
+        "internal_trigger_rate": toml_conf["internal_trigger_rate"],
+        "DUT_1": (
+            False
+            if toml_conf["dut_interfaces"][0] in ["False", "None", "off"]
+            else toml_conf["dut_interfaces"][0]
+        ),
+        "DUT_2": (
+            False
+            if toml_conf["dut_interfaces"][1] in ["False", "None", "off"]
+            else toml_conf["dut_interfaces"][1]
+        ),
+        "DUT_3": (
+            False
+            if toml_conf["dut_interfaces"][2] in ["False", "None", "off"]
+            else toml_conf["dut_interfaces"][2]
+        ),
+        "DUT_4": (
+            False
+            if toml_conf["dut_interfaces"][3] in ["False", "None", "off"]
+            else toml_conf["dut_interfaces"][3]
+        ),
+        "threshold_1": toml_conf["trigger_threshold"][0],
+        "threshold_2": toml_conf["trigger_threshold"][1],
+        "threshold_3": toml_conf["trigger_threshold"][2],
+        "threshold_4": toml_conf["trigger_threshold"][3],
+        "threshold_5": toml_conf["trigger_threshold"][4],
+        "threshold_6": toml_conf["trigger_threshold"][5],
+        "trigger_inputs_logic": toml_conf["trigger_inputs_logic"],
+        "trigger_signal_shape_stretch": toml_conf["trigger_signal_stretch"],
+        "trigger_signal_shape_delay": toml_conf["trigger_signal_delay"],
+        "trigger_polarity": toml_conf["trigger_polarity"],
+        "enable_clock_lemo_output": (
+            False
+            if toml_conf["enable_clock_lemo_output"] in ["False", "None"]
+            else True
+        ),
+        "pmt_control_1": toml_conf["pmt_power"][0],
+        "pmt_control_2": toml_conf["pmt_power"][1],
+        "pmt_control_3": toml_conf["pmt_power"][2],
+        "pmt_control_4": toml_conf["pmt_power"][3],
+        "save_data": (
+            False if toml_conf["save_data"] in ["False", "None", "off"] else True
+        ),
+        "output_data_path": toml_conf["output_data_path"],
+        "zmq_connection": (
+            False
+            if toml_conf["zmq_connection"] in ["False", "None", "off"]
+            else toml_conf["zmq_connection"]
+        ),
+        "max_trigger_number": (
+            None
+            if toml_conf["max_trigger_number"] in ["False", "None", "off"]
+            else toml_conf["max_trigger_number"]
+        ),
+        "timeout": (
+            None
+            if toml_conf["timeout"] in ["False", "None", "off"]
+            else toml_conf["timeout"]
+        ),
+    }
+    return conf

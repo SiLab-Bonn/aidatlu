@@ -66,5 +66,5 @@ output_data_path: 'aidatlu/test/fixtures/test_output_data/'
 zmq_connection: off #"tcp://:7500"
 
 # Optional stop conditions these can be by timeout in seconds or a maximum output trigger number.
-max_trigger_number: None
+max_trigger_number:
 timeout: 5

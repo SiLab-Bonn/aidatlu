@@ -1,8 +1,7 @@
 from pathlib import Path
 import os
-import yaml
 import pytest
-from aidatlu.main.config_parser import Configure, yaml_parser
+from aidatlu.main.config_parser import Configure, yaml_parser, toml_parser
 from aidatlu.hardware.ioexpander_controller import IOControl
 from aidatlu.main.tlu import AidaTLU
 from aidatlu.hardware.i2c import I2CCore
@@ -45,13 +44,14 @@ def test_config_parser():
         tlu=TLU,
         config_dict=CONFIG_FILE,
     )
-    test_config = yaml_parser(CONFIG_FILE_PATH)
-
     assert isinstance(config_parser.get_configuration_table(), list)
-    assert test_config["save_data"] == config_parser.get_data_handling()
-    assert test_config["output_data_path"] == config_parser.get_output_data_path()
-    assert (None, test_config["timeout"]) == config_parser.get_stop_condition()
-    assert test_config["zmq_connection"] == config_parser.get_zmq_connection()
+    assert CONFIG_FILE["save_data"] == config_parser.get_data_handling()
+    assert CONFIG_FILE["output_data_path"] == config_parser.get_output_data_path()
+    assert (None, CONFIG_FILE["timeout"]) == config_parser.get_stop_condition()
+    assert CONFIG_FILE["zmq_connection"] == config_parser.get_zmq_connection()
+
+    config_toml_path = FILEPATH / "fixtures" / "tlu_test_configuration.toml"
+    assert toml_parser(config_toml_path) == yaml_parser(CONFIG_FILE_PATH)
 
 
 def test_dut_configuration():
