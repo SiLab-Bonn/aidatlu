@@ -1,5 +1,6 @@
 import uhal
 from main.tlu import AidaTLU
+from main.config_parser import yaml_parser
 
 
 class AIDATLU:
@@ -32,7 +33,8 @@ class AIDATLU:
         self.aidatlu.configure()
 
     def init(self):
-        self.aidatlu = AidaTLU(hw, self.config_file, self.clock_file)
+        conf_dict = yaml_parser(self.config_file)
+        self.aidatlu = AidaTLU(hw, conf_dict, self.clock_file)
 
     def help(self):
         print("tlu.configure()")
