@@ -1,22 +1,22 @@
 [satellites]
 [satellites.AidaTLU]
 
-internal_trigger_rate = 0
-dut_interfaces = ['off', 'aida', 'eudet', 'aida']
+internal_trigger_rate = 100000
+dut_interfaces = ['aida', 'eudet', 'aidatrig', 'off']
 
-trigger_threshold = [-0.1, -0.1, -0.1, -0.1, -0.1, -0.1]
-trigger_input_logic = 'CH1 & CH2'
+trigger_threshold = [-0.1, -0.2, -0.3, -0.4, -0.5, -0.6]
+trigger_inputs_logic = '(CH1 & (not CH2) & (not CH3) & (not CH4) & (CH5) & (not CH6))'
 trigger_polarity = 'falling'
-trigger_signal_stretch = [2, 2, 2, 2, 2, 2]
-trigger_signal_delay = [0, 0, 0, 0, 0, 0]
+trigger_signal_stretch = [2, 2, 3, 2, 2, 2]
+trigger_signal_delay = [0, 1, 0, 0, 3, 0]
 
 enable_clock_lemo_output = 'True'
-pmt_power = [0.8, 0.8, 0.8, 0.8]
+pmt_power = [0.8, 0.8, 0.0, 0.0]
 save_data = 'True'
 output_data_path = 'None'
+zmq_connection = 'False'
 
 # Optional stop conditions can also be added to the configuration.
 # These can be by timeout in seconds or a maximum output trigger number.
-# If needed just uncomment the required stop condition in the example below:
-# max_trigger_number: 1000000
-# timeout: 5
+max_trigger_number = 'None'
+timeout = 'None'

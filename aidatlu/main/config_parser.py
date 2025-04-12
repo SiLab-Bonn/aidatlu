@@ -290,14 +290,17 @@ def yaml_parser(conf_file_path) -> list:
     return conf
 
 
-def toml_parser(conf_file_path):
+def toml_parser(conf_file_path, open_toml=True):
     """Parses a toml configuration file to a configuration dictionary.
 
     Returns:
         conf: configuration dictionary
     """
-    with open(conf_file_path, "rb") as file:
-        toml_conf = tomllib.load(file)
+    if open_toml:
+        with open(conf_file_path, "rb") as file:
+            toml_conf = tomllib.load(file)
+    else:
+        toml_conf = conf_file_path
     conf = {
         "internal_trigger_rate": toml_conf["internal_trigger_rate"],
         "DUT_1": (

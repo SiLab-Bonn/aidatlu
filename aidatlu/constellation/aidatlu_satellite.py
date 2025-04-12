@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from typing import Any, Tuple
+from typing import Any
 from pathlib import Path
 import time
 import threading
@@ -11,6 +11,7 @@ from aidatlu.main.tlu import AidaTLU as TLU
 from aidatlu.test.utils import MockI2C
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu import logger
+from aidatlu.main.config_parser import toml_parser
 from constellation.core.commandmanager import cscp_requestable
 from constellation.core.cscp import CSCPMessage
 from constellation.core.logging import setup_cli_logging
@@ -48,11 +49,9 @@ class AidaTLU(Satellite):
             hw = None
 
         clock_path = str(file_path) + "/../misc/aida_tlu_clk_config.txt"
-        config_path = str(file_path) + "/../tlu_configuration.yaml"
 
-        self.config_file = config_path
+        self.config_file = toml_parser(config, open_toml=False)
         self.clock_file = clock_path
-        self.ready = False
         self.aidatlu = TLU(hw, self.config_file, self.clock_file, i2c=I2CMETHOD)
 
         # this is stupid is there a better way
