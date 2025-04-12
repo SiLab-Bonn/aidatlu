@@ -160,3 +160,46 @@ class AidaTLU(Satellite):
             return self.aidatlu.total_trigger_number
         else:
             return None
+
+    @schedule_metric("", MetricsType.LAST_VALUE, 1)
+    def sc0(self) -> Any:
+        if self.fsm.current_state_value == SatelliteState.ORBIT:
+            self.log.debug("sc0: %s" % self.aidatlu.get_scalar(0))
+            return self.aidatlu.get_scalar(0)
+        else:
+            return None
+
+    @schedule_metric("", MetricsType.LAST_VALUE, 1)
+    def sc1(self) -> Any:
+        if self.fsm.current_state_value == SatelliteState.ORBIT:
+            return self.aidatlu.get_scalar(1)
+        else:
+            return None
+
+    @schedule_metric("", MetricsType.LAST_VALUE, 1)
+    def sc2(self) -> Any:
+        if self.fsm.current_state_value == SatelliteState.ORBIT:
+            return self.aidatlu.get_scalar(2)
+        else:
+            return None
+
+    @schedule_metric("", MetricsType.LAST_VALUE, 1)
+    def sc3(self) -> Any:
+        if self.fsm.current_state_value == SatelliteState.ORBIT:
+            return self.aidatlu.get_scalar(3)
+        else:
+            return None
+
+    @schedule_metric("", MetricsType.LAST_VALUE, 1)
+    def sc4(self) -> Any:
+        if self.fsm.current_state_value == SatelliteState.ORBIT:
+            return self.aidatlu.get_scalar(4)
+        else:
+            return None
+
+    @schedule_metric("", MetricsType.LAST_VALUE, 1)
+    def sc5(self) -> Any:
+        if self.fsm.current_state_value == SatelliteState.ORBIT:
+            return self.aidatlu.get_scalar(5)
+        else:
+            return None
