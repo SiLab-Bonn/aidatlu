@@ -1,31 +1,31 @@
 #!/usr/bin/env python3
-from typing import Any
-from pathlib import Path
-import time
+import os
 import threading
+import time
+from pathlib import Path
+from typing import Any
 
-from constellation.core.satellite import Satellite, SatelliteArgumentParser
-from constellation.core.configuration import ConfigError, Configuration
-from constellation.core.fsm import SatelliteState
-from aidatlu.main.tlu import AidaTLU as TLU
-from aidatlu.test.utils import MockI2C
-from aidatlu.hardware.i2c import I2CCore
-from aidatlu import logger
-from aidatlu.main.config_parser import toml_parser
+from constellation.core.cmdp import MetricsType
 from constellation.core.commandmanager import cscp_requestable
+from constellation.core.configuration import ConfigError, Configuration
 from constellation.core.cscp import CSCPMessage
+from constellation.core.fsm import SatelliteState
 from constellation.core.logging import setup_cli_logging
 from constellation.core.monitoring import schedule_metric
-from constellation.core.cmdp import MetricsType
-from constellation.core.fsm import SatelliteState
+from constellation.core.satellite import Satellite, SatelliteArgumentParser
 
-TEST = True
+from aidatlu import logger
+from aidatlu.hardware.i2c import I2CCore
+from aidatlu.main.config_parser import toml_parser
+from aidatlu.main.tlu import AidaTLU as TLU
+from aidatlu.test.utils import MockI2C
 
 
 class AidaTLU(Satellite):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        use_mock = os.environ.get('TLU_MOCK')
 
     def do_initializing(self, config: Configuration) -> str:
         self.log.info(
@@ -35,7 +35,7 @@ class AidaTLU(Satellite):
 
         file_path = Path(__file__).parent
 
-        if not TEST:
+        if not use_mock:
             import uhal
 
             uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
@@ -75,7 +75,7 @@ class AidaTLU(Satellite):
     def do_reconfigure(self, config: Configuration) -> str:
         file_path = Path(__file__).parent
 
-        if not TEST:
+        if not use_mock:
             uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
             manager = uhal.ConnectionManager(
                 "file://" + str(file_path) + "/../misc/aida_tlu_connection.xml"
@@ -98,7 +98,7 @@ class AidaTLU(Satellite):
         return "Do reconfigure complete"
 
     def do_starting(self, run_identifier: str = None) -> str:
-        if TEST:
+        if use_mock:
             start_time = time.time()
 
             def _get_timestamp(self):
