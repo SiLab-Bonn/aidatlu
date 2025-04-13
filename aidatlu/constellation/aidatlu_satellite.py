@@ -25,7 +25,7 @@ class AidaTLU(Satellite):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        use_mock = os.environ.get('TLU_MOCK')
+        self.use_mock = os.environ.get('TLU_MOCK')
 
     def do_initializing(self, config: Configuration) -> str:
         self.log.info(
@@ -35,7 +35,7 @@ class AidaTLU(Satellite):
 
         file_path = Path(__file__).parent
 
-        if not use_mock:
+        if not self.use_mock:
             import uhal
 
             uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
@@ -75,7 +75,7 @@ class AidaTLU(Satellite):
     def do_reconfigure(self, config: Configuration) -> str:
         file_path = Path(__file__).parent
 
-        if not use_mock:
+        if not self.use_mock:
             uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
             manager = uhal.ConnectionManager(
                 "file://" + str(file_path) + "/../misc/aida_tlu_connection.xml"
@@ -98,7 +98,7 @@ class AidaTLU(Satellite):
         return "Do reconfigure complete"
 
     def do_starting(self, run_identifier: str = None) -> str:
-        if use_mock:
+        if self.use_mock:
             start_time = time.time()
 
             def _get_timestamp(self):
