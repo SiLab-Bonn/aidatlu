@@ -25,7 +25,7 @@ class AidaTLU(Satellite):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.use_mock = os.environ.get('TLU_MOCK')
+        self.use_mock = os.environ.get("TLU_MOCK")
 
     def do_initializing(self, config: Configuration) -> str:
         self.log.info(
