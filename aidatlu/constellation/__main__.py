@@ -14,7 +14,7 @@ from .aidatlu_satellite import AidaTLU
 
 
 def main(args=None):
-    """Satellite controlling a Satellite for the AIDA-2020 TLU"""
+    """Controlling of a Satellite for the AIDA-2020 TLU"""
 
     parser = SatelliteArgumentParser(description=main.__doc__)
     args = vars(parser.parse_args(args))
