@@ -32,7 +32,7 @@ TLU_MOCK=True SatelliteAidaTLU
 | `internal_trigger_rate` | Generates internal trigger with a given frequency given in Hz | Integer |
 | `dut_interfaces` | Specify the operation mode of the DUT interface (`aida`, `eudet`, `aidatrig`) given in a list. | List |
 | `trigger_threshold` | Threshold setting of each individual trigger input channel given in V | List |
-| `trigger_inputs_logic` | Trigger Logic configuration accept a python expression for the trigger inputs. The logic is set by using the variables for the input channels 'CH1', 'CH2', 'CH3', 'CH4', 'CH5' and 'CH6' and the Python bitwise operators `&`, `|`, `not` and so on. Don't forget to use brackets... | String |
+| `trigger_inputs_logic` | Trigger Logic configuration accept a python expression for the trigger inputs. The logic is set by using the variables for the input channels 'CH1', 'CH2', 'CH3', 'CH4', 'CH5' and 'CH6' and the Python bitwise operators `and`, `or`, `not` and so on. Don't forget to use brackets... | String |
 | `trigger_polarity` | TLU can trigger on a rising or falling edge. | String |
 | `trigger_signal_stretch` | Stretches each individual trigger input by a given number of clock cycles (corresponds to 6.25ns steps) | List |
 | `trigger_signal_delay` | Delays each individual trigger input by a given number of clock cycles (corresponds to 6.25ns steps) | List |

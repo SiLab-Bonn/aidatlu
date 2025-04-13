@@ -5,7 +5,7 @@ internal_trigger_rate = 0
 dut_interfaces = ['aida', 'aida', 'eudet', 'off']
 
 trigger_threshold = [-0.1, -0.1, -0.1, -0.1, -0.1, -0.1]
-trigger_inputs_logic = 'CH1 & CH2'
+trigger_inputs_logic = 'CH1 and CH2'
 trigger_polarity = 'falling'
 trigger_signal_stretch = [2, 2, 2, 2, 2, 2]
 trigger_signal_delay = [0, 0, 0, 0, 0, 0]
