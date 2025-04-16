@@ -7,12 +7,10 @@ from typing import Any
 
 from constellation.core.cmdp import MetricsType
 from constellation.core.commandmanager import cscp_requestable
-from constellation.core.configuration import ConfigError, Configuration
-from constellation.core.cscp import CSCPMessage
+from constellation.core.configuration import Configuration
 from constellation.core.fsm import SatelliteState
-from constellation.core.logging import setup_cli_logging
 from constellation.core.monitoring import schedule_metric
-from constellation.core.satellite import Satellite, SatelliteArgumentParser
+from constellation.core.satellite import Satellite
 
 from aidatlu import logger
 from aidatlu.hardware.i2c import I2CCore

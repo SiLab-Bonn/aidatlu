@@ -10,11 +10,11 @@ trigger_polarity = 'falling'
 trigger_signal_stretch = [2, 2, 2, 2, 2, 2]
 trigger_signal_delay = [0, 0, 0, 0, 0, 0]
 
-enable_clock_lemo_output = 'True'
+enable_clock_lemo_output = true
 pmt_power = [0.8, 0.8, 0.0, 0.0]
-save_data = 'True'
+save_data = true
 output_data_path = 'None'
-zmq_connection = 'False'
+zmq_connection = false
 
 # Optional stop conditions can also be added to the configuration.
 # These can be by timeout in seconds or a maximum output trigger number.
