@@ -33,8 +33,8 @@ trigger_inputs:
 
   # Trigger Logic configuration accept a python expression for the trigger inputs.
   # The logic is set by using the variables for the input channels 'CH1', 'CH2', 'CH3', 'CH4', 'CH5' and 'CH6'
-  # and the Python bitwise operators AND: '&', OR: '|', NOT: 'not' and so on. Dont forget to use brackets...
-  trigger_inputs_logic: '(CH1 & (not CH2) & (not CH3) & (not CH4) & (CH5) & (not CH6))'
+  # and the Python logic operators: 'and', 'or', 'not' and so on. Dont forget to use brackets...
+  trigger_inputs_logic: '(CH1 and (not CH2) and (not CH3) and (not CH4) and (CH5) and (not CH6))'
 
   # TLU can trigger on a rising or falling edge. Trigger polarity is set using a string or boolean,
   # 'rising' corresponds to false and 'falling' to true

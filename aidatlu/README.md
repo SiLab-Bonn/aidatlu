@@ -26,7 +26,7 @@ Each trigger input can have one of three settings. The input can act as 'active'
 Between each trigger input, there is also the possibility to set 'AND' or 'OR'.
 A desired trigger configuration is set with the use of the Python boolean operators.
 These operators are used in conjunction with the input channels CH1-CH6 and interpreted as a literal logic expression.
-For example "(CH1 & (not CH2)) & (CH3 | CH4 | CH5 | CH6)" produces a valid trigger, when CH1 and not CH2 triggers and when one of CH3, CH4, CH5 or CH6 triggers.
+For example "(CH1 & (not CH2)) and (CH3 or CH4 or CH5 or CH6)" produces a valid trigger, when CH1 and not CH2 triggers and when one of CH3, CH4, CH5 or CH6 triggers.
 An input channel that is not explicitly set to 'veto' or 'enabled' is automatically set to 'do not care'.
 
 TLU can trigger on a rising or falling edge. Trigger polarity is set using a string or boolean,
