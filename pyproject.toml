@@ -28,7 +28,7 @@ dependencies = [
 
 [project.optional-dependencies]
 hw = ["online_monitor"]  # uhal package needs to be installed manually!
-test = ["pytest", "coverage"]
+test = ["pytest", "pytest-cov", "pytest-sugar"]
 doc = ["sphinx", "myst_parser", "sphinx_mdinclude", "pydata-sphinx-theme"]
 
 [tool.setuptools.dynamic]
