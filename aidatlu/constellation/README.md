@@ -16,7 +16,30 @@ Information over each individual trigger signal is saved in a compressed and hum
 The satellite to connect the AIDA-2020 TLU to the [Constellation](https://constellation.pages.desy.de/) control and data acquisition framework.
 
 
-Start the satellite with:
+## Building
+
+After installing [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html), also install the Python bindings and possible constellation requirement from the top file in the [Aida-TLU](https://github.com/SiLab-Bonn/aidatlu) repository.
+
+```bash
+pip install .[constellation]
+```
+
+A more detailed description of the prerequisite can also be found [here](https://silab-bonn.github.io/aidatlu/Introduction.html#installation).
+
+## Usage
+
+Add the cactus library path:
+
+```bash
+export LD_LIBRARY_PATH=<install_location>/lib
+```
+
+You also need to start the control hub:
+```bash
+/ipbus-software/controlhub/scripts/controlhub_start
+```
+
+Finally, start the satellite with:
 ```bash
 SatelliteAidaTLU
 ```
@@ -27,16 +50,6 @@ TLU mock. By default, the hardware will be used, but the mock can be selected us
 ```bash
 TLU_MOCK=True SatelliteAidaTLU
 ```
-
-## Building
-
-After installing [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html), also install the Python bindings and possible constellation requirement from the top file in the [Aida-TLU](https://github.com/SiLab-Bonn/aidatlu) repository.
-
-```bash
-pip install .[constellation]
-```
-
-A more detailed description of the prerequisite can also be found [here](https://github.com/SiLab-Bonn/aidatlu/blob/main/README.md).
 
 ## Parameters
 
