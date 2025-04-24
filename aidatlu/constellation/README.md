@@ -66,9 +66,6 @@ TLU_MOCK=True SatelliteAidaTLU -g testbeam -n TLU
 | `pmt_power` | Sets the four PMT control voltages in V | List | None |
 | `save_data` | Enables the creation of output data files. | String | None |
 | `output_data_path` | Specify a custom output data path to save the data to. If no path provided the TLU uses a default output folder. | String | `aidatlu/tlu_data/` |
-| `zmq_connection` | Sends status messages via a `ZMQ` address to the online monitor. | String | None |
-| `max_trigger_number` | Automatically stops the TLU after reaching this trigger output number. | Integer | None |
-| `timeout` | Automatically stops TLU after a given number of seconds. | Integer | None |
 
 ### Configuration Example
 An example configuration for the AIDA-TLU satellite which could be dropped into a Constellation configuration as a starting point.
@@ -89,10 +86,6 @@ enable_clock_lemo_output = true
 pmt_power = [0.8, 0.8, 0.0, 0.0]
 save_data = true
 output_data_path = 'None'
-zmq_connection = false
-
-max_trigger_number = 'None'
-timeout = 'None'
 ```
 
 ## Metrics

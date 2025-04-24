@@ -48,7 +48,7 @@ class AidaTLU(Satellite):
 
         clock_path = str(file_path) + "/../misc/aida_tlu_clk_config.txt"
 
-        self.config_file = toml_parser(config, open_toml=False)
+        self.config_file = toml_parser(config, constellation=True)
         self.clock_file = clock_path
         self.aidatlu = TLU(hw, self.config_file, self.clock_file, i2c=I2CMETHOD)
 

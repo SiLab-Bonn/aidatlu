@@ -246,8 +246,11 @@ class Configure:
         return list(conf_table.items())
 
 
-def yaml_parser(conf_file_path) -> list:
+def yaml_parser(conf_file_path: str) -> dict:
     """Parses a yaml configuration file to a configuration dictionary.
+
+    Args:
+        conf_file_path (str): Path to yaml configuration file
 
     Returns:
         conf: configuration dictionary
@@ -290,17 +293,22 @@ def yaml_parser(conf_file_path) -> list:
     return conf
 
 
-def toml_parser(conf_file_path, open_toml=True):
+def toml_parser(conf_file_path, constellation=False) -> dict:
     """Parses a toml configuration file to a configuration dictionary.
+
+    Args:
+        conf_file_path (str | conf): Path to toml configuration file, or constellation configuration
+        constellation (bool, optional): Disables some parser features that are not needed when using constellation. Defaults to False.
 
     Returns:
         conf: configuration dictionary
     """
-    if open_toml:
+    if not constellation:
         with open(conf_file_path, "rb") as file:
             toml_conf = tomllib.load(file)
-    else:
+    elif constellation:
         toml_conf = conf_file_path
+
     conf = {
         "internal_trigger_rate": toml_conf["internal_trigger_rate"],
         "DUT_1": (
@@ -346,20 +354,29 @@ def toml_parser(conf_file_path, open_toml=True):
             False if toml_conf["save_data"] in ["False", "None", "off"] else True
         ),
         "output_data_path": toml_conf["output_data_path"],
-        "zmq_connection": (
+    }
+
+    # Specifically disable some features for use with constellation.
+    if not constellation:
+        conf["zmq_connection"] = (
             False
             if toml_conf["zmq_connection"] in ["False", "None", "off"]
             else toml_conf["zmq_connection"]
-        ),
-        "max_trigger_number": (
+        )
+        conf["max_trigger_number"] = (
             None
             if toml_conf["max_trigger_number"] in ["False", "None", "off"]
             else toml_conf["max_trigger_number"]
-        ),
-        "timeout": (
+        )
+        conf["timeout"] = (
             None
             if toml_conf["timeout"] in ["False", "None", "off"]
             else toml_conf["timeout"]
-        ),
-    }
+        )
+
+    elif constellation:
+        conf["zmq_connection"] = False
+        conf["max_trigger_number"] = None
+        conf["timeout"] = None
+
     return conf

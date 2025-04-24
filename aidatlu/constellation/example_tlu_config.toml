@@ -14,9 +14,3 @@ enable_clock_lemo_output = true
 pmt_power = [0.8, 0.8, 0.0, 0.0]
 save_data = true
 output_data_path = 'None'
-zmq_connection = false
-
-# Optional stop conditions can also be added to the configuration.
-# These can be by timeout in seconds or a maximum output trigger number.
-max_trigger_number = 'None'
-timeout = 'None'
