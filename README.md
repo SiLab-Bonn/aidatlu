@@ -7,7 +7,7 @@ Repository for controlling the AIDA-2020 Trigger Logic Unit (TLU) with Python us
 The Python control software is based on [EUDAQ2](https://github.com/eudaq/eudaq/tree/master/user/tlu).
 The software is a lightweight version written in Python with a focus on readability and user-friendliness.
 Most user cases can be set with a .yaml configuration file and started by executing a single Python script.
-For a more in-depth look at the hardware components please take a look at the official [AIDA-2020 TLU project](https://ohwr.org/project/fmc-mtlu).
+For a more in-depth look at the hardware components please take a look at the official [AIDA-2020 TLU project](https://gitlab.com/ohwr/project/fmc-mtlu).
 Additionally, take a look at the [documentation](https://silab-bonn.github.io/aidatlu/) for this software.
 # Installation
 ## IPbus
