@@ -65,7 +65,7 @@ TLU_MOCK=True SatelliteAidaTLU -g testbeam -n TLU
 | `enable_clock_lemo_output` | Enable the LEMO clock output. | String | None |
 | `pmt_power` | Sets the four PMT control voltages in V | List | None |
 | `save_data` | Enables the creation of output data files. | String | None |
-| `output_data_path` | Specify a custom output data path to save the data to. If no path provided the TLU uses a default output folder. | String | `tlu_data/` |
+| `output_data_path` | Specify a custom output data path to save the data to. If no path provided the TLU uses a default output folder. | String | `aidatlu/tlu_data/` |
 | `zmq_connection` | Sends status messages via a `ZMQ` address to the online monitor. | String | None |
 | `max_trigger_number` | Automatically stops the TLU after reaching this trigger output number. | Integer | None |
 | `timeout` | Automatically stops TLU after a given number of seconds. | Integer | None |
