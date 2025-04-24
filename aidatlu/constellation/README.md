@@ -7,28 +7,28 @@ description: "Satellite for the AIDA-2020 TLU using a Python based control softw
 
 ## Description
 
-The AIDA-2020 Trigger Logic Unit is designed to proved flexible trigger configurations in test beam settings (https://doi.org/10.48550/arXiv.2005.00310).
+The AIDA-2020 Trigger Logic Unit is designed to provide flexible trigger configurations in test beam setups (https://doi.org/10.48550/arXiv.2005.00310).
 
 The Python-based control software for the AIDA-2020 TLU provides a comprehensive interface for controlling the TLU.
-The software establishes a connection to the hardware and allows easy configuration of different trigger setups.
+The software establishes a connection to the hardware and allows for easy configuration of different trigger setups.
 Information over each individual trigger signal is saved in a compressed and human-readable HDF5 format.
 
-The satellite to connect the AIDA-2020 TLU to the [Constellation](https://constellation.pages.desy.de/) control and data acquisition framework.
+The satellite connects the AIDA-2020 TLU to the [Constellation](https://constellation.pages.desy.de/) control and data acquisition framework.
 
 
 ## Building
 
-After installing [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html), also install the Python bindings and possible constellation requirement from the top file in the [Aida-TLU](https://github.com/SiLab-Bonn/aidatlu) repository.
+After installing [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html), with Python bindings (uhal), install the [Aida-TLU](https://github.com/SiLab-Bonn/aidatlu) package with the constellation requirement.
 
 ```bash
 pip install .[constellation]
 ```
 
-A more detailed description of the prerequisite can also be found [here](https://silab-bonn.github.io/aidatlu/Introduction.html#installation).
+A more detailed description of the prerequisites can also be found [here](https://silab-bonn.github.io/aidatlu/Introduction.html#installation).
 
 ## Usage
 
-Add the cactus library path:
+Add the chosen cactus library path, where the default installation location is `/opt/cactus/`:
 
 ```bash
 export LD_LIBRARY_PATH=<install_location>/lib
@@ -36,27 +36,27 @@ export LD_LIBRARY_PATH=<install_location>/lib
 
 You also need to start the control hub:
 ```bash
-/ipbus-software/controlhub/scripts/controlhub_start
+<install_location>/bin/controlhub_start
 ```
 
 Finally, start the satellite with:
 ```bash
-SatelliteAidaTLU
+SatelliteAidaTLU -g testbeam -n TLU
 ```
 
 The AIDA-TLU satellite can be tested using a
 TLU mock. By default, the hardware will be used, but the mock can be selected using an environmental variable.
 
 ```bash
-TLU_MOCK=True SatelliteAidaTLU
+TLU_MOCK=True SatelliteAidaTLU -g testbeam -n TLU
 ```
 
 ## Parameters
 
 | Configuration | Description | Type | Default Value |
 |-----------|-------------|------| ------|
-| `internal_trigger_rate` | Generates internal trigger with a given frequency given in Hz | Integer | None |
-| `dut_interfaces` | Specify the operation mode of the DUT interface (`aida`, `eudet`, `aidatrig`) given in a list. | List | None |
+| `internal_trigger_rate` | Generates internal triggers with a given frequency given in Hz | Integer | None |
+| `dut_interfaces` | Specify the operation mode of the DUT interface (`aida`, `eudet`, `aidatrig`) given as list | List | None |
 | `trigger_threshold` | Threshold setting of each individual trigger input channel given in V | List | None |
 | `trigger_inputs_logic` | Trigger Logic configuration accept a python expression for the trigger inputs. The logic is set by using the variables for the input channels 'CH1', 'CH2', 'CH3', 'CH4', 'CH5' and 'CH6' and the Python bitwise operators `and`, `or`, `not` and so on. Don't forget to use brackets... | String | None |
 | `trigger_polarity` | TLU can trigger on a rising or falling edge. | String | None |
@@ -65,7 +65,7 @@ TLU_MOCK=True SatelliteAidaTLU
 | `enable_clock_lemo_output` | Enable the LEMO clock output. | String | None |
 | `pmt_power` | Sets the four PMT control voltages in V | List | None |
 | `save_data` | Enables the creation of output data files. | String | None |
-| `output_data_path` | Specify a custom output data path to save the data to. If no path provided the TLU uses a default output folder. | String | None |
+| `output_data_path` | Specify a custom output data path to save the data to. If no path provided the TLU uses a default output folder. | String | `tlu_data/` |
 | `zmq_connection` | Sends status messages via a `ZMQ` address to the online monitor. | String | None |
 | `max_trigger_number` | Automatically stops the TLU after reaching this trigger output number. | Integer | None |
 | `timeout` | Automatically stops TLU after a given number of seconds. | Integer | None |
