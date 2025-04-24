@@ -85,6 +85,8 @@ class AidaTLU(Satellite):
             hw = None
 
         self.aidatlu = TLU(hw, self.config_file, self.clock_file, i2c=I2CMETHOD)
+
+        # Resets aidatlu logger setups and replaces it with the constellation logger
         logger._reset_all_loggers()
         self.aidatlu.log = self.log
         self.aidatlu.io_controller.log = self.log
