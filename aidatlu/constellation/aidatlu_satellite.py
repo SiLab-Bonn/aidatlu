@@ -60,6 +60,7 @@ class AidaTLU(Satellite):
         self.aidatlu.clock_controller.log = self.log
         self.aidatlu.trigger_logic.log = self.log
         self.aidatlu.dut_logic.log = self.log
+        self.aidatlu.config_parser.log = self.log
         return "Initializing complete"
 
     def do_launching(self, payload: Any = None) -> str:

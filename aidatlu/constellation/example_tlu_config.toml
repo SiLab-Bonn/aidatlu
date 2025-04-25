@@ -13,4 +13,4 @@ trigger_signal_delay = [0, 0, 0, 0, 0, 0]
 enable_clock_lemo_output = true
 pmt_power = [0.8, 0.8, 0.0, 0.0]
 save_data = true
-output_data_path = 'None'
+output_data_path = ''

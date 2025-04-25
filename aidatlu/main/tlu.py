@@ -407,14 +407,14 @@ class AidaTLU:
         if self.save_data:
             self.path = self.config_parser.get_output_data_path()
             if self.path == None:
-                self.path = str(Path(__file__).parent) + "/../tlu_data/"
-                if __name__ == "__main__":
-                    self.path = str(Path(__file__).parent) + "/../tlu_data/"
-            self.raw_data_path = self.path + "tlu_raw_run%s_%s.h5" % (
+                self.path = Path(__file__).parent.parent / "tlu_data/"
+            self.raw_data_path = str(self.path) + "/tlu_raw_run%s_%s.h5" % (
                 self.run_number,
                 datetime.now().strftime("%Y_%m_%d_%H_%M_%S"),
             )
-            self.interpreted_data_path = self.path + "tlu_interpreted_run%s_%s.h5" % (
+            self.interpreted_data_path = str(
+                self.path
+            ) + "/tlu_interpreted_run%s_%s.h5" % (
                 self.run_number,
                 datetime.now().strftime("%Y_%m_%d_%H_%M_%S"),
             )

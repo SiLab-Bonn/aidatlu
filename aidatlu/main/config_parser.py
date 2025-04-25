@@ -18,7 +18,7 @@ class Configure:
         self.conf_trigger_logic()
         self.conf_auxillary()
         self.tlu.set_enable_record_data(1)
-        self.log.success("TLU configured")
+        self.log.info("TLU configured")
 
     def get_data_handling(self) -> tuple:
         """Information about data handling.
@@ -184,7 +184,8 @@ class Configure:
                 "mask high: %s, mask low: %s" % (hex(mask_high), hex(mask_low))
             )
             self.tlu.trigger_logic.set_trigger_mask(mask_high, mask_low)
-        self.log.warning("No trigger configuration provided!")
+        else:
+            self.log.warning("No trigger configuration provided!")
 
     def _create_trigger_masking_word(self, trigger_configuration) -> int:
         """Create specific long trigger configuration word by iterating over all possible
@@ -293,7 +294,7 @@ def yaml_parser(conf_file_path: str) -> dict:
     return conf
 
 
-def toml_parser(conf_file_path, constellation=False) -> dict:
+def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
     """Parses a toml configuration file to a configuration dictionary.
 
     Args:
@@ -306,7 +307,7 @@ def toml_parser(conf_file_path, constellation=False) -> dict:
     if not constellation:
         with open(conf_file_path, "rb") as file:
             toml_conf = tomllib.load(file)
-    elif constellation:
+    else:
         toml_conf = conf_file_path
 
     conf = {
@@ -353,7 +354,11 @@ def toml_parser(conf_file_path, constellation=False) -> dict:
         "save_data": (
             False if toml_conf["save_data"] in ["False", "None", "off"] else True
         ),
-        "output_data_path": toml_conf["output_data_path"],
+        "output_data_path": (
+            None
+            if toml_conf["output_data_path"] in ["None", ""]
+            else toml_conf["output_data_path"]
+        ),
     }
 
     # Specifically disable some features for use with constellation.
@@ -374,7 +379,7 @@ def toml_parser(conf_file_path, constellation=False) -> dict:
             else toml_conf["timeout"]
         )
 
-    elif constellation:
+    else:
         conf["zmq_connection"] = False
         conf["max_trigger_number"] = None
         conf["timeout"] = None
