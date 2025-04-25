@@ -458,7 +458,7 @@ class AidaTLU:
             self.h5_file.close()
             interpret_data(self.raw_data_path, self.interpreted_data_path)
 
-        self.log.success("Run finished")
+        self.log.info("Run finished")
 
 
 if __name__ == "__main__":

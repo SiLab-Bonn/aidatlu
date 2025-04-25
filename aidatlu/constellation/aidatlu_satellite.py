@@ -52,7 +52,7 @@ class AidaTLU(Satellite):
         self.clock_file = clock_path
         self.aidatlu = TLU(hw, self.config_file, self.clock_file, i2c=I2CMETHOD)
 
-        # this is stupid is there a better way
+        # Resets aidatlu loggers and replaces them with constellation loggers
         logger._reset_all_loggers()
         self.aidatlu.log = self.log
         self.aidatlu.io_controller.log = self.log
@@ -129,9 +129,11 @@ class AidaTLU(Satellite):
         return "Do running complete"
 
     def do_stopping(self) -> str:
+        self.aidatlu.stop_run_configuration()
         return "Do stopping complete"
 
     def do_landing(self) -> str:
+        self.aidatlu.reset_configuration()
         return "Do Stop"
 
     @schedule_metric("Hz", MetricsType.LAST_VALUE, 1)
