@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any
 
 from constellation.core.cmdp import MetricsType
-from constellation.core.commandmanager import cscp_requestable
 from constellation.core.configuration import Configuration
 from constellation.core.fsm import SatelliteState
 from constellation.core.monitoring import schedule_metric
@@ -31,36 +30,23 @@ class AidaTLU(Satellite):
             ", ".join(config.get_keys()),
         )
 
-        file_path = Path(__file__).parent
+        self.file_path = Path(__file__).parent
 
         if not self.use_mock:
             import uhal
 
             uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
             manager = uhal.ConnectionManager(
-                "file://" + str(file_path) + "/../misc/aida_tlu_connection.xml"
+                "file://" + str(self.file_path) + "/../misc/aida_tlu_connection.xml"
             )
-            hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
-            I2CMETHOD = I2CCore
+            self.hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
+            self.i2c_method = I2CCore
         else:
-            I2CMETHOD = MockI2C
-            hw = None
+            self.i2c_method = MockI2C
+            self.hw = None
 
-        clock_path = str(file_path) + "/../misc/aida_tlu_clk_config.txt"
+        self._init_tlu(config)
 
-        self.config_file = toml_parser(config, constellation=True)
-        self.clock_file = clock_path
-        self.aidatlu = TLU(hw, self.config_file, self.clock_file, i2c=I2CMETHOD)
-
-        # Resets aidatlu loggers and replaces them with constellation loggers
-        logger._reset_all_loggers()
-        self.aidatlu.log = self.log
-        self.aidatlu.io_controller.log = self.log
-        self.aidatlu.dac_controller.log = self.log
-        self.aidatlu.clock_controller.log = self.log
-        self.aidatlu.trigger_logic.log = self.log
-        self.aidatlu.dut_logic.log = self.log
-        self.aidatlu.config_parser.log = self.log
         return "Initializing complete"
 
     def do_launching(self, payload: Any = None) -> str:
@@ -72,30 +58,7 @@ class AidaTLU(Satellite):
         return "Do landing complete"
 
     def do_reconfigure(self, config: Configuration) -> str:
-        file_path = Path(__file__).parent
-
-        if not self.use_mock:
-            uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
-            manager = uhal.ConnectionManager(
-                "file://" + str(file_path) + "/../misc/aida_tlu_connection.xml"
-            )
-            hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
-            I2CMETHOD = I2CCore
-        else:
-            I2CMETHOD = MockI2C
-            hw = None
-
-        self.aidatlu = TLU(hw, self.config_file, self.clock_file, i2c=I2CMETHOD)
-
-        # Resets aidatlu logger setups and replaces it with the constellation logger
-        logger._reset_all_loggers()
-        self.aidatlu.log = self.log
-        self.aidatlu.io_controller.log = self.log
-        self.aidatlu.dac_controller.log = self.log
-        self.aidatlu.clock_controller.log = self.log
-        self.aidatlu.trigger_logic.log = self.log
-        self.aidatlu.dut_logic.log = self.log
-        self.aidatlu.configure()
+        self._init_tlu(config)
         return "Do reconfigure complete"
 
     def do_starting(self, run_identifier: str = None) -> str:
@@ -136,6 +99,24 @@ class AidaTLU(Satellite):
     def do_landing(self) -> str:
         self.aidatlu.reset_configuration()
         return "Do Stop"
+
+    def _init_tlu(self, config: Configuration) -> None:
+        "Parse configuration file to TLU and initialize, set loggers"
+        self.config_file = toml_parser(config, constellation=True)
+        self.clock_file = str(self.file_path) + "/../misc/aida_tlu_clk_config.txt"
+        self.aidatlu = TLU(
+            self.hw, self.config_file, self.clock_file, i2c=self.i2c_method
+        )
+
+        # Resets aidatlu loggers and replaces them with constellation loggers
+        logger._reset_all_loggers()
+        self.aidatlu.log = self.log
+        self.aidatlu.io_controller.log = self.log
+        self.aidatlu.dac_controller.log = self.log
+        self.aidatlu.clock_controller.log = self.log
+        self.aidatlu.trigger_logic.log = self.log
+        self.aidatlu.dut_logic.log = self.log
+        self.aidatlu.config_parser.log = self.log
 
     @schedule_metric("Hz", MetricsType.LAST_VALUE, 1)
     def trigger_in_rate(self) -> Any:

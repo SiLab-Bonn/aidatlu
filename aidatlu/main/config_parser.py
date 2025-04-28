@@ -351,9 +351,6 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
         "pmt_control_2": toml_conf["pmt_power"][1],
         "pmt_control_3": toml_conf["pmt_power"][2],
         "pmt_control_4": toml_conf["pmt_power"][3],
-        "save_data": (
-            False if toml_conf["save_data"] in ["False", "None", "off"] else True
-        ),
         "output_data_path": (
             None
             if toml_conf["output_data_path"] in ["None", ""]
@@ -378,10 +375,14 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
             if toml_conf["timeout"] in ["False", "None", "off"]
             else toml_conf["timeout"]
         )
+        conf["save_data"] = (
+            False if toml_conf["save_data"] in ["False", "None", "off"] else True
+        )
 
     else:
         conf["zmq_connection"] = False
         conf["max_trigger_number"] = None
         conf["timeout"] = None
+        conf["save_data"] = True
 
     return conf

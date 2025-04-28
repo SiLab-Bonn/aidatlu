@@ -62,7 +62,6 @@ TLU_MOCK=True SatelliteAidaTLU -g testbeam -n TLU
 | `trigger_signal_delay` | Delays each individual trigger input by a given number of clock cycles (corresponds to 6.25ns steps) | List | None |
 | `enable_clock_lemo_output` | Enable the LEMO clock output. | String | None |
 | `pmt_power` | Sets the four PMT control voltages in V | List | None |
-| `save_data` | Enables the creation of output data files. | String | None |
 | `output_data_path` | Specify a custom output data path to save the data to. If no path provided the TLU uses a default output folder. | String | `aidatlu/tlu_data/` |
 
 ### Configuration Example
@@ -82,8 +81,7 @@ trigger_signal_delay = [0, 0, 0, 0, 0, 0]
 
 enable_clock_lemo_output = true
 pmt_power = [0.8, 0.8, 0.0, 0.0]
-save_data = true
-output_data_path = 'None'
+output_data_path = ''
 ```
 
 ## Metrics
