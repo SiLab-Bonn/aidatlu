@@ -10,6 +10,6 @@ trigger_polarity = 'falling'
 trigger_signal_stretch = [2, 2, 2, 2, 2, 2]
 trigger_signal_delay = [0, 0, 0, 0, 0, 0]
 
-enable_clock_lemo_output = true
+enable_clock_lemo_output = false
 pmt_power = [0.8, 0.8, 0.0, 0.0]
 output_data_path = ''

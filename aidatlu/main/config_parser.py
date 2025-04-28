@@ -307,58 +307,76 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
     if not constellation:
         with open(conf_file_path, "rb") as file:
             toml_conf = tomllib.load(file)
+            keys = toml_conf.keys()
+            print(toml_conf)
     else:
         toml_conf = conf_file_path
+        keys = conf_file_path.get_keys()
 
-    conf = {
-        "internal_trigger_rate": toml_conf["internal_trigger_rate"],
-        "DUT_1": (
-            False
-            if toml_conf["dut_interfaces"][0] in ["False", "None", "off"]
-            else toml_conf["dut_interfaces"][0]
-        ),
-        "DUT_2": (
-            False
-            if toml_conf["dut_interfaces"][1] in ["False", "None", "off"]
-            else toml_conf["dut_interfaces"][1]
-        ),
-        "DUT_3": (
-            False
-            if toml_conf["dut_interfaces"][2] in ["False", "None", "off"]
-            else toml_conf["dut_interfaces"][2]
-        ),
-        "DUT_4": (
-            False
-            if toml_conf["dut_interfaces"][3] in ["False", "None", "off"]
-            else toml_conf["dut_interfaces"][3]
-        ),
-        "threshold_1": toml_conf["trigger_threshold"][0],
-        "threshold_2": toml_conf["trigger_threshold"][1],
-        "threshold_3": toml_conf["trigger_threshold"][2],
-        "threshold_4": toml_conf["trigger_threshold"][3],
-        "threshold_5": toml_conf["trigger_threshold"][4],
-        "threshold_6": toml_conf["trigger_threshold"][5],
-        "trigger_inputs_logic": toml_conf["trigger_inputs_logic"],
-        "trigger_signal_shape_stretch": toml_conf["trigger_signal_stretch"],
-        "trigger_signal_shape_delay": toml_conf["trigger_signal_delay"],
-        "trigger_polarity": toml_conf["trigger_polarity"],
-        "enable_clock_lemo_output": (
+    conf = {}
+
+    # default configuration parameters
+    if "internal_trigger_rate" not in keys:
+        conf["internal_trigger_rate"] = 0
+    else:
+        conf["internal_trigger_rate"] = toml_conf["internal_trigger_rate"]
+    if "trigger_polarity" not in keys:
+        conf["trigger_polarity"] = "falling"
+    else:
+        conf["trigger_polarity"] = toml_conf["trigger_polarity"]
+    if "enable_clock_lemo_output" not in keys:
+        conf["enable_clock_lemo_output"] = False
+    else:
+        conf["enable_clock_lemo_output"] = (
             False
             if toml_conf["enable_clock_lemo_output"] in ["False", "None"]
             else True
-        ),
-        "pmt_control_1": toml_conf["pmt_power"][0],
-        "pmt_control_2": toml_conf["pmt_power"][1],
-        "pmt_control_3": toml_conf["pmt_power"][2],
-        "pmt_control_4": toml_conf["pmt_power"][3],
-        "output_data_path": (
+        )
+    if "output_data_path" not in keys:
+        conf["output_data_path"] = None
+    else:
+        conf["output_data_path"] = (
             None
             if toml_conf["output_data_path"] in ["None", ""]
             else toml_conf["output_data_path"]
-        ),
-    }
+        )
 
-    # Specifically disable some features for use with constellation.
+    # required configuration parameters
+    conf["DUT_1"] = (
+        False
+        if toml_conf["dut_interfaces"][0] in ["False", "None", "off"]
+        else toml_conf["dut_interfaces"][0]
+    )
+    conf["DUT_2"] = (
+        False
+        if toml_conf["dut_interfaces"][1] in ["False", "None", "off"]
+        else toml_conf["dut_interfaces"][1]
+    )
+    conf["DUT_3"] = (
+        False
+        if toml_conf["dut_interfaces"][2] in ["False", "None", "off"]
+        else toml_conf["dut_interfaces"][2]
+    )
+    conf["DUT_4"] = (
+        False
+        if toml_conf["dut_interfaces"][3] in ["False", "None", "off"]
+        else toml_conf["dut_interfaces"][3]
+    )
+    conf["threshold_1"] = toml_conf["trigger_threshold"][0]
+    conf["threshold_2"] = toml_conf["trigger_threshold"][1]
+    conf["threshold_3"] = toml_conf["trigger_threshold"][2]
+    conf["threshold_4"] = toml_conf["trigger_threshold"][3]
+    conf["threshold_5"] = toml_conf["trigger_threshold"][4]
+    conf["threshold_6"] = toml_conf["trigger_threshold"][5]
+    conf["trigger_inputs_logic"] = toml_conf["trigger_inputs_logic"]
+    conf["trigger_signal_shape_stretch"] = toml_conf["trigger_signal_stretch"]
+    conf["trigger_signal_shape_delay"] = toml_conf["trigger_signal_delay"]
+    conf["pmt_control_1"] = toml_conf["pmt_power"][0]
+    conf["pmt_control_2"] = toml_conf["pmt_power"][1]
+    conf["pmt_control_3"] = toml_conf["pmt_power"][2]
+    conf["pmt_control_4"] = toml_conf["pmt_power"][3]
+
+    # Specifically disable some configuration parameters for use with constellation.
     if not constellation:
         conf["zmq_connection"] = (
             False

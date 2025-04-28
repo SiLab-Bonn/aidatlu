@@ -1,6 +1,8 @@
 ---
 title: "AidaTLU"
 description: "Satellite for the AIDA-2020 TLU using a Python based control software"
+language: "Python"
+category: "External"
 ---
 
 ## Description
@@ -53,16 +55,16 @@ TLU_MOCK=True SatelliteAidaTLU -g testbeam -n TLU
 
 | Configuration | Description | Type | Default Value |
 |-----------|-------------|------| ------|
-| `internal_trigger_rate` | Generates internal triggers with a given frequency given in Hz | Integer | None |
-| `dut_interfaces` | Specify the operation mode of the DUT interface (`aida`, `eudet`, `aidatrig`) given as list | List | None |
-| `trigger_threshold` | Threshold setting of each individual trigger input channel given in V | List | None |
-| `trigger_inputs_logic` | Trigger Logic configuration accept a python expression for the trigger inputs. The logic is set by using the variables for the input channels 'CH1', 'CH2', 'CH3', 'CH4', 'CH5' and 'CH6' and the Python logic operators `and`, `or`, `not` and so on. Don't forget to use brackets... | String | None |
-| `trigger_polarity` | TLU can trigger on a rising or falling edge. | String | None |
-| `trigger_signal_stretch` | Stretches each individual trigger input by a given number of clock cycles (corresponds to 6.25ns steps) | List | None |
-| `trigger_signal_delay` | Delays each individual trigger input by a given number of clock cycles (corresponds to 6.25ns steps) | List | None |
-| `enable_clock_lemo_output` | Enable the LEMO clock output. | String | None |
-| `pmt_power` | Sets the four PMT control voltages in V | List | None |
-| `output_data_path` | Specify a custom output data path to save the data to. If no path provided the TLU uses a default output folder. | String | `aidatlu/tlu_data/` |
+| `internal_trigger_rate` | (Optional) Generates internal triggers with a given frequency given in Hz | Integer | 0 |
+| `dut_interfaces` | (Required) Specify the operation mode of the DUT interface (`aida`, `eudet`) given as list | List | None |
+| `trigger_threshold` | (Required) Threshold setting of each individual trigger input channel given in V | List | None |
+| `trigger_inputs_logic` | (Required) Trigger Logic configuration accept a python expression for the trigger inputs. The logic is set by using the variables for the input channels 'CH1', 'CH2', 'CH3', 'CH4', 'CH5' and 'CH6' and the Python logic operators `and`, `or`, `not` and so on. Don't forget to use brackets... | String | None |
+| `trigger_polarity` | (Optional) TLU can trigger on a rising or falling edge. | String | "falling" |
+| `trigger_signal_stretch` | (Required) Stretches each individual trigger input by a given number of clock cycles (corresponds to 6.25ns steps) | List | None |
+| `trigger_signal_delay` | (Required) Delays each individual trigger input by a given number of clock cycles (corresponds to 6.25ns steps) | List | None |
+| `enable_clock_lemo_output` | (Optional) Enable the LEMO clock output. | String | False |
+| `pmt_power` | (Required) Sets the four PMT control voltages in V | List | None |
+| `output_data_path` | (Optional) Specify a custom output data path to save the data to. If no path provided the TLU uses a default output folder. | String | `aidatlu/tlu_data/` |
 
 ### Configuration Example
 An example configuration for the AIDA-TLU satellite which could be dropped into a Constellation configuration as a starting point.
