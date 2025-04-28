@@ -119,20 +119,20 @@ class AidaTLU(Satellite):
         self.aidatlu.config_parser.log = self.log
 
     @schedule_metric("Hz", MetricsType.LAST_VALUE, 1)
-    def trigger_in_rate(self) -> Any:
+    def pre_veto_rate_rate(self) -> Any:
         if self.fsm.current_state_value == SatelliteState.RUN and hasattr(
-            self.aidatlu, "particle_rate"
+            self.aidatlu, "pre_veto_rate"
         ):
-            return self.aidatlu.particle_rate
+            return self.aidatlu.pre_veto_rate
         else:
             return None
 
     @schedule_metric("Hz", MetricsType.LAST_VALUE, 1)
-    def trigger_out_rate(self) -> Any:
+    def post_veto_rate(self) -> Any:
         if self.fsm.current_state_value == SatelliteState.RUN and hasattr(
-            self.aidatlu, "hit_rate"
+            self.aidatlu, "post_veto_rate"
         ):
-            return self.aidatlu.hit_rate
+            return self.aidatlu.post_veto_rate
         else:
             return None
 

@@ -92,8 +92,8 @@ The following metrics are distributed by this satellite and can be subscribed to
 
 | Metric | Description | Value Type | Metric Type | Interval |
 |--------|-------------|------------|-------------|----------|
-| `TRIGGER_IN_RATE` | Incoming trigger rate in Hertz | Integer | `LAST_VALUE` | 1s |
-| `TRIGGER_OUT_RATE` | Outgoing trigger rate in Hertz | Integer | `LAST_VALUE` | 1s |
+| `PRE_VETO_RATE` | Trigger rate after trigger logic (before DUT veto) in Hertz | Integer | `LAST_VALUE` | 1s |
+| `POST_VETO_RATE` | Outgoing trigger rate to the devices (after DUT veto) in Hertz | Integer | `LAST_VALUE` | 1s |
 | `TRIGGER_TOTAL_TRIGGER_NR` | Total trigger number | Integer | `LAST_VALUE` | 1s |
 | `SC0` | Total number that trigger input 1 received a valid signal | Integer | `LAST_VALUE` | 1s |
 | `SC1` | Total number that trigger input 2 received a valid signal | Integer | `LAST_VALUE` | 1s |

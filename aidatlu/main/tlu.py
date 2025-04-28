@@ -277,10 +277,10 @@ class AidaTLU:
         Args:
             time (int): current runtime of the TLU
         """
-        self.hit_rate = (
+        self.post_veto_rate = (
             self.trigger_logic.get_post_veto_trigger() - self.last_triggers_freq
         ) / (time - self.last_time)
-        self.particle_rate = (
+        self.pre_veto_rate = (
             self.trigger_logic.get_pre_veto_trigger() - self.last_particle_freq
         ) / (time - self.last_time)
         self.run_time = time
@@ -295,8 +295,8 @@ class AidaTLU:
                         self.run_time,
                         self.event_number,
                         self.total_trigger_number,
-                        self.particle_rate,
-                        self.hit_rate,
+                        self.pre_veto_rate,
+                        self.post_veto_rate,
                     ]
                 ),
                 flags=zmq.NOBLOCK,
@@ -307,13 +307,13 @@ class AidaTLU:
         self.last_particle_freq = self.trigger_logic.get_pre_veto_trigger()
 
         self.log.info(
-            "Run time: %.3f s, Event: %s, Total trigger: %s, Trigger in freq: %.f Hz, Trigger out freq.: %.f Hz"
+            "Run time: %.3f s, Event: %s, Total trigger: %s, Pre veto rate: %.f Hz, Post veto rate.: %.f Hz"
             % (
                 self.run_time,
                 self.event_number,
                 self.total_trigger_number,
-                self.particle_rate,
-                self.hit_rate,
+                self.pre_veto_rate,
+                self.post_veto_rate,
             )
         )
 
