@@ -278,14 +278,14 @@ class AidaTLU:
             time (int): current runtime of the TLU
         """
         self.post_veto_rate = (
-            self.trigger_logic.get_post_veto_trigger() - self.last_triggers_freq
+            self.trigger_logic.get_post_veto_trigger() - self.last_post_veto_trigger
         ) / (time - self.last_time)
         self.pre_veto_rate = (
-            self.trigger_logic.get_pre_veto_trigger() - self.last_particle_freq
+            self.trigger_logic.get_pre_veto_trigger() - self.last_pre_veto_trigger
         ) / (time - self.last_time)
         self.run_time = time
-        self.event_number = self.trigger_logic.get_post_veto_trigger()
-        self.total_trigger_number = self.trigger_logic.get_pre_veto_trigger()
+        self.total_post_veto = self.trigger_logic.get_post_veto_trigger()
+        self.total_pre_veto = self.trigger_logic.get_pre_veto_trigger()
         s0, s1, s2, s3, s4, s5 = self.get_scalers()
 
         if self.zmq_address:
@@ -293,8 +293,8 @@ class AidaTLU:
                 str(
                     [
                         self.run_time,
-                        self.event_number,
-                        self.total_trigger_number,
+                        self.total_post_veto,
+                        self.total_pre_veto,
                         self.pre_veto_rate,
                         self.post_veto_rate,
                     ]
@@ -303,15 +303,15 @@ class AidaTLU:
             )
 
         self.last_time = time
-        self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
-        self.last_particle_freq = self.trigger_logic.get_pre_veto_trigger()
+        self.last_post_veto_trigger = self.trigger_logic.get_post_veto_trigger()
+        self.last_pre_veto_trigger = self.trigger_logic.get_pre_veto_trigger()
 
         self.log.info(
-            "Run time: %.3f s, Event: %s, Total trigger: %s, Pre veto rate: %.f Hz, Post veto rate.: %.f Hz"
+            "Run time: %.1f s, Pre veto: %s, Post veto: %s, Pre veto rate: %.f Hz, Post veto rate.: %.f Hz"
             % (
                 self.run_time,
-                self.event_number,
-                self.total_trigger_number,
+                self.total_pre_veto,
+                self.total_post_veto,
                 self.pre_veto_rate,
                 self.post_veto_rate,
             )
@@ -396,8 +396,8 @@ class AidaTLU:
         # reset starting parameter
         self.start_time = self.get_timestamp()
         self.last_time = 0
-        self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
-        self.last_particle_freq = self.trigger_logic.get_pre_veto_trigger()
+        self.last_post_veto_trigger = self.trigger_logic.get_post_veto_trigger()
+        self.last_pre_veto_trigger = self.trigger_logic.get_pre_veto_trigger()
         self.stop_condition = False
         # prepare data handling and zmq connection
         self.save_data = self.config_parser.get_data_handling()

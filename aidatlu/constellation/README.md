@@ -53,9 +53,9 @@ SatelliteAidaTLU -g testbeam -n TLU
 | Configuration | Description | Type | Default Value |
 |-----------|-------------|------| ------|
 | `internal_trigger_rate` | (Optional) Generates internal triggers with a given frequency given in Hz | Integer | 0 |
-| `dut_interfaces` | (Required) Specify the operation mode of the DUT interface (`aida`, `eudet`) given as list | List | None |
+| `dut_interfaces` | (Required) Specify the operation mode of the DUT interface (`aida`, `eudet`, `off`) given as list with a required length of 4. | List | None |
 | `trigger_threshold` | (Required) Threshold setting of each individual trigger input channel given in V | List | None |
-| `trigger_inputs_logic` | (Required) Trigger Logic configuration accept a python expression for the trigger inputs. The logic is set by using the variables for the input channels `CH1`, `CH2`, `CH3`, `CH4`, `CH5` and `CH6` and the Python logic operators `and`, `or`, `not` and so on. Don't forget to use brackets... | String | None |
+| `trigger_inputs_logic` | (Required) Trigger Logic configuration accept a Python expression for the trigger inputs. The logic is set by using the variables for the input channels `CH1`, `CH2`, `CH3`, `CH4`, `CH5` and `CH6` and the Python logic operators `and`, `or`, `not` and so on. Don't forget to use brackets... | String | None |
 | `trigger_polarity` | (Optional) TLU can trigger on a rising or falling edge. Set to `rising` or `falling` | String | `falling` |
 | `trigger_signal_stretch` | (Required) Stretches each individual trigger input by a given number of clock cycles (corresponds to 6.25ns steps) | List | None |
 | `trigger_signal_delay` | (Required) Delays each individual trigger input by a given number of clock cycles (corresponds to 6.25ns steps) | List | None |
@@ -91,7 +91,8 @@ The following metrics are distributed by this satellite and can be subscribed to
 |--------|-------------|------------|-------------|----------|
 | `PRE_VETO_RATE` | Trigger rate after trigger logic (before DUT veto) in Hertz | Integer | `LAST_VALUE` | 1s |
 | `POST_VETO_RATE` | Outgoing trigger rate to the devices (after DUT veto) in Hertz | Integer | `LAST_VALUE` | 1s |
-| `TRIGGER_TOTAL_TRIGGER_NR` | Total trigger number | Integer | `LAST_VALUE` | 1s |
+| `TOTAL_PRE_VETO` | Total number of pre veto trigger | Integer | `LAST_VALUE` | 1s |
+| `TOTAL_POST_VETO` | Total number of post veto trigger | Integer | `LAST_VALUE` | 1s |
 | `SC0` | Total number that trigger input 1 received a valid signal | Integer | `LAST_VALUE` | 1s |
 | `SC1` | Total number that trigger input 2 received a valid signal | Integer | `LAST_VALUE` | 1s |
 | `SC2` | Total number that trigger input 3 received a valid signal | Integer | `LAST_VALUE` | 1s |

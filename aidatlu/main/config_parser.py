@@ -308,7 +308,6 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
         with open(conf_file_path, "rb") as file:
             toml_conf = tomllib.load(file)
             keys = toml_conf.keys()
-            print(toml_conf)
     else:
         toml_conf = conf_file_path
         keys = conf_file_path.get_keys()

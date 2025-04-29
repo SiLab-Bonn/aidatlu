@@ -137,11 +137,20 @@ class AidaTLU(Satellite):
             return None
 
     @schedule_metric("", MetricsType.LAST_VALUE, 1)
-    def trigger_total_trigger_nr(self) -> Any:
+    def total_post_veto(self) -> Any:
         if self.fsm.current_state_value == SatelliteState.RUN and hasattr(
-            self.aidatlu, "total_trigger_number"
+            self.aidatlu, "total_post_veto"
         ):
-            return self.aidatlu.total_trigger_number
+            return self.aidatlu.total_post_veto
+        else:
+            return None
+
+    @schedule_metric("", MetricsType.LAST_VALUE, 1)
+    def total_pre_veto(self) -> Any:
+        if self.fsm.current_state_value == SatelliteState.RUN and hasattr(
+            self.aidatlu, "total_pre_veto"
+        ):
+            return self.aidatlu.total_pre_veto
         else:
             return None
 
