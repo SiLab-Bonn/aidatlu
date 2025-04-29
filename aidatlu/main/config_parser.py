@@ -312,6 +312,18 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
         toml_conf = conf_file_path
         keys = conf_file_path.get_keys()
 
+    # Throw erros when length of list of required parameters do not match.
+    if len(toml_conf["dut_interfaces"]) !=4:
+        raise ValueError("Set operating mode of all 4 DUT interfaces. The length of dut_interfaces has to be 4!")
+    if len(toml_conf["trigger_threshold"]) !=6:
+        raise ValueError("Set threshold of all 6 trigger inputs. The length of trigger_threshold has to be 6!")
+    if len(toml_conf["pmt_power"]) !=4:
+        raise ValueError("Set PMT power of all 4 outputs. The length of pmt_power has to be 4!")
+    if len(toml_conf["trigger_signal_stretch"]) !=6:
+        raise ValueError("Set the signal stretch of all 6 trigger inputs. The length of trigger_signal_stretch has to be 6!")
+    if len(toml_conf["trigger_signal_delay"]) !=6:
+        raise ValueError("Set the signal delay of all 6 trigger inputs. The length of trigger_signal_delay has to be 6!")
+
     conf = {}
 
     # default configuration parameters
