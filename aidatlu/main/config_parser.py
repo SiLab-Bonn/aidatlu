@@ -18,7 +18,7 @@ class Configure:
         self.conf_trigger_logic()
         self.conf_auxillary()
         self.tlu.set_enable_record_data(1)
-        self.log.success("TLU configured")
+        self.log.info("TLU configured")
 
     def get_data_handling(self) -> tuple:
         """Information about data handling.
@@ -184,7 +184,8 @@ class Configure:
                 "mask high: %s, mask low: %s" % (hex(mask_high), hex(mask_low))
             )
             self.tlu.trigger_logic.set_trigger_mask(mask_high, mask_low)
-        self.log.warning("No trigger configuration provided!")
+        else:
+            self.log.warning("No trigger configuration provided!")
 
     def _create_trigger_masking_word(self, trigger_configuration) -> int:
         """Create specific long trigger configuration word by iterating over all possible
@@ -246,8 +247,11 @@ class Configure:
         return list(conf_table.items())
 
 
-def yaml_parser(conf_file_path) -> list:
+def yaml_parser(conf_file_path: str) -> dict:
     """Parses a yaml configuration file to a configuration dictionary.
+
+    Args:
+        conf_file_path (str): Path to yaml configuration file
 
     Returns:
         conf: configuration dictionary
@@ -290,73 +294,134 @@ def yaml_parser(conf_file_path) -> list:
     return conf
 
 
-def toml_parser(conf_file_path):
+def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
     """Parses a toml configuration file to a configuration dictionary.
+
+    Args:
+        conf_file_path (str | conf): Path to toml configuration file, or constellation configuration
+        constellation (bool, optional): Disables some parser features that are not needed when using constellation. Defaults to False.
 
     Returns:
         conf: configuration dictionary
     """
-    with open(conf_file_path, "rb") as file:
-        toml_conf = tomllib.load(file)
-    conf = {
-        "internal_trigger_rate": toml_conf["internal_trigger_rate"],
-        "DUT_1": (
-            False
-            if toml_conf["dut_interfaces"][0] in ["False", "None", "off"]
-            else toml_conf["dut_interfaces"][0]
-        ),
-        "DUT_2": (
-            False
-            if toml_conf["dut_interfaces"][1] in ["False", "None", "off"]
-            else toml_conf["dut_interfaces"][1]
-        ),
-        "DUT_3": (
-            False
-            if toml_conf["dut_interfaces"][2] in ["False", "None", "off"]
-            else toml_conf["dut_interfaces"][2]
-        ),
-        "DUT_4": (
-            False
-            if toml_conf["dut_interfaces"][3] in ["False", "None", "off"]
-            else toml_conf["dut_interfaces"][3]
-        ),
-        "threshold_1": toml_conf["trigger_threshold"][0],
-        "threshold_2": toml_conf["trigger_threshold"][1],
-        "threshold_3": toml_conf["trigger_threshold"][2],
-        "threshold_4": toml_conf["trigger_threshold"][3],
-        "threshold_5": toml_conf["trigger_threshold"][4],
-        "threshold_6": toml_conf["trigger_threshold"][5],
-        "trigger_inputs_logic": toml_conf["trigger_inputs_logic"],
-        "trigger_signal_shape_stretch": toml_conf["trigger_signal_stretch"],
-        "trigger_signal_shape_delay": toml_conf["trigger_signal_delay"],
-        "trigger_polarity": toml_conf["trigger_polarity"],
-        "enable_clock_lemo_output": (
+    if not constellation:
+        with open(conf_file_path, "rb") as file:
+            toml_conf = tomllib.load(file)
+            keys = toml_conf.keys()
+    else:
+        toml_conf = conf_file_path
+        keys = conf_file_path.get_keys()
+
+    # Throw an error when the length of the list of required parameters does not match.
+    if len(toml_conf["dut_interfaces"]) != 4:
+        raise ValueError(
+            "Set operating mode of all 4 DUT interfaces. The length of dut_interfaces has to be 4!"
+        )
+    if len(toml_conf["trigger_threshold"]) != 6:
+        raise ValueError(
+            "Set threshold of all 6 trigger inputs. The length of trigger_threshold has to be 6!"
+        )
+    if len(toml_conf["pmt_power"]) != 4:
+        raise ValueError(
+            "Set PMT power of all 4 outputs. The length of pmt_power has to be 4!"
+        )
+    if len(toml_conf["trigger_signal_stretch"]) != 6:
+        raise ValueError(
+            "Set the signal stretch of all 6 trigger inputs. The length of trigger_signal_stretch has to be 6!"
+        )
+    if len(toml_conf["trigger_signal_delay"]) != 6:
+        raise ValueError(
+            "Set the signal delay of all 6 trigger inputs. The length of trigger_signal_delay has to be 6!"
+        )
+
+    conf = {}
+
+    # default configuration parameters
+    if "internal_trigger_rate" not in keys:
+        conf["internal_trigger_rate"] = 0
+    else:
+        conf["internal_trigger_rate"] = toml_conf["internal_trigger_rate"]
+    if "trigger_polarity" not in keys:
+        conf["trigger_polarity"] = "falling"
+    else:
+        conf["trigger_polarity"] = toml_conf["trigger_polarity"]
+    if "enable_clock_lemo_output" not in keys:
+        conf["enable_clock_lemo_output"] = False
+    else:
+        conf["enable_clock_lemo_output"] = (
             False
             if toml_conf["enable_clock_lemo_output"] in ["False", "None"]
             else True
-        ),
-        "pmt_control_1": toml_conf["pmt_power"][0],
-        "pmt_control_2": toml_conf["pmt_power"][1],
-        "pmt_control_3": toml_conf["pmt_power"][2],
-        "pmt_control_4": toml_conf["pmt_power"][3],
-        "save_data": (
-            False if toml_conf["save_data"] in ["False", "None", "off"] else True
-        ),
-        "output_data_path": toml_conf["output_data_path"],
-        "zmq_connection": (
+        )
+    if "output_data_path" not in keys:
+        conf["output_data_path"] = None
+    else:
+        conf["output_data_path"] = (
+            None
+            if toml_conf["output_data_path"] in ["None", ""]
+            else toml_conf["output_data_path"]
+        )
+
+    # required configuration parameters
+    conf["DUT_1"] = (
+        False
+        if toml_conf["dut_interfaces"][0] in ["False", "None", "off"]
+        else toml_conf["dut_interfaces"][0]
+    )
+    conf["DUT_2"] = (
+        False
+        if toml_conf["dut_interfaces"][1] in ["False", "None", "off"]
+        else toml_conf["dut_interfaces"][1]
+    )
+    conf["DUT_3"] = (
+        False
+        if toml_conf["dut_interfaces"][2] in ["False", "None", "off"]
+        else toml_conf["dut_interfaces"][2]
+    )
+    conf["DUT_4"] = (
+        False
+        if toml_conf["dut_interfaces"][3] in ["False", "None", "off"]
+        else toml_conf["dut_interfaces"][3]
+    )
+    conf["threshold_1"] = toml_conf["trigger_threshold"][0]
+    conf["threshold_2"] = toml_conf["trigger_threshold"][1]
+    conf["threshold_3"] = toml_conf["trigger_threshold"][2]
+    conf["threshold_4"] = toml_conf["trigger_threshold"][3]
+    conf["threshold_5"] = toml_conf["trigger_threshold"][4]
+    conf["threshold_6"] = toml_conf["trigger_threshold"][5]
+    conf["trigger_inputs_logic"] = toml_conf["trigger_inputs_logic"]
+    conf["trigger_signal_shape_stretch"] = toml_conf["trigger_signal_stretch"]
+    conf["trigger_signal_shape_delay"] = toml_conf["trigger_signal_delay"]
+    conf["pmt_control_1"] = toml_conf["pmt_power"][0]
+    conf["pmt_control_2"] = toml_conf["pmt_power"][1]
+    conf["pmt_control_3"] = toml_conf["pmt_power"][2]
+    conf["pmt_control_4"] = toml_conf["pmt_power"][3]
+
+    # Specifically disable some configuration parameters for use with constellation.
+    if not constellation:
+        conf["zmq_connection"] = (
             False
             if toml_conf["zmq_connection"] in ["False", "None", "off"]
             else toml_conf["zmq_connection"]
-        ),
-        "max_trigger_number": (
+        )
+        conf["max_trigger_number"] = (
             None
             if toml_conf["max_trigger_number"] in ["False", "None", "off"]
             else toml_conf["max_trigger_number"]
-        ),
-        "timeout": (
+        )
+        conf["timeout"] = (
             None
             if toml_conf["timeout"] in ["False", "None", "off"]
             else toml_conf["timeout"]
-        ),
-    }
+        )
+        conf["save_data"] = (
+            False if toml_conf["save_data"] in ["False", "None", "off"] else True
+        )
+
+    else:
+        conf["zmq_connection"] = False
+        conf["max_trigger_number"] = None
+        conf["timeout"] = None
+        conf["save_data"] = True
+
     return conf

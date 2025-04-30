@@ -49,7 +49,7 @@ class AidaTLU:
         self.conf_list = self.config_parser.get_configuration_table()
         self.get_event_fifo_fill_level()
         self.get_event_fifo_csr()
-        self.get_scalars()
+        self.get_scalers()
 
     def reset_configuration(self) -> None:
         """Switch off all outputs, reset all counters and set threshold to 1.2V"""
@@ -213,19 +213,19 @@ class AidaTLU:
             return np.array(fifo_content)
         pass
 
-    def get_scalar(self, channel: int) -> int:
-        """reads current scalar value from register"""
+    def get_scaler(self, channel: int) -> int:
+        """reads current scaler value from register"""
         if channel < 0 or channel > 5:
             raise ValueError("Only channels 0 to 5 are valid")
         return self.i2c.read_register(f"triggerInputs.ThrCount{channel:d}R")
 
-    def get_scalars(self) -> list:
+    def get_scalers(self) -> list:
         """reads current sc values from registers
 
         Returns:
             list: all 6 trigger sc values
         """
-        return [self.get_scalar(n) for n in range(6)]
+        return [self.get_scaler(n) for n in range(6)]
 
     def init_raw_data_table(self) -> None:
         """Initializes the raw data table, where the raw FIFO data is found."""
@@ -277,47 +277,47 @@ class AidaTLU:
         Args:
             time (int): current runtime of the TLU
         """
-        self.hit_rate = (
-            self.trigger_logic.get_post_veto_trigger() - self.last_triggers_freq
+        self.post_veto_rate = (
+            self.trigger_logic.get_post_veto_trigger() - self.last_post_veto_trigger
         ) / (time - self.last_time)
-        self.particle_rate = (
-            self.trigger_logic.get_pre_veto_trigger() - self.last_particle_freq
+        self.pre_veto_rate = (
+            self.trigger_logic.get_pre_veto_trigger() - self.last_pre_veto_trigger
         ) / (time - self.last_time)
         self.run_time = time
-        self.event_number = self.trigger_logic.get_post_veto_trigger()
-        self.total_trigger_number = self.trigger_logic.get_pre_veto_trigger()
-        s0, s1, s2, s3, s4, s5 = self.get_scalars()
+        self.total_post_veto = self.trigger_logic.get_post_veto_trigger()
+        self.total_pre_veto = self.trigger_logic.get_pre_veto_trigger()
+        s0, s1, s2, s3, s4, s5 = self.get_scalers()
 
         if self.zmq_address:
             self.socket.send_string(
                 str(
                     [
                         self.run_time,
-                        self.event_number,
-                        self.total_trigger_number,
-                        self.particle_rate,
-                        self.hit_rate,
+                        self.total_post_veto,
+                        self.total_pre_veto,
+                        self.pre_veto_rate,
+                        self.post_veto_rate,
                     ]
                 ),
                 flags=zmq.NOBLOCK,
             )
 
         self.last_time = time
-        self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
-        self.last_particle_freq = self.trigger_logic.get_pre_veto_trigger()
+        self.last_post_veto_trigger = self.trigger_logic.get_post_veto_trigger()
+        self.last_pre_veto_trigger = self.trigger_logic.get_pre_veto_trigger()
 
         self.log.info(
-            "Run time: %.3f s, Event: %s, Total trigger: %s, Trigger in freq: %.f Hz, Trigger out freq.: %.f Hz"
+            "Run time: %.1f s, Pre veto: %s, Post veto: %s, Pre veto rate: %.f Hz, Post veto rate.: %.f Hz"
             % (
                 self.run_time,
-                self.event_number,
-                self.total_trigger_number,
-                self.particle_rate,
-                self.hit_rate,
+                self.total_pre_veto,
+                self.total_post_veto,
+                self.pre_veto_rate,
+                self.post_veto_rate,
             )
         )
 
-        self.log.debug("Scalar %i:%i:%i:%i:%i:%i" % (s0, s1, s2, s3, s4, s5))
+        self.log.debug("Scaler %i:%i:%i:%i:%i:%i" % (s0, s1, s2, s3, s4, s5))
         self.log.debug("FIFO level: %s" % self.get_event_fifo_fill_level())
         self.log.debug("FIFO level 2: %s" % self.get_event_fifo_csr())
         self.log.debug(
@@ -396,8 +396,8 @@ class AidaTLU:
         # reset starting parameter
         self.start_time = self.get_timestamp()
         self.last_time = 0
-        self.last_triggers_freq = self.trigger_logic.get_post_veto_trigger()
-        self.last_particle_freq = self.trigger_logic.get_pre_veto_trigger()
+        self.last_post_veto_trigger = self.trigger_logic.get_post_veto_trigger()
+        self.last_pre_veto_trigger = self.trigger_logic.get_pre_veto_trigger()
         self.stop_condition = False
         # prepare data handling and zmq connection
         self.save_data = self.config_parser.get_data_handling()
@@ -407,14 +407,14 @@ class AidaTLU:
         if self.save_data:
             self.path = self.config_parser.get_output_data_path()
             if self.path == None:
-                self.path = "tlu_data/"
-                if __name__ == "__main__":
-                    self.path = "../tlu_data/"
-            self.raw_data_path = self.path + "tlu_raw_run%s_%s.h5" % (
+                self.path = Path(__file__).parent.parent / "tlu_data/"
+            self.raw_data_path = str(self.path) + "/tlu_raw_run%s_%s.h5" % (
                 self.run_number,
                 datetime.now().strftime("%Y_%m_%d_%H_%M_%S"),
             )
-            self.interpreted_data_path = self.path + "tlu_interpreted_run%s_%s.h5" % (
+            self.interpreted_data_path = str(
+                self.path
+            ) + "/tlu_interpreted_run%s_%s.h5" % (
                 self.run_number,
                 datetime.now().strftime("%Y_%m_%d_%H_%M_%S"),
             )
@@ -458,7 +458,7 @@ class AidaTLU:
             self.h5_file.close()
             interpret_data(self.raw_data_path, self.interpreted_data_path)
 
-        self.log.success("Run finished")
+        self.log.info("Run finished")
 
 
 if __name__ == "__main__":
