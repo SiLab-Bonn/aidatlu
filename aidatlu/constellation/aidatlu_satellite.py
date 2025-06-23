@@ -7,7 +7,7 @@ from typing import Any
 
 from constellation.core.cmdp import MetricsType
 from constellation.core.configuration import Configuration
-from constellation.core.fsm import SatelliteState
+from constellation.core.message.cscp1 import SatelliteState
 from constellation.core.monitoring import schedule_metric
 from constellation.core.satellite import Satellite
 
