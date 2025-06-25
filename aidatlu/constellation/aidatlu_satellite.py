@@ -137,27 +137,18 @@ class AidaTLU(DataSender):
         self.aidatlu.dut_logic.log = self.log
         self.aidatlu.config_parser.log = self.log
 
-    def _handle_event(self, evt) -> None:
-        timestamp = (np.uint64(evt[0]) & 0x0000FFFF << 32) + evt[1]
+    def _handle_event(self, evt: list) -> None:
+        timestamp = ((np.uint64(evt[0]) & 0x0000FFFF) << 32) + evt[1]
         # Collect metadata
         meta = {
-            "dtype": f"{evt.dtype}",
+            "dtype": "uint32",
             "flag_trigger": True,
             "trigger": int(evt[3]),
             "timestamp_begin": int(timestamp * 1000),
             "timestamp_end": int((timestamp + 25) * 1000),
         }
-        # Assemble payload in legacy format - first scalers then input bitmask
-        payload = [
-            (evt[2] >> 24) & 0xFF,
-            (evt[2] >> 16) & 0xFF,
-            (evt[2] >> 8) & 0xFF,
-            evt[2] & 0xFF,
-            (evt[4] >> 24) & 0xFF,
-            (evt[4] >> 16) & 0xFF,
-            (evt[0] >> 16) & 0x3F,
-        ]
-        self.data_queue.put((payload, meta))
+        # New data format: store 6 bytes
+        self.data_queue.put((evt, meta))
 
     @schedule_metric("Hz", MetricsType.LAST_VALUE, 1)
     def pre_veto_rate_rate(self) -> Any:
