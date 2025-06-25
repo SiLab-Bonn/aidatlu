@@ -12,11 +12,12 @@ def main(args=None):
     args = vars(parser.parse_args(args))
 
     # set up logging
-    setup_cli_logging(args.pop("log_level"))
+    setup_cli_logging(args.pop("level"))
 
-    # start server with remaining args
+    # start satellite with remaining args
     s = AidaTLU(**args)
     s.run_satellite()
 
 
-main()
+if __name__ == "__main__":
+    main()
