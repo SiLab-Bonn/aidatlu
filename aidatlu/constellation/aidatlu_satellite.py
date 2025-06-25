@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from collections import deque
 import os
 import threading
 import time
@@ -95,33 +96,16 @@ class AidaTLU(DataSender):
     def do_run(self, run_identifier: str) -> str:
         t = threading.Thread(target=self.aidatlu.handle_status)
         t.start()
+
+        # We ideally pull 6 uint32s, but we might pull more or less
+        # Thus, add data to a queue and pop in blocks of 6 uint32s
+        data_queue = deque()
         while not self._state_thread_evt.is_set():
             evt = self.aidatlu.pull_fifo_event()
-            if np.size(evt) == 6:
-                timestamp = (np.uint64(evt[0]) & 0x0000FFFF << 32) + evt[1]
-                # Collect metadata
-                meta = {
-                    "dtype": f"{evt.dtype}",
-                    "flag_trigger": True,
-                    "trigger": int(evt[3]),
-                    "timestamp_begin": int(timestamp * 1000),
-                    "timestamp_end": int((timestamp + 25) * 1000),
-                }
-                # Assemble payload in legacy format - first scalers then input bitmask
-                payload = [
-                    (evt[2] >> 24) & 0xFF,
-                    (evt[2] >> 16) & 0xFF,
-                    (evt[2] >> 8) & 0xFF,
-                    evt[2] & 0xFF,
-                    (evt[4] >> 24) & 0xFF,
-                    (evt[4] >> 16) & 0xFF,
-                    (evt[0] >> 16) & 0x3F,
-                ]
-                self.data_queue.put((payload, meta))
-            elif np.size(evt) > 1:
-                self.log.warning(
-                    f"Wrong event data length, got {np.size(evt)}, expected 6"
-                )
+            if np.size(evt) > 1:
+                data_queue.extend(evt)
+                while len(data_queue) >= 6:
+                    self._handle_event([data_queue.popleft() for _ in range(6)])
 
         t.do_run = False
         self.aidatlu.stop_run()
@@ -152,6 +136,28 @@ class AidaTLU(DataSender):
         self.aidatlu.trigger_logic.log = self.log
         self.aidatlu.dut_logic.log = self.log
         self.aidatlu.config_parser.log = self.log
+
+    def _handle_event(self, evt) -> None:
+        timestamp = (np.uint64(evt[0]) & 0x0000FFFF << 32) + evt[1]
+        # Collect metadata
+        meta = {
+            "dtype": f"{evt.dtype}",
+            "flag_trigger": True,
+            "trigger": int(evt[3]),
+            "timestamp_begin": int(timestamp * 1000),
+            "timestamp_end": int((timestamp + 25) * 1000),
+        }
+        # Assemble payload in legacy format - first scalers then input bitmask
+        payload = [
+            (evt[2] >> 24) & 0xFF,
+            (evt[2] >> 16) & 0xFF,
+            (evt[2] >> 8) & 0xFF,
+            evt[2] & 0xFF,
+            (evt[4] >> 24) & 0xFF,
+            (evt[4] >> 16) & 0xFF,
+            (evt[0] >> 16) & 0x3F,
+        ]
+        self.data_queue.put((payload, meta))
 
     @schedule_metric("Hz", MetricsType.LAST_VALUE, 1)
     def pre_veto_rate_rate(self) -> Any:
