@@ -353,14 +353,6 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
             if toml_conf["enable_clock_lemo_output"] in ["False", "None"]
             else True
         )
-    if "output_data_path" not in keys:
-        conf["output_data_path"] = None
-    else:
-        conf["output_data_path"] = (
-            None
-            if toml_conf["output_data_path"] in ["None", ""]
-            else toml_conf["output_data_path"]
-        )
 
     # required configuration parameters
     conf["DUT_1"] = (
@@ -399,6 +391,14 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
 
     # Specifically disable some configuration parameters for use with constellation.
     if not constellation:
+        if "output_data_path" not in keys:
+            conf["output_data_path"] = None
+        else:
+            conf["output_data_path"] = (
+                None
+                if toml_conf["output_data_path"] in ["None", ""]
+                else toml_conf["output_data_path"]
+            )
         conf["zmq_connection"] = (
             False
             if toml_conf["zmq_connection"] in ["False", "None", "off"]
@@ -419,6 +419,7 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
         )
 
     else:
+        conf["output_data_path"] = None
         conf["zmq_connection"] = False
         conf["max_trigger_number"] = None
         conf["timeout"] = None
