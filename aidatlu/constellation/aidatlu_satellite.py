@@ -103,9 +103,9 @@ class AidaTLU(DataSender):
                 meta = {
                     "dtype": f"{evt.dtype}",
                     "flag_trigger": True,
-                    "trigger": evt[3],
-                    "timestamp_begin": timestamp * 1000,
-                    "timestamp_end": (timestamp + 25) * 1000,
+                    "trigger": int(evt[3]),
+                    "timestamp_begin": int(timestamp * 1000),
+                    "timestamp_end": int((timestamp + 25) * 1000),
                 }
                 # Assemble payload in legacy format - first scalers then input bitmask
                 payload = [
