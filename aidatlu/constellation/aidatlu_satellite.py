@@ -9,7 +9,7 @@ from constellation.core.cmdp import MetricsType
 from constellation.core.configuration import Configuration
 from constellation.core.message.cscp1 import SatelliteState
 from constellation.core.monitoring import schedule_metric
-from constellation.core.satellite import Satellite
+from constellation.core.datasender import DataSender
 
 from aidatlu import logger
 from aidatlu.hardware.i2c import I2CCore
@@ -18,7 +18,7 @@ from aidatlu.main.tlu import AidaTLU as TLU
 from aidatlu.test.utils import MockI2C
 
 
-class AidaTLU(Satellite):
+class AidaTLU(DataSender):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -87,7 +87,9 @@ class AidaTLU(Satellite):
         t = threading.Thread(target=self.aidatlu.handle_status)
         t.start()
         while not self._state_thread_evt.is_set():
-            self.aidatlu.run_loop()
+            current_event = self.aidatlu.pull_fifo_event()
+            if np.size(current_event) > 1:
+                self.data_queue.put((current_event.tobytes(), {"dtype": f"{current_event.dtype}"}))
         t.do_run = False
         self.aidatlu.stop_run()
         return "Do running complete"
