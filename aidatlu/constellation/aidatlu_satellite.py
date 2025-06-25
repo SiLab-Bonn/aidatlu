@@ -94,17 +94,33 @@ class AidaTLU(DataSender):
         t = threading.Thread(target=self.aidatlu.handle_status)
         t.start()
         while not self._state_thread_evt.is_set():
-            current_event = self.aidatlu.pull_fifo_event()
-            if np.size(current_event) > 1:
-                timestamp = (current_event[0] & 0x0000FFFF << 32) + current_event[1]
+            evt = self.aidatlu.pull_fifo_event()
+            if np.size(evt) == 6:
+                timestamp = (evt[0] & 0x0000FFFF << 32) + evt[1]
+                # Collect metadata
                 meta = {
-                    "dtype": f"{current_event.dtype}",
+                    "dtype": f"{evt.dtype}",
                     "flag_trigger": True,
-                    "trigger": current_event[3],
+                    "trigger": evt[3],
                     "timestamp_begin": timestamp * 1000,
                     "timestamp_end": (timestamp + 25) * 1000,
                 }
-                self.data_queue.put((current_event.tobytes(), meta))
+                # Assemble payload in legacy format - first scalers then input bitmask
+                payload = [
+                    (evt[2] >> 24) & 0xFF,
+                    (evt[2] >> 16) & 0xFF,
+                    (evt[2] >> 8) & 0xFF,
+                    evt[2] & 0xFF,
+                    (evt[4] >> 24) & 0xFF,
+                    (evt[4] >> 16) & 0xFF,
+                    (evt[0] >> 16) & 0x3F,
+                ]
+                self.data_queue.put((payload, meta))
+            elif np.size(evt) > 1:
+                self.log.warning(
+                    f"Wrong event data length, got {np.size(evt)}, expected 6"
+                )
+
         t.do_run = False
         self.aidatlu.stop_run()
         return "Do running complete"
