@@ -96,7 +96,15 @@ class AidaTLU(DataSender):
         while not self._state_thread_evt.is_set():
             current_event = self.aidatlu.pull_fifo_event()
             if np.size(current_event) > 1:
-                self.data_queue.put((current_event.tobytes(), {"dtype": f"{current_event.dtype}"}))
+                timestamp = (current_event[0] & 0x0000FFFF << 32) + current_event[1]
+                meta = {
+                    "dtype": f"{current_event.dtype}",
+                    "flag_trigger": True,
+                    "trigger": current_event[3],
+                    "timestamp_begin": timestamp * 1000,
+                    "timestamp_end": (timestamp + 25) * 1000,
+                }
+                self.data_queue.put((current_event.tobytes(), meta))
         t.do_run = False
         self.aidatlu.stop_run()
         return "Do running complete"
