@@ -425,4 +425,10 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
         conf["timeout"] = None
         conf["save_data"] = False
 
+        # Loads custom clock configuration file if provided
+        try:
+            conf["clock_config"] = toml_conf["clock_config"]
+        except:
+            conf["clock_config"] = None
+
     return conf

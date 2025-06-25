@@ -118,7 +118,11 @@ class AidaTLU(DataSender):
     def _init_tlu(self, config: Configuration) -> None:
         "Parse configuration file to TLU and initialize, set loggers"
         self.config_file = toml_parser(config, constellation=True)
-        self.clock_file = str(self.file_path) + "/../misc/aida_tlu_clk_config.txt"
+        if self.config_file["clock_config"] in [None, "None", False]:
+            self.log.info("No clock configuration provided, using default file")
+            self.clock_file = str(self.file_path) + "/../misc/aida_tlu_clk_config.txt"
+        else:
+            self.clock_file = self.config_file["clock_config"]
         self.aidatlu = TLU(
             self.hw, self.config_file, self.clock_file, i2c=self.i2c_method
         )

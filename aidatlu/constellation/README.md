@@ -78,6 +78,7 @@ SatelliteAidaTLU -g testbeam -n TLU
 | `trigger_signal_delay` | (Required) Delays each individual trigger input by a given number of clock cycles (corresponds to `6.25ns` steps) | List | None |
 | `enable_clock_lemo_output` | (Optional) Enable the LEMO clock output. | String | False |
 | `pmt_power` | (Required) Sets the four PMT control voltages in V | List | None |
+| `clock_config` | (Optional) Specify a custom clock configuration. If no path is provided the TLU uses the default configuration. | String | `aidatlu/misc/aida_tlu_clk_config.txt` |
 
 ### Configuration Example
 An example configuration for the AIDA-TLU satellite which could be dropped into a Constellation configuration as a starting point.
