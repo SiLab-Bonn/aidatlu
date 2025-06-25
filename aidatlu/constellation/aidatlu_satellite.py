@@ -81,6 +81,13 @@ class AidaTLU(DataSender):
 
         self.aidatlu.start_run_configuration()
 
+        # Set Begin-of-run tags
+        self.BOR["BoardID"] = self.aidatlu.get_device_id()
+
+        # For EudaqNativeWriter compatibility
+        self.BOR["eudaq_event"] = "TluRawDataEvent"
+        self.BOR["frames_as_blocks"] = True
+
         return "Do starting complete"
 
     def do_run(self, run_identifier: str) -> str:
