@@ -5,6 +5,8 @@ import time
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 from constellation.core.cmdp import MetricsType
 from constellation.core.configuration import Configuration
 from constellation.core.message.cscp1 import SatelliteState
@@ -96,7 +98,7 @@ class AidaTLU(DataSender):
         while not self._state_thread_evt.is_set():
             evt = self.aidatlu.pull_fifo_event()
             if np.size(evt) == 6:
-                timestamp = (evt[0] & 0x0000FFFF << 32) + evt[1]
+                timestamp = (np.uint64(evt[0]) & 0x0000FFFF << 32) + evt[1]
                 # Collect metadata
                 meta = {
                     "dtype": f"{evt.dtype}",
