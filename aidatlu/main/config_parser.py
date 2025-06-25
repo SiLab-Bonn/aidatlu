@@ -423,6 +423,6 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
         conf["zmq_connection"] = False
         conf["max_trigger_number"] = None
         conf["timeout"] = None
-        conf["save_data"] = True
+        conf["save_data"] = False
 
     return conf
