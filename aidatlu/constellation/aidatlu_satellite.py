@@ -141,14 +141,14 @@ class AidaTLU(DataSender):
         timestamp = ((np.uint64(evt[0]) & 0x0000FFFF) << 32) + evt[1]
         # Collect metadata
         meta = {
-            "dtype": "uint32",
             "flag_trigger": True,
             "trigger": int(evt[3]),
             "timestamp_begin": int(timestamp * 1000),
             "timestamp_end": int((timestamp + 25) * 1000),
         }
-        # New data format: store 6 bytes
-        self.data_queue.put((evt, meta))
+        # New data format: store 6 uint32 as bytes in little-endian
+        payload = np.array(evt, dtype="<u4").tobytes()
+        self.data_queue.put((payload, meta))
 
     @schedule_metric("Hz", MetricsType.LAST_VALUE, 1)
     def pre_veto_rate_rate(self) -> Any:
