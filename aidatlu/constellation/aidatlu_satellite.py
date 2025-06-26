@@ -53,7 +53,7 @@ class AidaTLU(Satellite):
         self.aidatlu.configure()
         return "Do launching complete"
 
-    def do_landing(self, payload: Any) -> str:
+    def do_landing(self) -> str:
         self.aidatlu.reset_configuration()
         return "Do landing complete"
 
@@ -95,10 +95,6 @@ class AidaTLU(Satellite):
     def do_stopping(self) -> str:
         self.aidatlu.stop_run_configuration()
         return "Do stopping complete"
-
-    def do_landing(self) -> str:
-        self.aidatlu.reset_configuration()
-        return "Do Stop"
 
     def _init_tlu(self, config: Configuration) -> None:
         "Parse configuration file to TLU and initialize, set loggers"
