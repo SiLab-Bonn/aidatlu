@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
+from collections import deque
 import os
 import threading
 import time
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 from constellation.core.cmdp import MetricsType
 from constellation.core.configuration import Configuration
 from constellation.core.message.cscp1 import SatelliteState
 from constellation.core.monitoring import schedule_metric
-from constellation.core.satellite import Satellite
+from constellation.core.datasender import DataSender
 
 from aidatlu import logger
 from aidatlu.hardware.i2c import I2CCore
@@ -18,7 +21,7 @@ from aidatlu.main.tlu import AidaTLU as TLU
 from aidatlu.test.utils import MockI2C
 
 
-class AidaTLU(Satellite):
+class AidaTLU(DataSender):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -81,13 +84,29 @@ class AidaTLU(Satellite):
 
         self.aidatlu.start_run_configuration()
 
+        # Set Begin-of-run tags
+        self.BOR["BoardID"] = self.aidatlu.get_device_id()
+
+        # For EudaqNativeWriter compatibility
+        self.BOR["eudaq_event"] = "TluRawDataEvent"
+        self.BOR["frames_as_blocks"] = True
+
         return "Do starting complete"
 
     def do_run(self, run_identifier: str) -> str:
         t = threading.Thread(target=self.aidatlu.handle_status)
         t.start()
+
+        # We ideally pull 6 uint32s, but we might pull more or less
+        # Thus, add data to a queue and pop in blocks of 6 uint32s
+        data_queue = deque()
         while not self._state_thread_evt.is_set():
-            self.aidatlu.run_loop()
+            evt = self.aidatlu.pull_fifo_event()
+            if np.size(evt) > 1:
+                data_queue.extend(evt)
+                while len(data_queue) >= 6:
+                    self._handle_event([data_queue.popleft() for _ in range(6)])
+
         t.do_run = False
         self.aidatlu.stop_run()
         return "Do running complete"
@@ -113,6 +132,19 @@ class AidaTLU(Satellite):
         self.aidatlu.trigger_logic.log = self.log
         self.aidatlu.dut_logic.log = self.log
         self.aidatlu.config_parser.log = self.log
+
+    def _handle_event(self, evt: list) -> None:
+        timestamp = ((np.uint64(evt[0]) & 0x0000FFFF) << 32) + evt[1]
+        # Collect metadata
+        meta = {
+            "flag_trigger": True,
+            "trigger": int(evt[3]),
+            "timestamp_begin": int(timestamp * 1000),
+            "timestamp_end": int((timestamp + 25) * 1000),
+        }
+        # New data format: store 6 uint32 as bytes in little-endian
+        payload = np.array(evt, dtype="<u4").tobytes()
+        self.data_queue.put((payload, meta))
 
     @schedule_metric("Hz", MetricsType.LAST_VALUE, 1)
     def pre_veto_rate(self) -> Any:

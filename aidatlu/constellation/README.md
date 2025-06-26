@@ -15,6 +15,23 @@ Information over each individual trigger signal is saved in a compressed and hum
 
 The satellite connects the AIDA-2020 TLU to the [Constellation](https://constellation.pages.desy.de/) control and data acquisition framework.
 
+This satellite sends the raw data read from the TLU FIFO, consisting of six 32bit words with the following data:
+
+* event type: `(word0 >> 28) & 0xf`
+* trigger flag, input 0: `(word0 >> 16) & 0x1`
+* trigger flag, input 1: `(word0 >> 17) & 0x1`
+* trigger flag, input 2: `(word0 >> 18) & 0x1`
+* trigger flag, input 3: `(word0 >> 19) & 0x1`
+* trigger flag, input 4: `(word0 >> 20) & 0x1`
+* trigger flag, input 5: `(word0 >> 21) & 0x1`
+* timestamp: `((word0 & 0x0000ffff) << 32) + word1`
+* fine timestamp, input 0: `(word2 >> 24) & 0xff`
+* fine timestamp, input 1: `(word2 >> 16) & 0xff`
+* fine timestamp, input 2: `(word2 >> 8) & 0xff`
+* fine timestamp, input 3: `word2 & 0xff`
+* fine timestamp, input 4: `(word4 >> 24) & 0xff`
+* fine timestamp, input 5: `(word4 >> 16) & 0xff`
+* event number: `word3`
 
 ## Building
 
@@ -61,7 +78,6 @@ SatelliteAidaTLU -g testbeam -n TLU
 | `trigger_signal_delay` | (Required) Delays each individual trigger input by a given number of clock cycles (corresponds to `6.25ns` steps) | List | None |
 | `enable_clock_lemo_output` | (Optional) Enable the LEMO clock output. | String | False |
 | `pmt_power` | (Required) Sets the four PMT control voltages in V | List | None |
-| `output_data_path` | (Optional) Specify a custom output data path to save the data to. If no path provided the TLU uses a default output folder. | String | `aidatlu/tlu_data/` |
 
 ### Configuration Example
 An example configuration for the AIDA-TLU satellite which could be dropped into a Constellation configuration as a starting point.
@@ -80,7 +96,6 @@ trigger_signal_delay = [0, 0, 0, 0, 0, 0]
 
 enable_clock_lemo_output = false
 pmt_power = [0.8, 0.8, 0.0, 0.0]
-output_data_path = ''
 ```
 
 ## Metrics
