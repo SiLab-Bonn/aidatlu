@@ -134,7 +134,8 @@ class AidaTLU(DataSender):
         self.aidatlu.config_parser.log = self.log
 
     def _handle_event(self, evt: list) -> None:
-        timestamp = ((np.uint64(evt[0]) & 0x0000FFFF) << 32) + evt[1]
+        # Calculate timestamp in nanoseconds from TLU 40MHz clock:
+        timestamp = 25 * (((np.uint64(evt[0]) & 0x0000FFFF) << 32) + evt[1])
         # Collect metadata
         meta = {
             "flag_trigger": True,
