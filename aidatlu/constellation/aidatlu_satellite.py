@@ -143,7 +143,7 @@ class AidaTLU(DataSender):
         # Collect metadata
         meta = {
             "flag_trigger": True,
-            "trigger": int(evt[3]),
+            "trigger_number": int(evt[3]),
             "timestamp_begin": int(timestamp * 1000),
             "timestamp_end": int((timestamp + 25) * 1000),
         }
