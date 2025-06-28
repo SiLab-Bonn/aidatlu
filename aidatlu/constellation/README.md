@@ -15,24 +15,6 @@ Information over each individual trigger signal is saved in a compressed and hum
 
 The satellite connects the AIDA-2020 TLU to the [Constellation](https://constellation.pages.desy.de/) control and data acquisition framework.
 
-This satellite sends the raw data read from the TLU FIFO, consisting of six 32bit words with the following data:
-
-* event type: `(word0 >> 28) & 0xf`
-* trigger flag, input 0: `(word0 >> 16) & 0x1`
-* trigger flag, input 1: `(word0 >> 17) & 0x1`
-* trigger flag, input 2: `(word0 >> 18) & 0x1`
-* trigger flag, input 3: `(word0 >> 19) & 0x1`
-* trigger flag, input 4: `(word0 >> 20) & 0x1`
-* trigger flag, input 5: `(word0 >> 21) & 0x1`
-* timestamp: `((word0 & 0x0000ffff) << 32) + word1`
-* fine timestamp, input 0: `(word2 >> 24) & 0xff`
-* fine timestamp, input 1: `(word2 >> 16) & 0xff`
-* fine timestamp, input 2: `(word2 >> 8) & 0xff`
-* fine timestamp, input 3: `word2 & 0xff`
-* fine timestamp, input 4: `(word4 >> 24) & 0xff`
-* fine timestamp, input 5: `(word4 >> 16) & 0xff`
-* event number: `word3`
-
 ## Building
 
 After installing [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html), with Python bindings `(uhal)`, install the [Aida-TLU](https://github.com/SiLab-Bonn/aidatlu) package with the constellation requirement.
@@ -115,3 +97,23 @@ The following metrics are distributed by this satellite and can be subscribed to
 | `SC3` | Total number that trigger input 4 received a valid signal | Integer | `LAST_VALUE` | 1s |
 | `SC4` | Total number that trigger input 5 received a valid signal | Integer | `LAST_VALUE` | 1s |
 | `SC5` | Total number that trigger input 6 received a valid signal | Integer | `LAST_VALUE` | 1s |
+
+## Data
+
+This satellite sends the raw data read from the TLU FIFO, consisting of six 32bit words with the following data:
+
+* event type: `(word0 >> 28) & 0xf`
+* trigger flag, input 0: `(word0 >> 16) & 0x1`
+* trigger flag, input 1: `(word0 >> 17) & 0x1`
+* trigger flag, input 2: `(word0 >> 18) & 0x1`
+* trigger flag, input 3: `(word0 >> 19) & 0x1`
+* trigger flag, input 4: `(word0 >> 20) & 0x1`
+* trigger flag, input 5: `(word0 >> 21) & 0x1`
+* timestamp: `((word0 & 0x0000ffff) << 32) + word1`
+* fine timestamp, input 0: `(word2 >> 24) & 0xff`
+* fine timestamp, input 1: `(word2 >> 16) & 0xff`
+* fine timestamp, input 2: `(word2 >> 8) & 0xff`
+* fine timestamp, input 3: `word2 & 0xff`
+* fine timestamp, input 4: `(word4 >> 24) & 0xff`
+* fine timestamp, input 5: `(word4 >> 16) & 0xff`
+* event number: `word3`
