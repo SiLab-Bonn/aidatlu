@@ -5,23 +5,26 @@ import threading
 import time
 from pathlib import Path
 from typing import Any
+from datetime import datetime
 
 import numpy as np
+import tables as tb
 
 from constellation.core.cmdp import MetricsType
 from constellation.core.configuration import Configuration
 from constellation.core.message.cscp1 import SatelliteState
 from constellation.core.monitoring import schedule_metric
-from constellation.core.datasender import DataSender
+from constellation.core.satellite import Satellite
 
 from aidatlu import logger
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.main.config_parser import Configure, toml_parser
 from aidatlu.hardware.tlu_controller import TLUControl as TLU
 from aidatlu.test.utils import MockI2C
+from aidatlu.main.data_parser import interpret_data
 
 
-class AidaTLU(DataSender):
+class AidaTLU(Satellite):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -95,14 +98,52 @@ class AidaTLU(DataSender):
         self.last_post_veto_trigger = self.aidatlu.trigger_logic.get_post_veto_trigger()
         self.last_pre_veto_trigger = self.aidatlu.trigger_logic.get_pre_veto_trigger()
 
-        # Set Begin-of-run tags
-        self.BOR["BoardID"] = self.aidatlu.get_device_id()
+        # # Set Begin-of-run tags
+        # self.BOR["BoardID"] = self.aidatlu.get_device_id()
 
-        # For EudaqNativeWriter compatibility
-        self.BOR["eudaq_event"] = "TluRawDataEvent"
-        self.BOR["frames_as_blocks"] = True
+        # # For EudaqNativeWriter compatibility
+        # self.BOR["eudaq_event"] = "TluRawDataEvent"
+        # self.BOR["frames_as_blocks"] = True
+
+        self.path = self.config_parser.get_output_data_path()
+        if self.path == None:
+            self.path = Path(__file__).parent.parent / "tlu_data/"
+        self.raw_data_path = str(self.path) + "/tlu_raw_run_%s.h5" % (
+            datetime.now().strftime("%Y_%m_%d_%H_%M_%S"),
+        )
+        self.interpreted_data_path = str(
+            self.path
+        ) + "/tlu_interpreted_run_%s.h5" % (
+            datetime.now().strftime("%Y_%m_%d_%H_%M_%S"),
+        )
+        self.init_raw_data_table()
 
         return "Do starting complete"
+
+    def init_raw_data_table(self) -> None:
+        """Initializes the raw data table, where the raw FIFO data is found."""
+        data_dtype = np.dtype([("raw", "u4")])
+        config_dtype = np.dtype([("attribute", "S32"), ("value", "S32")])
+
+        Path(self.path).mkdir(parents=True, exist_ok=True)
+        hdf5_filter = tb.Filters(complib="blosc", complevel=5)
+        self.h5_file = tb.open_file(self.raw_data_path, mode="w", title="TLU")
+        self.data_table = self.h5_file.create_table(
+            self.h5_file.root,
+            name="raw_data",
+            description=data_dtype,
+            title="Raw data",
+            filters=hdf5_filter,
+        )
+        config_table = self.h5_file.create_table(
+            self.h5_file.root,
+            name="conf",
+            description=config_dtype,
+            title="Configuration",
+            filters=hdf5_filter,
+        )
+        self.buffer = []
+        config_table.append(self.conf_list)
 
     def do_run(self, run_identifier: str) -> str:
         t = threading.Thread(target=self.handle_status)
@@ -112,11 +153,9 @@ class AidaTLU(DataSender):
         # Thus, add data to a queue and pop in blocks of 6 uint32s
         data_queue = deque()
         while not self._state_thread_evt.is_set():
-            evt = self.aidatlu.pull_fifo_event()
-            if np.size(evt) > 1:
-                data_queue.extend(evt)
-                while len(data_queue) >= 6:
-                    self._handle_event([data_queue.popleft() for _ in range(6)])
+            current_event = self.aidatlu.pull_fifo_event()
+            if np.size(current_event) > 1:
+                    self.data_table.append(current_event)
 
         t.do_run = False
         self.aidatlu.stop_run()
@@ -124,6 +163,8 @@ class AidaTLU(DataSender):
 
     def do_stopping(self) -> str:
         self.aidatlu.pull_fifo_event()
+        self.h5_file.close()
+        interpret_data(self.raw_data_path, self.interpreted_data_path)
         self.log.info("Run finished")
         return "Do stopping complete"
 
