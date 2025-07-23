@@ -41,6 +41,7 @@ TLUCONTROL = TLUControl(
     i2c=I2CMETHOD,
 )
 
+
 def test_check_ups():
     """Test read write TLU configurations"""
 

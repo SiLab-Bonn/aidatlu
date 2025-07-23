@@ -8,9 +8,9 @@ from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.ioexpander_controller import IOControl
 from aidatlu.hardware.trigger_controller import TriggerLogic
 
+
 class TLUControl:
-    """Controls general TLU functionalities.
-    """
+    """Controls general TLU functionalities."""
 
     def __init__(self, hw, i2c=I2CCore) -> None:
         self.log = logger.setup_main_logger(__class__.__name__)
@@ -30,7 +30,7 @@ class TLUControl:
         self.dut_logic = DUTLogic(self.i2c)
 
         self.reset_configuration()
-        
+
     ### General TLU Functions ###
 
     def reset_configuration(self) -> None:
@@ -79,10 +79,10 @@ class TLUControl:
         for addr in range(6):
             id.append(self.i2c.read(self.i2c.modules["eeprom"], 0xFA + addr) & 0xFF)
         return int("0x" + "".join(["{:x}".format(i) for i in id]), 16) & 0xFFFFFFFFFFFF
-    
+
     def get_fw_version(self) -> int:
         return self.i2c.read_register("version")
-    
+
     def reset_timestamp(self) -> None:
         """Sets bit to  'ResetTimestampW' register to reset the time stamp."""
         self.i2c.write_register("Event_Formatter.ResetTimestampW", 1)
@@ -174,7 +174,7 @@ class TLUControl:
         time = self.i2c.read_register("Event_Formatter.CurrentTimestampHR")
         time = time << 32
         time = time + self.i2c.read_register("Event_Formatter.CurrentTimestampLR")
-        return time  
+        return time
 
     def pull_fifo_event(self) -> list:
         """Pulls event from the FIFO. This is needed in the run loop to prevent the buffer to get stuck.
@@ -206,11 +206,11 @@ class TLUControl:
             list: all 6 trigger sc values
         """
         return [self.get_scaler(n) for n in range(6)]
-    
+
     def get_pre_veto_trigger_number(self) -> int:
-        """Optains the number of triggers recorded in the TLU before the veto is applied from the trigger logic register"""
+        """Obtains the number of triggers recorded in the TLU before the veto is applied from the trigger logic register"""
         return self.trigger_logic.get_pre_veto_trigger()
 
     def get_post_veto_trigger_number(self) -> int:
-        """Optains the number of triggers recorded in the TLU after the veto is applied from the trigger logic register"""
+        """Obtains the number of triggers recorded in the TLU after the veto is applied from the trigger logic register"""
         return self.trigger_logic.get_post_veto_trigger()

@@ -18,7 +18,6 @@ class AidaTLU:
     def __init__(self, hw, config_dict, clock_config_path, i2c=I2CCore) -> None:
         self.log = logger.setup_main_logger(__class__.__name__)
 
-
         self.tlu_controller = TLUControl(hw=hw, i2c=i2c)
         self.tlu_controller.write_clock_config(clock_config_path)
 
@@ -87,7 +86,10 @@ class AidaTLU:
                 if current_time > self.timeout:
                     self.stop_condition = True
             if self.max_trigger != None:
-                if self.tlu_controller.trigger_logic.get_post_veto_trigger() > self.max_trigger:
+                if (
+                    self.tlu_controller.trigger_logic.get_post_veto_trigger()
+                    > self.max_trigger
+                ):
                     self.stop_condition = True
 
     def log_sent_status(self, time: int) -> None:
@@ -98,10 +100,12 @@ class AidaTLU:
             time (int): current runtime of the TLU
         """
         self.post_veto_rate = (
-            self.tlu_controller.trigger_logic.get_post_veto_trigger() - self.last_post_veto_trigger
+            self.tlu_controller.trigger_logic.get_post_veto_trigger()
+            - self.last_post_veto_trigger
         ) / (time - self.last_time)
         self.pre_veto_rate = (
-            self.tlu_controller.trigger_logic.get_pre_veto_trigger() - self.last_pre_veto_trigger
+            self.tlu_controller.trigger_logic.get_pre_veto_trigger()
+            - self.last_pre_veto_trigger
         ) / (time - self.last_time)
         self.run_time = time
         self.total_post_veto = self.tlu_controller.trigger_logic.get_post_veto_trigger()
@@ -123,8 +127,12 @@ class AidaTLU:
             )
 
         self.last_time = time
-        self.last_post_veto_trigger = self.tlu_controller.trigger_logic.get_post_veto_trigger()
-        self.last_pre_veto_trigger = self.tlu_controller.trigger_logic.get_pre_veto_trigger()
+        self.last_post_veto_trigger = (
+            self.tlu_controller.trigger_logic.get_post_veto_trigger()
+        )
+        self.last_pre_veto_trigger = (
+            self.tlu_controller.trigger_logic.get_pre_veto_trigger()
+        )
 
         self.log.info(
             "Run time: %.1f s, Pre veto: %s, Post veto: %s, Pre veto rate: %.f Hz, Post veto rate.: %.f Hz"
@@ -138,11 +146,16 @@ class AidaTLU:
         )
 
         self.log.debug("Scaler %i:%i:%i:%i:%i:%i" % (s0, s1, s2, s3, s4, s5))
-        self.log.debug("FIFO level: %s" % self.tlu_controller.get_event_fifo_fill_level())
+        self.log.debug(
+            "FIFO level: %s" % self.tlu_controller.get_event_fifo_fill_level()
+        )
         self.log.debug("FIFO level 2: %s" % self.tlu_controller.get_event_fifo_csr())
         self.log.debug(
             "fifo csr: %s fifo fill level: %s"
-            % (self.tlu_controller.get_event_fifo_fill_level(), self.tlu_controller.get_event_fifo_csr())
+            % (
+                self.tlu_controller.get_event_fifo_fill_level(),
+                self.tlu_controller.get_event_fifo_csr(),
+            )
         )
         self.log.debug(
             "post: %s pre: %s"
@@ -216,8 +229,12 @@ class AidaTLU:
         # reset starting parameter
         self.start_time = self.tlu_controller.get_timestamp()
         self.last_time = 0
-        self.last_post_veto_trigger = self.tlu_controller.trigger_logic.get_post_veto_trigger()
-        self.last_pre_veto_trigger = self.tlu_controller.trigger_logic.get_pre_veto_trigger()
+        self.last_post_veto_trigger = (
+            self.tlu_controller.trigger_logic.get_post_veto_trigger()
+        )
+        self.last_pre_veto_trigger = (
+            self.tlu_controller.trigger_logic.get_pre_veto_trigger()
+        )
         self.stop_condition = False
         # prepare data handling and zmq connection
         self.save_data = self.config_parser.get_data_handling()

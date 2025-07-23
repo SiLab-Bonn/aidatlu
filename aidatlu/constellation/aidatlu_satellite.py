@@ -135,9 +135,7 @@ class AidaTLU(DataSender):
             self.clock_file = str(self.file_path) + "/../misc/aida_tlu_clk_config.txt"
         else:
             self.clock_file = self.config_file["clock_config"]
-        self.aidatlu = TLU(
-            self.hw, i2c=self.i2c_method
-        )
+        self.aidatlu = TLU(self.hw, i2c=self.i2c_method)
         self.config_parser = Configure(self.aidatlu, self.config_file)
         # Resets aidatlu loggers and replaces them with constellation loggers
         logger._reset_all_loggers()
@@ -208,40 +206,36 @@ class AidaTLU(DataSender):
         )
         if self.aidatlu.get_event_fifo_csr() == 0x10:
             self.log.warning("FIFO is full")
-        
+
     @schedule_metric("Hz", MetricsType.LAST_VALUE, 1)
     def pre_veto_rate(self) -> Any:
         if self.fsm.current_state_value == SatelliteState.RUN and hasattr(
-            self.aidatlu, "pre_veto_rate"
+            self, "pre_veto_rate"
         ):
-            return self.aidatlu.pre_veto_rate
+            return self.pre_veto_rate
         else:
             return None
 
     @schedule_metric("Hz", MetricsType.LAST_VALUE, 1)
     def post_veto_rate(self) -> Any:
         if self.fsm.current_state_value == SatelliteState.RUN and hasattr(
-            self.aidatlu, "post_veto_rate"
+            self, "post_veto_rate"
         ):
-            return self.aidatlu.post_veto_rate
+            return self.post_veto_rate
         else:
             return None
 
     @schedule_metric("", MetricsType.LAST_VALUE, 1)
     def post_veto(self) -> Any:
-        if self.fsm.current_state_value == SatelliteState.RUN and hasattr(
-            self.aidatlu, "total_post_veto"
-        ):
-            return self.aidatlu.total_post_veto
+        if self.fsm.current_state_value == SatelliteState.RUN:
+            return self.aidatlu.get_post_veto_trigger_number()
         else:
             return None
 
     @schedule_metric("", MetricsType.LAST_VALUE, 1)
     def pre_veto(self) -> Any:
-        if self.fsm.current_state_value == SatelliteState.RUN and hasattr(
-            self.aidatlu, "total_pre_veto"
-        ):
-            return self.aidatlu.total_pre_veto
+        if self.fsm.current_state_value == SatelliteState.RUN:
+            return self.aidatlu.get_pre_veto_trigger_number()
         else:
             return None
 
