@@ -23,7 +23,7 @@ class AidaTLU:
         self.tlu_controller.write_clock_config(clock_config_path)
 
         self.reset_configuration()
-        self.config_parser = Configure(self, config_dict)
+        self.config_parser = Configure(self.tlu_controller, config_dict)
 
         self.log.success("TLU initialized")
 
@@ -37,6 +37,7 @@ class AidaTLU:
 
     def reset_configuration(self) -> None:
         self.tlu_controller.reset_configuration()
+        self.run_number = 0
         try:
             self.h5_file.close()
         except:

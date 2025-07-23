@@ -29,6 +29,8 @@ class TLUControl:
         self.trigger_logic = TriggerLogic(self.i2c)
         self.dut_logic = DUTLogic(self.i2c)
 
+        self.reset_configuration()
+        
     ### General TLU Functions ###
 
     def reset_configuration(self) -> None:
