@@ -8,12 +8,8 @@ import tables as tb
 import zmq
 
 from aidatlu import logger
-from aidatlu.hardware.clock_controller import ClockControl
-from aidatlu.hardware.dac_controller import DacControl
-from aidatlu.hardware.dut_controller import DUTLogic
+from aidatlu.hardware.tlu_controller import TLUControl
 from aidatlu.hardware.i2c import I2CCore
-from aidatlu.hardware.ioexpander_controller import IOControl
-from aidatlu.hardware.trigger_controller import TriggerLogic
 from aidatlu.main.config_parser import Configure, yaml_parser
 from aidatlu.main.data_parser import interpret_data
 
@@ -22,7 +18,9 @@ class AidaTLU:
     def __init__(self, hw, config_dict, clock_config_path, i2c=I2CCore) -> None:
         self.log = logger.setup_main_logger(__class__.__name__)
 
-        self.clock_controller.write_clock_conf(clock_config_path)
+
+        self.tlu_controller = TLUControl(hw=hw, i2c=i2c)
+        self.tlu_controller.write_clock_config(clock_config_path)
 
         self.reset_configuration()
         self.config_parser = Configure(self, config_dict)
@@ -33,17 +31,19 @@ class AidaTLU:
         """loads the conf.yaml and configures the TLU accordingly."""
         self.config_parser.configure()
         self.conf_list = self.config_parser.get_configuration_table()
-        self.get_event_fifo_fill_level()
-        self.get_event_fifo_csr()
-        self.get_scalers()
+        self.tlu_controller.get_event_fifo_fill_level()
+        self.tlu_controller.get_event_fifo_csr()
+        self.tlu_controller.get_scalers()
 
     def reset_configuration(self) -> None:
+        self.tlu_controller.reset_configuration()
         try:
             self.h5_file.close()
         except:
             pass
 
     def stop_run(self) -> None:
+        self.tlu_controller.stop_run()
         self.run_number += 1
 
     def init_raw_data_table(self) -> None:
@@ -76,7 +76,7 @@ class AidaTLU:
         t = threading.current_thread()
         while getattr(t, "do_run", True):
             time.sleep(0.5)
-            last_time = self.get_timestamp()
+            last_time = self.tlu_controller.get_timestamp()
             current_time = (last_time - self.start_time) * 25 / 1000000000
             # Logs and poss. sends status every 1s.
             if current_time - self.last_time > 1:
@@ -86,7 +86,7 @@ class AidaTLU:
                 if current_time > self.timeout:
                     self.stop_condition = True
             if self.max_trigger != None:
-                if self.trigger_logic.get_post_veto_trigger() > self.max_trigger:
+                if self.tlu_controller.trigger_logic.get_post_veto_trigger() > self.max_trigger:
                     self.stop_condition = True
 
     def log_sent_status(self, time: int) -> None:
@@ -97,15 +97,15 @@ class AidaTLU:
             time (int): current runtime of the TLU
         """
         self.post_veto_rate = (
-            self.trigger_logic.get_post_veto_trigger() - self.last_post_veto_trigger
+            self.tlu_controller.trigger_logic.get_post_veto_trigger() - self.last_post_veto_trigger
         ) / (time - self.last_time)
         self.pre_veto_rate = (
-            self.trigger_logic.get_pre_veto_trigger() - self.last_pre_veto_trigger
+            self.tlu_controller.trigger_logic.get_pre_veto_trigger() - self.last_pre_veto_trigger
         ) / (time - self.last_time)
         self.run_time = time
-        self.total_post_veto = self.trigger_logic.get_post_veto_trigger()
-        self.total_pre_veto = self.trigger_logic.get_pre_veto_trigger()
-        s0, s1, s2, s3, s4, s5 = self.get_scalers()
+        self.total_post_veto = self.tlu_controller.trigger_logic.get_post_veto_trigger()
+        self.total_pre_veto = self.tlu_controller.trigger_logic.get_pre_veto_trigger()
+        s0, s1, s2, s3, s4, s5 = self.tlu_controller.get_scalers()
 
         if self.zmq_address:
             self.socket.send_string(
@@ -122,8 +122,8 @@ class AidaTLU:
             )
 
         self.last_time = time
-        self.last_post_veto_trigger = self.trigger_logic.get_post_veto_trigger()
-        self.last_pre_veto_trigger = self.trigger_logic.get_pre_veto_trigger()
+        self.last_post_veto_trigger = self.tlu_controller.trigger_logic.get_post_veto_trigger()
+        self.last_pre_veto_trigger = self.tlu_controller.trigger_logic.get_pre_veto_trigger()
 
         self.log.info(
             "Run time: %.1f s, Pre veto: %s, Post veto: %s, Pre veto rate: %.f Hz, Post veto rate.: %.f Hz"
@@ -137,27 +137,27 @@ class AidaTLU:
         )
 
         self.log.debug("Scaler %i:%i:%i:%i:%i:%i" % (s0, s1, s2, s3, s4, s5))
-        self.log.debug("FIFO level: %s" % self.get_event_fifo_fill_level())
-        self.log.debug("FIFO level 2: %s" % self.get_event_fifo_csr())
+        self.log.debug("FIFO level: %s" % self.tlu_controller.get_event_fifo_fill_level())
+        self.log.debug("FIFO level 2: %s" % self.tlu_controller.get_event_fifo_csr())
         self.log.debug(
             "fifo csr: %s fifo fill level: %s"
-            % (self.get_event_fifo_fill_level(), self.get_event_fifo_csr())
+            % (self.tlu_controller.get_event_fifo_fill_level(), self.tlu_controller.get_event_fifo_csr())
         )
         self.log.debug(
             "post: %s pre: %s"
             % (
-                self.trigger_logic.get_post_veto_trigger(),
-                self.trigger_logic.get_pre_veto_trigger(),
+                self.tlu_controller.trigger_logic.get_post_veto_trigger(),
+                self.tlu_controller.trigger_logic.get_pre_veto_trigger(),
             )
         )
-        self.log.debug("time stamp: %s" % (self.get_timestamp()))
+        self.log.debug("time stamp: %s" % (self.tlu_controller.get_timestamp()))
         if (
             self.run_time < 10
         ):  # Logs trigger configuration when logging level is debug for the first 10s
-            current_event = self.pull_fifo_event()
+            current_event = self.tlu_controller.pull_fifo_event()
             if np.size(current_event) > 1:
                 self.log_trigger_inputs(current_event[0:6])
-        if self.get_event_fifo_csr() == 0x10:
+        if self.tlu_controller.get_event_fifo_csr() == 0x10:
             self.log.warning("FIFO is full")
 
     def log_trigger_inputs(self, event_vector: list) -> None:
@@ -209,14 +209,14 @@ class AidaTLU:
 
     def start_run_configuration(self) -> None:
         """Start of the run configurations, consists of timestamp resets, data preparations and zmq connections initialization."""
-        self.start_run()
-        self.get_fw_version()
-        self.get_device_id()
+        self.tlu_controller.start_run()
+        self.tlu_controller.get_fw_version()
+        self.tlu_controller.get_device_id()
         # reset starting parameter
-        self.start_time = self.get_timestamp()
+        self.start_time = self.tlu_controller.get_timestamp()
         self.last_time = 0
-        self.last_post_veto_trigger = self.trigger_logic.get_post_veto_trigger()
-        self.last_pre_veto_trigger = self.trigger_logic.get_pre_veto_trigger()
+        self.last_post_veto_trigger = self.tlu_controller.trigger_logic.get_post_veto_trigger()
+        self.last_pre_veto_trigger = self.tlu_controller.trigger_logic.get_pre_veto_trigger()
         self.stop_condition = False
         # prepare data handling and zmq connection
         self.save_data = self.config_parser.get_data_handling()
@@ -249,7 +249,7 @@ class AidaTLU:
             KeyboardInterrupt: The run loop can be interrupted when raising a KeyboardInterrupt.
         """
         try:
-            current_event = self.pull_fifo_event()
+            current_event = self.tlu_controller.pull_fifo_event()
             try:
                 if self.save_data and np.size(current_event) > 1:
                     self.data_table.append(current_event)
@@ -268,7 +268,7 @@ class AidaTLU:
     def stop_run_configuration(self) -> None:
         """Cleans remaining FIFO data and closes data files and zmq connections after a run."""
         # Cleanup of FIFO
-        self.pull_fifo_event()
+        self.tlu_controller.pull_fifo_event()
 
         if self.zmq_address:
             self.socket.close()

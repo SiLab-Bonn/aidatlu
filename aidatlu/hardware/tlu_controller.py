@@ -64,6 +64,9 @@ class TLUControl:
 
     ### Basic TLU Control Functions ###
 
+    def write_clock_config(self, clock_config_path):
+        self.clock_controller.write_clock_conf(clock_config_path)
+
     def get_device_id(self) -> int:
         """Read back board id. Consists of six blocks of hex data
 
