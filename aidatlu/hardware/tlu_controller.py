@@ -14,8 +14,8 @@ class TLUControl:
 
     def __init__(self, hw, i2c=I2CCore) -> None:
         self.log = logger.setup_main_logger(__class__.__name__)
-        self.i2c = i2c(hw)
         self.i2c_hw = hw
+        self.i2c = i2c(self.i2c_hw)
         self.log.info("Initializing IPbus interface")
         self.i2c.init()
 
@@ -44,7 +44,6 @@ class TLUControl:
         for i in range(6):
             self.dac_controller.set_threshold(i + 1, 0)
         # Resets all internal counters and raise the trigger veto.
-        self.set_run_active(False)
         self.reset_status()
         self.reset_counters()
         self.trigger_logic.set_trigger_veto(True)
