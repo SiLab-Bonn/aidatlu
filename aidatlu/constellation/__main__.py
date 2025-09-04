@@ -3,7 +3,7 @@ from constellation.core.logging import setup_cli_logging
 from constellation.core.datasender import DataSenderArgumentParser
 from constellation.core.satellite import SatelliteArgumentParser
 
-from .aidatlu_satellite import AidaTLU
+from aidatlu_satellite import AidaTLU
 
 
 def main(args=None):
