@@ -160,7 +160,7 @@ class AidaTLU(TransmitterSatellite):
         }
         # New data format: store 6 uint32 as bytes in little-endian
         payload = np.array(evt, dtype="<u4").tobytes()
-        data_record = self.new_data_record()
+        data_record = self.new_data_record(meta)
         data_record.add_block(payload)
         self.send_data_record(data_record)
 
