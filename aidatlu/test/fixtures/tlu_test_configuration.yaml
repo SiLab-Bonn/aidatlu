@@ -60,7 +60,7 @@ pmt_control:
 # Save and generate interpreted data from the raw data set. Set to 'True' or 'False'.
 # If no specific output path is provided, the data is saved in the default output data path (aidatlu/aidatlu/tlu_data).
 save_data: True
-output_data_path: 'aidatlu/test/fixtures/test_output_data/'
+output_data_path: 'aidatlu/test/fixtures/test_output_data'
 
 # zmq connection for status messages, leave it blank or set to off if not needed
 zmq_connection: off #"tcp://:7500"

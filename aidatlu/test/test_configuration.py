@@ -5,6 +5,7 @@ from aidatlu.main.config_parser import Configure, yaml_parser, toml_parser
 from aidatlu.hardware.ioexpander_controller import IOControl
 from aidatlu.main.tlu import AidaTLU
 from aidatlu.hardware.i2c import I2CCore
+from aidatlu.hardware.tlu_controller import TLUControl
 from aidatlu.test.utils import MockI2C
 
 FILEPATH = Path(__file__).parent
@@ -29,10 +30,8 @@ else:
     HW = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
     I2CMETHOD = I2CCore
 
-TLU = AidaTLU(
+TLU = TLUControl(
     HW,
-    CONFIG_FILE,
-    FILEPATH / "../misc/aida_tlu_clk_config.txt",
     i2c=I2CMETHOD,
 )
 

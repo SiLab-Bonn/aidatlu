@@ -4,6 +4,7 @@ import os
 import pytest
 from aidatlu.main.tlu import AidaTLU
 from aidatlu.hardware.i2c import I2CCore
+from aidatlu.hardware.tlu_controller import TLUControl
 from aidatlu.test.utils import MockI2C
 from aidatlu.main.config_parser import yaml_parser
 
@@ -35,26 +36,32 @@ TLU = AidaTLU(
     i2c=I2CMETHOD,
 )
 
+TLUCONTROL = TLUControl(
+    HW,
+    i2c=I2CMETHOD,
+)
+
 
 def test_check_ups():
     """Test read write TLU configurations"""
 
+    TLUCONTROL.reset_configuration()
     if MOCK:
-        TLU.set_event_fifo_csr(0)
-        assert TLU.get_event_fifo_csr() == 0
-        assert TLU.get_device_id() == 0xFFFFFFFFFFFF
-        assert TLU.get_fw_version() == -1
-        assert TLU.get_run_active() == 0
-        assert TLU.get_event_fifo_fill_level() == -1
-        assert TLU.get_timestamp() == -0x100000001
-        assert TLU.get_scalers() == [-1, -1, -1, -1, -1, -1]
+        TLUCONTROL.set_event_fifo_csr(0)
+        assert TLUCONTROL.get_event_fifo_csr() == 0
+        assert TLUCONTROL.get_device_id() == 0xFFFFFFFFFFFF
+        assert TLUCONTROL.get_fw_version() == -1
+        assert TLUCONTROL.get_run_active() == 0
+        assert TLUCONTROL.get_event_fifo_fill_level() == -1
+        assert TLUCONTROL.get_timestamp() == -0x100000001
+        assert TLUCONTROL.get_scalers() == [-1, -1, -1, -1, -1, -1]
         with pytest.raises(ValueError):
-            TLU.get_scaler(6)
+            TLUCONTROL.get_scaler(6)
     else:
-        TLU.set_event_fifo_csr(0)
-        assert TLU.get_event_fifo_csr() == 3
-        assert TLU.get_run_active() == 0
-        assert TLU.get_event_fifo_fill_level() == 0
+        TLUCONTROL.set_event_fifo_csr(0)
+        assert TLUCONTROL.get_event_fifo_csr() == 3
+        assert TLUCONTROL.get_run_active() == 0
+        assert TLUCONTROL.get_event_fifo_fill_level() == 0
 
 
 def test_configuration():
@@ -78,10 +85,10 @@ def test_run():
             return 0
 
         # Overwrite TLU methods needed for run loop
-        func_type = type(TLU.get_timestamp)
-        TLU.get_timestamp = func_type(_get_timestamp, TLU)
-        func_type = type(TLU.pull_fifo_event)
-        TLU.pull_fifo_event = func_type(_pull_fifo_event, TLU)
+        func_type = type(TLUCONTROL.get_timestamp)
+        TLU.tlu_controller.get_timestamp = func_type(_get_timestamp, TLUCONTROL)
+        func_type = type(TLUCONTROL.pull_fifo_event)
+        TLU.tlu_controller.pull_fifo_event = func_type(_pull_fifo_event, TLUCONTROL)
 
         TLU.configure()
         TLU.run()
