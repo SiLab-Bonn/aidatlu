@@ -26,8 +26,8 @@
 .. * :ref:`genindex`
 .. * :ref:`search`
 
-The **AIDA-2020 Trigger Logic Unit (TLU)** software package provides tools for configuring, controlling, 
-and monitoring the TLU hardware system.  
+The **AIDA-2020 Trigger Logic Unit (TLU)** software package provides tools for configuring, controlling,
+and monitoring the TLU hardware system.
 This documentation is organized to guide you from setup and configuration to
 code references.
 
@@ -72,8 +72,8 @@ Contents
 Getting Started
 ---------------
 
-- **New users**: Start with the :doc:`Introduction` sections.  
-- **System setup**: See :doc:`Configuration` for hardware and software configuration options.  
+- **New users**: Start with the :doc:`Introduction` sections.
+- **System setup**: See :doc:`Configuration` for hardware and software configuration options.
 - **Constellation**: For use with Constellation see :doc:`Constellation`.
 
 ----
@@ -94,4 +94,3 @@ Indices and Tables
 
 * :ref:`genindex`
 * :ref:`search`
-

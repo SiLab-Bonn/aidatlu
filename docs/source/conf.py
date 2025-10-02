@@ -35,7 +35,7 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx_mdinclude",
     "sphinx.ext.viewcode",
-    "sphinx_design"
+    "sphinx_design",
 ]
 
 autosectionlabel_prefix_document = True
