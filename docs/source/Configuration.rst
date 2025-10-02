@@ -1,5 +1,3 @@
-Configuration
-==================
 
 .. mdinclude:: ../../aidatlu/README.md
 
