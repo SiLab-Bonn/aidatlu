@@ -17,7 +17,7 @@ The satellite connects the AIDA-2020 TLU to the [Constellation](https://constell
 
 ## Building
 
-After installing [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html), with Python bindings `(uhal)`, install the [Aida-TLU](https://github.com/SiLab-Bonn/aidatlu) package with the constellation requirement.
+After installing [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html), with Python bindings (`uhal`), install the [Aida-TLU](https://github.com/SiLab-Bonn/aidatlu) package with the constellation requirement.
 
 ```bash
 pip install .[constellation]
@@ -29,23 +29,26 @@ A more detailed description of the prerequisites can also be found [here](https:
 
 Add the chosen cactus library path, where the default installation location is `/opt/cactus/`:
 
-```bash
+```sh
 export LD_LIBRARY_PATH=<install_location>/lib
 ```
 
 You also need to start the control hub:
-```bash
+
+```sh
 <install_location>/bin/controlhub_start
 ```
 
 Finally, start the satellite with:
-```bash
+
+```sh
 SatelliteAidaTLU -g testbeam -n TLU
 ```
 
-> [!NOTE]
-> The TLU configuration resets during launching and landing.
-> This means DUT interface signals (e.g. clock signals) are disrupted during these transitions.
+```{note}
+The TLU configuration resets during launching and landing.
+This means DUT interface signals (e.g. clock signals) are disrupted during these transitions.
+```
 
 ## Parameters
 
@@ -60,10 +63,13 @@ SatelliteAidaTLU -g testbeam -n TLU
 | `trigger_signal_delay` | (Required) Delays each individual trigger input by a given number of clock cycles (corresponds to `6.25ns` steps) | List | None |
 | `enable_clock_lemo_output` | (Optional) Enable the LEMO clock output. | String | False |
 | `pmt_power` | (Required) Sets the four PMT control voltages in V | List | None |
-| `clock_config` | (Optional) Specify a custom clock configuration. If no path is provided the TLU uses the default configuration. | String | `aidatlu/misc/aida_tlu_clk_config.txt` |
+| `clock_config` | (Optional) Specify a custom clock configuration. If no path is provided the TLU uses the default configuration. | String | None |
+
+The default clock configuration can be found in [`aidatlu/misc/aida_tlu_clk_config.txt`](https://github.com/SiLab-Bonn/aidatlu/blob/main/aidatlu/misc/aida_tlu_clk_config.txt).
 
 ### Configuration Example
-An example configuration for the AIDA-TLU satellite which could be dropped into a Constellation configuration as a starting point.
+
+An example configuration for the AIDA-TLU satellite which could be dropped into a Constellation configuration as a starting point:
 
 ```toml
 [satellites.AidaTLU]
