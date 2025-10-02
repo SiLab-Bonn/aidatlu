@@ -30,7 +30,7 @@ dependencies = [
 constellation = ["ConstellationDAQ"]
 hw = ["online_monitor"]  # uhal package needs to be installed manually!
 test = ["pytest", "pytest-cov", "pytest-sugar"]
-doc = ["sphinx", "myst_parser", "sphinx_mdinclude", "pydata-sphinx-theme"]
+doc = ["sphinx", "myst_parser", "sphinx_mdinclude", "pydata-sphinx-theme", "sphinx_design"]
 
 [tool.setuptools.dynamic]
 version = {attr = "aidatlu.__version__"}
