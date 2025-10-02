@@ -12,7 +12,7 @@ from constellation.core.cmdp import MetricsType
 from constellation.core.configuration import Configuration
 from constellation.core.message.cscp1 import SatelliteState
 from constellation.core.monitoring import schedule_metric
-from constellation.core.datasender import DataSender
+from constellation.core.transmitter_satellite import TransmitterSatellite
 
 from aidatlu import logger
 from aidatlu.hardware.i2c import I2CCore
@@ -21,7 +21,7 @@ from aidatlu.hardware.tlu_controller import TLUControl as TLU
 from aidatlu.test.utils import MockI2C
 
 
-class AidaTLU(DataSender):
+class AidaTLU(TransmitterSatellite):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -96,11 +96,11 @@ class AidaTLU(DataSender):
         self.last_pre_veto_trigger = self.aidatlu.trigger_logic.get_pre_veto_trigger()
 
         # Set Begin-of-run tags
-        self.BOR["BoardID"] = self.aidatlu.get_device_id()
+        self.bor["BoardID"] = self.aidatlu.get_device_id()
 
         # For EudaqNativeWriter compatibility
-        self.BOR["eudaq_event"] = "TluRawDataEvent"
-        self.BOR["frames_as_blocks"] = True
+        self.bor["eudaq_event"] = "TluRawDataEvent"
+        self.bor["frames_as_blocks"] = True
 
         return "Do starting complete"
 
@@ -160,7 +160,9 @@ class AidaTLU(DataSender):
         }
         # New data format: store 6 uint32 as bytes in little-endian
         payload = np.array(evt, dtype="<u4").tobytes()
-        self.data_queue.put((payload, meta))
+        data_record = self.new_data_record(meta)
+        data_record.add_block(payload)
+        self.send_data_record(data_record)
 
     def handle_status(self) -> None:
         """Status message handling in separate thread. Calculates run time and obtain trigger information and sent it out every second."""
