@@ -108,9 +108,8 @@ class AidaTLU:
             - self.last_pre_veto_trigger
         ) / (time - self.last_time)
         self.run_time = time
-        self.total_post_veto = self.tlu_controller.trigger_logic.get_post_veto_trigger()
-        self.total_pre_veto = self.tlu_controller.trigger_logic.get_pre_veto_trigger()
-        s0, s1, s2, s3, s4, s5 = self.tlu_controller.get_scalers()
+        self.total_post_veto = self.trigger_logic.get_post_veto_trigger()
+        self.total_pre_veto = self.trigger_logic.get_pre_veto_trigger()
 
         if self.zmq_address:
             self.socket.send_string(
@@ -145,33 +144,7 @@ class AidaTLU:
             )
         )
 
-        self.log.debug("Scaler %i:%i:%i:%i:%i:%i" % (s0, s1, s2, s3, s4, s5))
-        self.log.debug(
-            "FIFO level: %s" % self.tlu_controller.get_event_fifo_fill_level()
-        )
-        self.log.debug("FIFO level 2: %s" % self.tlu_controller.get_event_fifo_csr())
-        self.log.debug(
-            "fifo csr: %s fifo fill level: %s"
-            % (
-                self.tlu_controller.get_event_fifo_fill_level(),
-                self.tlu_controller.get_event_fifo_csr(),
-            )
-        )
-        self.log.debug(
-            "post: %s pre: %s"
-            % (
-                self.tlu_controller.trigger_logic.get_post_veto_trigger(),
-                self.tlu_controller.trigger_logic.get_pre_veto_trigger(),
-            )
-        )
-        self.log.debug("time stamp: %s" % (self.tlu_controller.get_timestamp()))
-        if (
-            self.run_time < 10
-        ):  # Logs trigger configuration when logging level is debug for the first 10s
-            current_event = self.tlu_controller.pull_fifo_event()
-            if np.size(current_event) > 1:
-                self.log_trigger_inputs(current_event[0:6])
-        if self.tlu_controller.get_event_fifo_csr() == 0x10:
+        if self.get_event_fifo_csr() == 0x10:
             self.log.warning("FIFO is full")
 
     def log_trigger_inputs(self, event_vector: list) -> None:
