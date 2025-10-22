@@ -286,7 +286,6 @@ class AidaTLU:
         self.run_time = time
         self.total_post_veto = self.trigger_logic.get_post_veto_trigger()
         self.total_pre_veto = self.trigger_logic.get_pre_veto_trigger()
-        s0, s1, s2, s3, s4, s5 = self.get_scalers()
 
         if self.zmq_address:
             self.socket.send_string(
@@ -317,27 +316,6 @@ class AidaTLU:
             )
         )
 
-        self.log.debug("Scaler %i:%i:%i:%i:%i:%i" % (s0, s1, s2, s3, s4, s5))
-        self.log.debug("FIFO level: %s" % self.get_event_fifo_fill_level())
-        self.log.debug("FIFO level 2: %s" % self.get_event_fifo_csr())
-        self.log.debug(
-            "fifo csr: %s fifo fill level: %s"
-            % (self.get_event_fifo_fill_level(), self.get_event_fifo_csr())
-        )
-        self.log.debug(
-            "post: %s pre: %s"
-            % (
-                self.trigger_logic.get_post_veto_trigger(),
-                self.trigger_logic.get_pre_veto_trigger(),
-            )
-        )
-        self.log.debug("time stamp: %s" % (self.get_timestamp()))
-        if (
-            self.run_time < 10
-        ):  # Logs trigger configuration when logging level is debug for the first 10s
-            current_event = self.pull_fifo_event()
-            if np.size(current_event) > 1:
-                self.log_trigger_inputs(current_event[0:6])
         if self.get_event_fifo_csr() == 0x10:
             self.log.warning("FIFO is full")
 
