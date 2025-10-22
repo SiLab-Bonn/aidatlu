@@ -20,11 +20,11 @@ class Configure:
         self.tlu.set_enable_record_data(1)
         self.log.info("TLU configured")
 
-    def get_data_handling(self) -> tuple:
+    def get_data_handling(self) -> bool:
         """Information about data handling.
 
         Returns:
-            tuple: two bools, save and interpret data.
+            bool: save and interpret data.
         """
 
         return self.conf["save_data"]
@@ -76,18 +76,18 @@ class Configure:
         dut = [0, 0, 0, 0]
         dut_mode = [0, 0, 0, 0]
         for i in range(4):
-            if self.tlu.config_parser.conf["DUT_%s" % (i + 1)] == "eudet":
+            if self.conf["DUT_%s" % (i + 1)] == "eudet":
                 self.tlu.io_controller.switch_led(i + 1, "g")
                 dut[i] = 2**i
                 # Clock output needs to be disabled for EUDET mode.
                 self.tlu.io_controller.clock_hdmi_output(i + 1, "off")
-            if self.tlu.config_parser.conf["DUT_%s" % (i + 1)] == "aidatrig":
+            if self.conf["DUT_%s" % (i + 1)] == "aidatrig":
                 self.tlu.io_controller.switch_led(i + 1, "w")
                 dut[i] = 2**i
                 dut_mode[i] = 2 ** (2 * i)
                 # In AIDA mode the clock output is needed.
                 self.tlu.io_controller.clock_hdmi_output(i + 1, "chip")
-            if self.tlu.config_parser.conf["DUT_%s" % (i + 1)] == "aida":
+            if self.conf["DUT_%s" % (i + 1)] == "aida":
                 self.tlu.io_controller.switch_led(i + 1, "b")
                 dut[i] = 2**i
                 dut_mode[i] = 3 * (2) ** (2 * i)
@@ -99,7 +99,7 @@ class Configure:
                 "DUT %i configured in %s"
                 % (
                     (i + 1),
-                    self.tlu.config_parser.conf["DUT_%s" % (i + 1)],
+                    self.conf["DUT_%s" % (i + 1)],
                 )
             )
             for i in range(4)
