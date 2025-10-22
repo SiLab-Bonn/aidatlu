@@ -108,8 +108,8 @@ class AidaTLU:
             - self.last_pre_veto_trigger
         ) / (time - self.last_time)
         self.run_time = time
-        self.total_post_veto = self.trigger_logic.get_post_veto_trigger()
-        self.total_pre_veto = self.trigger_logic.get_pre_veto_trigger()
+        self.total_post_veto = self.tlu_controller.trigger_logic.get_post_veto_trigger()
+        self.total_pre_veto = self.tlu_controller.trigger_logic.get_pre_veto_trigger()
 
         if self.zmq_address:
             self.socket.send_string(
@@ -144,7 +144,7 @@ class AidaTLU:
             )
         )
 
-        if self.get_event_fifo_csr() == 0x10:
+        if self.tlu_controller.get_event_fifo_csr() == 0x10:
             self.log.warning("FIFO is full")
 
     def log_trigger_inputs(self, event_vector: list) -> None:
