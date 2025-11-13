@@ -281,6 +281,33 @@ This operating mode is an extension of the AIDA mode.
 The difference to the standard AIDA mode is, that additionally at each trigger
 the trigger number is sent through RESET.
 
+Timing Measurement
+---------------------------------
+A 8-bit, 780 ps fine time stamp is assigned to each trigger input. These time stamps are saved as 'sc1-sc6'.
+These fine time stamps, in addition to the trigger logic system of the TLU, can be utilized for timing measurements between trigger inputs.
+
+A feature of the TLU is, that each trigger input is recorded during a logic window, even when the specific trigger input is not needed in the trigger logic word.
+Connected scintillator inputs, that are not part of the trigger logic configuration can still be found in the DATA of the TLU.
+An active trigger input is denoted in the 'input1 - input6' field of the TLU data.
+One has to account here for the according stretch and delays of the trigger inputs.
+
+The trigger inputs can be configured to trigger on a rising or falling edge of a signal.
+For accurate timings, these should be synchronized. When comparing for example a falling edge of a scintillator signal with the positive digital rising edge of a HitOR
+signal, one of these inputs needs to be inverted.
+The TLU allows the inversion of these trigger signals in the logic part by assigning a 'not' to the trigger input.
+A 'not trigger' is always false in the trigger input field.
+
+An example for a configuration of a timing measurement using a TJ-Monopix2 and a scintillator (TJ-HitOR in CH3, scintillator in CH1) is denoted below:
+
+    * threshold_1: -0.07
+    * threshold_3: 0.2
+    * trigger_inputs_logic: (not CH3)
+    * polarity: falling
+    * stretch: [31, 2, 2, 2, 2, 2]
+    * delay: [11, 0, 4, 0, 0, 0]
+
+Offline, the data is selected to achieve the specific logic configuration 'CH1 & (not CH3)'.
+
 Additional features
 ********************
 
