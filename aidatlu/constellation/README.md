@@ -1,8 +1,9 @@
 ---
 title: "AidaTLU"
 description: "Satellite for the AIDA-2020 TLU using a Python based control software"
+category: "Readout Systems"
 language: "Python"
-category: "External"
+parent_class: "TransmitterSatellite"
 ---
 
 ## Description
