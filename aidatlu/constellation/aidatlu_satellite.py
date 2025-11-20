@@ -139,7 +139,7 @@ class AidaTLU(DataSender):
 
     def _handle_event(self, evt: list) -> None:
         # Calculate timestamp in nanoseconds from TLU 40MHz clock:
-        timestamp = 25 * (((np.uint64(evt[0]) & 0x0000FFFF) << 32) + evt[1])
+        timestamp = 25 * (((np.uint64(evt[0]) & np.uint64(0x0000FFFF)) << 32) + evt[1])
         # Collect metadata
         meta = {
             "flag_trigger": True,
