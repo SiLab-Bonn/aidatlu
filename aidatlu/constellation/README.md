@@ -1,8 +1,9 @@
 ---
 title: "AidaTLU"
-description: "Satellite for the AIDA-2020 TLU using a Python based control software"
+description: "Satellite for the AIDA-2020 TLU using a Python-based control software"
+category: "Readout Systems"
 language: "Python"
-category: "External"
+parent_class: "TransmitterSatellite"
 ---
 
 ## Description
@@ -11,13 +12,13 @@ The AIDA-2020 Trigger Logic Unit is designed to provide flexible trigger configu
 
 The Python-based control software for the AIDA-2020 TLU provides a comprehensive interface for controlling the TLU.
 The software establishes a connection to the hardware and allows for easy configuration of different trigger setups.
-Information over each individual trigger signal is saved in a compressed and human-readable HDF5 format.
+Information about each individual trigger signal is saved in a compressed (blosc) and human-readable HDF5 format.
 
 The satellite connects the AIDA-2020 TLU to the [Constellation](https://constellation.pages.desy.de/) control and data acquisition framework.
 
 ## Building
 
-After installing [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html), with Python bindings (`uhal`), install the [Aida-TLU](https://github.com/SiLab-Bonn/aidatlu) package with the constellation requirement.
+After installing [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html) with Python bindings (`uhal`), install the [Aida-TLU](https://github.com/SiLab-Bonn/aidatlu) package with the constellation requirement.
 
 ```bash
 pip install .[constellation]
@@ -27,7 +28,7 @@ A more detailed description of the prerequisites can also be found [here](https:
 
 ## Usage
 
-Add the chosen cactus library path, where the default installation location is `/opt/cactus/`:
+Add the chosen cactus library path, where the default install location is `/opt/cactus/`:
 
 ```sh
 export LD_LIBRARY_PATH=<install_location>/lib
@@ -54,16 +55,16 @@ This means DUT interface signals (e.g. clock signals) are disrupted during these
 
 | Configuration | Description | Type | Default Value |
 |-----------|-------------|------| ------|
-| `internal_trigger_rate` | (Optional) Generates internal triggers with a given frequency given in Hz | Integer | 0 |
-| `dut_interfaces` | (Required) Specify the operation mode of the DUT interface (`aida`, `eudet`, `aidatrig`, `off`) given as list with a required length of 4. Where `aida` and `eudet` corresponds to the classic AIDA and EUDET mode respectively and `aidatrig` to the AIDA-mode with handshake. Disable a DUT interface with `off`. | List | None |
-| `trigger_threshold` | (Required) Threshold setting of each individual trigger input channel given in V | List | None |
-| `trigger_inputs_logic` | (Required) Trigger Logic configuration accept a Python expression for the trigger inputs. The logic is set by using the variables for the input channels `CH1`, `CH2`, `CH3`, `CH4`, `CH5` and `CH6` and the Python logic operators `and`, `or`, `not` and so on. Don't forget to use brackets... | String | None |
+| `internal_trigger_rate` | (Optional) Generates internal triggers with a given frequency given in Hz. | Integer | 0 |
+| `dut_interfaces` | (Required) Specify the operation mode of the DUT interface (`aida`, `eudet`, `aidatrig`, `off`), given as list with a required length of 4. `aida` and `eudet` correspond to the classic AIDA and EUDET mode respectively and `aidatrig` to the AIDA-mode with handshake. Disable a DUT interface with `off`. | List | None |
+| `trigger_threshold` | (Required) Threshold setting of each individual trigger input channel given in V. | List | None |
+| `trigger_inputs_logic` | (Required) Trigger Logic configuration accepts a Python expression for the trigger inputs. The logic is set by using the variables for the input channels `CH1`, `CH2`, `CH3`, `CH4`, `CH5` and `CH6` and the Python logic operators `and`, `or`, `not` and so on. Don't forget to use brackets... | String | None |
 | `trigger_polarity` | (Optional) TLU can trigger on a rising or falling edge. Set to `rising` or `falling` | String | `falling` |
 | `trigger_signal_stretch` | (Required) Stretches each individual trigger input by a given number of clock cycles (corresponds to `6.25ns` steps) | List | None |
 | `trigger_signal_delay` | (Required) Delays each individual trigger input by a given number of clock cycles (corresponds to `6.25ns` steps) | List | None |
 | `enable_clock_lemo_output` | (Optional) Enable the LEMO clock output. | String | False |
 | `pmt_power` | (Required) Sets the four PMT control voltages in V | List | None |
-| `clock_config` | (Optional) Specify a custom clock configuration. If no path is provided the TLU uses the default configuration. | String | None |
+| `clock_config` | (Optional) Specify a custom clock configuration. If no path is provided, the TLU uses the default configuration. | String | None |
 
 The default clock configuration can be found in [`aidatlu/misc/aida_tlu_clk_config.txt`](https://github.com/SiLab-Bonn/aidatlu/blob/main/aidatlu/misc/aida_tlu_clk_config.txt).
 
