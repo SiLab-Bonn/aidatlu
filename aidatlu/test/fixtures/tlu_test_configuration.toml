@@ -10,7 +10,7 @@ trigger_signal_delay = [0, 1, 0, 0, 3, 0]
 enable_clock_lemo_output = 'True'
 pmt_power = [0.8, 0.8, 0, -0.2]
 save_data = 'True'
-output_data_path = 'aidatlu/test/fixtures/test_output_data/'
+output_data_path = 'aidatlu/test/fixtures/test_output_data'
 zmq_connection = 'False'
 
 # Optional stop conditions can also be added to the configuration.
