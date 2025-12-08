@@ -100,7 +100,7 @@ class AidaTLU(TransmitterSatellite):
 
         # For EudaqNativeWriter compatibility
         self.bor["eudaq_event"] = "TluRawDataEvent"
-        self.bor["frames_as_blocks"] = True
+        self.bor["write_as_blocks"] = True
 
         return "Do starting complete"
 
