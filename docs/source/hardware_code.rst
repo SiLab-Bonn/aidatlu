@@ -32,6 +32,12 @@ IO Expander Control
 .. autoclass:: aidatlu.hardware.ioexpander_controller.IOControl
     :members:
 
+TLU Control
+--------------------
+
+.. autoclass:: aidatlu.hardware.tlu_controller.TLUControl
+    :members:
+
 Trigger Control
 --------------------
 
