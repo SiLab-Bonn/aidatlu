@@ -64,7 +64,7 @@ html_theme_options = {
     # "show_nav_level": 3,
     "primary_sidebar_end": ["indices.html", "sidebar-ethical-ads.html"],
     "secondary_sidebar_items": [],
-    # [...]
+    "header_links_before_dropdown": 4,
 }
 
 html_sidebars = {"*": ["page-toc", "edit-this-page", "sourcelink"]}
