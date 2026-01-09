@@ -1,30 +1,6 @@
-.. AIDATLU documentation master file, created by
-   sphinx-quickstart on Mon Nov 20 13:34:00 2023.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
-.. Welcome to AIDA-TLU's documentation!
-.. =====================================
-
-.. .. toctree::
-..    :maxdepth: 2
-
-..    Introduction
-..    Configuration
-..    Documentation
-..    Constellation
-
-.. .. toctree::
-..    :maxdepth: 1
-
-..    hardware_code
-..    main_code
-
-.. Indices and tables
-.. ==================
-
-.. * :ref:`genindex`
-.. * :ref:`search`
+AIDA-2020-TLU
+--------------
 
 The **AIDA-2020 Trigger Logic Unit (TLU)** software package provides tools for configuring, controlling,
 and monitoring the TLU hardware system.
@@ -44,7 +20,7 @@ Contents
       :link-type: doc
       :class-card: sd-card sd-shadow-sm sd-rounded-lg
 
-   .. grid-item-card:: 🔧 Configurations
+   .. grid-item-card:: 🔧 Configuration
       :link: Configuration
       :link-type: doc
       :class-card: sd-card sd-shadow-sm sd-rounded-lg

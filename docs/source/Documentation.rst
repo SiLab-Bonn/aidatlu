@@ -335,7 +335,7 @@ The tests load the configuration file ```tlu_test_configuration.yaml```.
 Individual settings in the test configuration file can not be changed.
 
 Log Level
-------
+----------
 To set different log levels change the default log level in logger.py 'setup_main_logger' and 'setup_derived_logger'.
 
 Integration into EUDAQ2
