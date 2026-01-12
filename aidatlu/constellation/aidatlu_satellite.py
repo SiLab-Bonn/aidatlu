@@ -53,6 +53,9 @@ class AidaTLU(TransmitterSatellite):
         return "Initializing complete"
 
     def do_launching(self, payload: Any = None) -> str:
+        self.aidatlu.reset_counters()
+        self.aidatlu.reset_fifo()
+        self.aidatlu.reset_timestamp()
         self.config_parser.configure()
         self.conf_list = self.config_parser.get_configuration_table()
         self.aidatlu.get_event_fifo_fill_level()
