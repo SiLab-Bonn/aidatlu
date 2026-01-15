@@ -1,6 +1,6 @@
 # AIDA-TLU
 [![tests](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/tests.yml/badge.svg)](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/tests.yml)
-[![pre-commit](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/pre-commit.yml)
+[![pre-commit](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/pre_commit.yml)
 [![documentation](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/documentation.yml/badge.svg)](https://github.com/SiLab-Bonn/aidatlu/actions/workflows/documentation.yml)
 
 Repository for controlling the AIDA-2020 Trigger Logic Unit (TLU) with Python using uHAL bindings from [IPbus](https://ipbus.web.cern.ch/).
