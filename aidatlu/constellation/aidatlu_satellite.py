@@ -181,7 +181,7 @@ class AidaTLU(TransmitterSatellite):
                 self.log_status(current_time)
 
     def log_status(self, time: int) -> None:
-        """Logs the status of the TLU run with trigger number, runtime usw.
+        """Logs the status of the TLU run with runtime, pre- and post-veto numbers/rates.
            Also calculates the mean trigger frequency between function calls.
 
         Args:
