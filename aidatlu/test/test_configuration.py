@@ -1,11 +1,11 @@
 from pathlib import Path
 import os
 import pytest
-from aidatlu.main.config_parser import Configure, yaml_parser, toml_parser
+from aidatlu.main.config_parser import yaml_parser, toml_parser
 from aidatlu.hardware.ioexpander_controller import IOControl
 from aidatlu.main.tlu import AidaTLU
 from aidatlu.hardware.i2c import I2CCore
-from aidatlu.hardware.tlu_controller import TLUControl
+from aidatlu.hardware.tlu_controller import TLUControl, TLUConfigure
 from aidatlu.test.utils import MockI2C
 
 FILEPATH = Path(__file__).parent
@@ -39,15 +39,15 @@ TLU = TLUControl(
 def test_config_parser():
     """Test parsing the configuration file"""
 
-    config_parser = Configure(
+    tlu_configure = TLUConfigure(
         tlu=TLU,
         config_dict=CONFIG_FILE,
     )
-    assert isinstance(config_parser.get_configuration_table(), list)
-    assert CONFIG_FILE["save_data"] == config_parser.get_data_handling()
-    assert CONFIG_FILE["output_data_path"] == config_parser.get_output_data_path()
-    assert (None, CONFIG_FILE["timeout"]) == config_parser.get_stop_condition()
-    assert CONFIG_FILE["zmq_connection"] == config_parser.get_zmq_connection()
+    assert isinstance(tlu_configure.get_configuration_table(), list)
+    assert CONFIG_FILE["save_data"] == tlu_configure.get_data_handling()
+    assert CONFIG_FILE["output_data_path"] == tlu_configure.get_output_data_path()
+    assert (None, CONFIG_FILE["timeout"]) == tlu_configure.get_stop_condition()
+    assert CONFIG_FILE["zmq_connection"] == tlu_configure.get_zmq_connection()
 
     config_toml_path = FILEPATH / "fixtures" / "tlu_test_configuration.toml"
     assert toml_parser(config_toml_path) == yaml_parser(CONFIG_FILE_PATH)
@@ -55,11 +55,11 @@ def test_config_parser():
 
 def test_dut_configuration():
     """Test configuration of the DUT interfaces"""
-    config_parser = Configure(
+    tlu_configure = TLUConfigure(
         tlu=TLU,
         config_dict=CONFIG_FILE,
     )
-    config_parser.conf_dut()
+    tlu_configure.conf_dut()
 
     assert TLU.i2c.read_register("DUTInterfaces.DUTMaskR") == 0x7
     assert TLU.i2c.read_register("DUTInterfaces.DUTInterfaceModeR") == 0x13
@@ -83,11 +83,11 @@ def test_dut_configuration():
 
 def test_trigger_logic_configuration():
     """Test configuration of the trigger logic"""
-    config_parser = Configure(
+    tlu_configure = TLUConfigure(
         tlu=TLU,
         config_dict=CONFIG_FILE,
     )
-    config_parser.conf_trigger_logic()
+    tlu_configure.conf_trigger_logic()
     if MOCK:
         assert TLU.i2c.read_register("triggerInputs.InvertEdgeW") == 0x1
         assert TLU.i2c.read_register("triggerLogic.InternalTriggerIntervalW") == 0x640
@@ -125,11 +125,11 @@ def test_trigger_logic_configuration():
 
 def test_trigger_input_configuration():
     """Test configuration of the trigger inputs"""
-    config_parser = Configure(
+    tlu_configure = TLUConfigure(
         tlu=TLU,
         config_dict=CONFIG_FILE,
     )
-    config_parser.conf_trigger_inputs()
+    tlu_configure.conf_trigger_inputs()
     if MOCK:
         # Write array concatenates array bitwise, this is not implemented in the mock
         mem_addr = 0x18 + (0 & 0x7)
@@ -153,11 +153,11 @@ def test_trigger_input_configuration():
 
 def test_conf_auxillary():
     """Test PMT power and LEMO clock I/O"""
-    config_parser = Configure(
+    tlu_configure = TLUConfigure(
         tlu=TLU,
         config_dict=CONFIG_FILE,
     )
-    config_parser.conf_auxillary()
+    tlu_configure.conf_auxillary()
 
     if MOCK:
         # Write array concatenates array bitwise, this is not implemented in the mock
