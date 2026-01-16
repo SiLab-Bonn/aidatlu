@@ -202,7 +202,7 @@ class AidaTLU(TransmitterSatellite):
         self.last_post_veto_trigger = self.aidatlu.get_post_veto_trigger_number()
         self.last_pre_veto_trigger = self.aidatlu.get_pre_veto_trigger_number()
 
-        self.log.info(
+        self.log.debug(
             "Run time: %.1f s, Pre veto: %s, Post veto: %s, Pre veto rate: %.f Hz, Post veto rate.: %.f Hz"
             % (
                 self.run_time,
