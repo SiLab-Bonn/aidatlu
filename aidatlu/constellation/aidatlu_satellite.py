@@ -233,21 +233,21 @@ class AidaTLU(TransmitterSatellite):
         else:
             return None
 
-    @schedule_metric("", MetricsType.LAST_VALUE, 1)
+    @schedule_metric("", MetricsType.LAST_VALUE, 5)
     def post_veto(self) -> Any:
         if self.fsm.current_state_value == SatelliteState.RUN:
             return self.aidatlu.get_post_veto_trigger_number()
         else:
             return None
 
-    @schedule_metric("", MetricsType.LAST_VALUE, 1)
+    @schedule_metric("", MetricsType.LAST_VALUE, 5)
     def pre_veto(self) -> Any:
         if self.fsm.current_state_value == SatelliteState.RUN:
             return self.aidatlu.get_pre_veto_trigger_number()
         else:
             return None
 
-    @schedule_metric("", MetricsType.LAST_VALUE, 1)
+    @schedule_metric("", MetricsType.LAST_VALUE, 5)
     def sc0(self) -> Any:
         if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
             self.log.debug("sc0: %s" % self.aidatlu.get_scaler(0))
@@ -255,35 +255,35 @@ class AidaTLU(TransmitterSatellite):
         else:
             return None
 
-    @schedule_metric("", MetricsType.LAST_VALUE, 1)
+    @schedule_metric("", MetricsType.LAST_VALUE, 5)
     def sc1(self) -> Any:
         if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
             return self.aidatlu.get_scaler(1)
         else:
             return None
 
-    @schedule_metric("", MetricsType.LAST_VALUE, 1)
+    @schedule_metric("", MetricsType.LAST_VALUE, 5)
     def sc2(self) -> Any:
         if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
             return self.aidatlu.get_scaler(2)
         else:
             return None
 
-    @schedule_metric("", MetricsType.LAST_VALUE, 1)
+    @schedule_metric("", MetricsType.LAST_VALUE, 5)
     def sc3(self) -> Any:
         if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
             return self.aidatlu.get_scaler(3)
         else:
             return None
 
-    @schedule_metric("", MetricsType.LAST_VALUE, 1)
+    @schedule_metric("", MetricsType.LAST_VALUE, 5)
     def sc4(self) -> Any:
         if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
             return self.aidatlu.get_scaler(4)
         else:
             return None
 
-    @schedule_metric("", MetricsType.LAST_VALUE, 1)
+    @schedule_metric("", MetricsType.LAST_VALUE, 5)
     def sc5(self) -> Any:
         if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
             return self.aidatlu.get_scaler(5)
