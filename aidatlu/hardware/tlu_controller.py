@@ -167,7 +167,7 @@ class TLUControl:
         """Get current time stamp.
 
         Returns:
-            int: Time stamp is not formatted.
+            int: Time stamp in 40MHz clock cycles.
         """
         time = self.i2c.read_register("Event_Formatter.CurrentTimestampHR")
         time = time << 32

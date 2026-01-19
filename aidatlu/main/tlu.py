@@ -93,7 +93,7 @@ class AidaTLU:
                     self.stop_condition = True
 
     def log_sent_status(self, time: int) -> None:
-        """Logs the status of the TLU run with trigger number, runtime usw.
+        """Logs the status of the TLU run with runtime, pre- and post-veto numbers/rates.
            Also calculates the mean trigger frequency between function calls.
 
         Args:
