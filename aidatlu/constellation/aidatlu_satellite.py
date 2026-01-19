@@ -16,8 +16,8 @@ from constellation.core.transmitter_satellite import TransmitterSatellite
 
 from aidatlu import logger
 from aidatlu.hardware.i2c import I2CCore
-from aidatlu.main.config_parser import Configure, toml_parser
-from aidatlu.hardware.tlu_controller import TLUControl as TLU
+from aidatlu.main.config_parser import toml_parser
+from aidatlu.hardware.tlu_controller import TLUControl, TLUConfigure
 from aidatlu.test.utils import MockI2C
 
 
@@ -53,18 +53,18 @@ class AidaTLU(TransmitterSatellite):
         return "Initializing complete"
 
     def do_launching(self, payload: Any = None) -> str:
-        self.aidatlu.reset_counters()
-        self.aidatlu.reset_fifo()
-        self.aidatlu.reset_timestamp()
-        self.config_parser.configure()
-        self.conf_list = self.config_parser.get_configuration_table()
-        self.aidatlu.get_event_fifo_fill_level()
-        self.aidatlu.get_event_fifo_csr()
-        self.aidatlu.get_scalers()
+        self.tlu_controller.reset_counters()
+        self.tlu_controller.reset_fifo()
+        self.tlu_controller.reset_timestamp()
+        self.tlu_configure.configure()
+        self.conf_list = self.tlu_configure.get_configuration_table()
+        self.tlu_controller.get_event_fifo_fill_level()
+        self.tlu_controller.get_event_fifo_csr()
+        self.tlu_controller.get_scalers()
         return "Do launching complete"
 
     def do_landing(self) -> str:
-        self.aidatlu.reset_configuration()
+        self.tlu_controller.reset_configuration()
         return "Do landing complete"
 
     def do_reconfigure(self, config: Configuration) -> str:
@@ -84,22 +84,30 @@ class AidaTLU(TransmitterSatellite):
                 return 0
 
             # Overwrite TLU methods needed for run loop
-            func_type = type(self.aidatlu.get_timestamp)
-            self.aidatlu.get_timestamp = func_type(_get_timestamp, self.aidatlu)
-            func_type = type(self.aidatlu.pull_fifo_event)
-            self.aidatlu.pull_fifo_event = func_type(_pull_fifo_event, self.aidatlu)
+            func_type = type(self.tlu_controller.get_timestamp)
+            self.tlu_controller.get_timestamp = func_type(
+                _get_timestamp, self.tlu_controller
+            )
+            func_type = type(self.tlu_controller.pull_fifo_event)
+            self.tlu_controller.pull_fifo_event = func_type(
+                _pull_fifo_event, self.tlu_controller
+            )
 
-        self.aidatlu.start_run()
-        self.aidatlu.get_fw_version()
-        self.aidatlu.get_device_id()
+        self.tlu_controller.start_run()
+        self.tlu_controller.get_fw_version()
+        self.tlu_controller.get_device_id()
         # reset starting parameter
-        self.start_time = self.aidatlu.get_timestamp()
+        self.start_time = self.tlu_controller.get_timestamp()
         self.last_time = 0
-        self.last_post_veto_trigger = self.aidatlu.trigger_logic.get_post_veto_trigger()
-        self.last_pre_veto_trigger = self.aidatlu.trigger_logic.get_pre_veto_trigger()
+        self.last_post_veto_trigger = (
+            self.tlu_controller.trigger_logic.get_post_veto_trigger()
+        )
+        self.last_pre_veto_trigger = (
+            self.tlu_controller.trigger_logic.get_pre_veto_trigger()
+        )
 
         # Set Begin-of-run tags
-        self.bor["BoardID"] = self.aidatlu.get_device_id()
+        self.bor["BoardID"] = self.tlu_controller.get_device_id()
 
         # For EudaqNativeWriter compatibility
         self.bor["eudaq_event"] = "TluRawDataEvent"
@@ -115,18 +123,18 @@ class AidaTLU(TransmitterSatellite):
         # Thus, add data to a queue and pop in blocks of 6 uint32s
         data_queue = deque()
         while not self._state_thread_evt.is_set():
-            evt = self.aidatlu.pull_fifo_event()
+            evt = self.tlu_controller.pull_fifo_event()
             if np.size(evt) > 1:
                 data_queue.extend(evt)
                 while len(data_queue) >= 6:
                     self._handle_event([data_queue.popleft() for _ in range(6)])
 
         t.do_run = False
-        self.aidatlu.stop_run()
+        self.tlu_controller.stop_run()
         return "Do running complete"
 
     def do_stopping(self) -> str:
-        self.aidatlu.pull_fifo_event()
+        self.tlu_controller.pull_fifo_event()
         self.log.info("Run finished")
         return "Do stopping complete"
 
@@ -138,20 +146,20 @@ class AidaTLU(TransmitterSatellite):
             self.clock_file = str(self.file_path) + "/../misc/aida_tlu_clk_config.txt"
         else:
             self.clock_file = self.config_file["clock_config"]
-        self.aidatlu = TLU(self.hw, i2c=self.i2c_method)
-        self.aidatlu.write_clock_config(self.clock_file)
+        self.tlu_controller = TLUControl(self.hw, i2c=self.i2c_method)
+        self.tlu_controller.write_clock_config(self.clock_file)
 
-        self.config_parser = Configure(self.aidatlu, self.config_file)
-        self.aidatlu.reset_configuration()
+        self.tlu_configure = TLUConfigure(self.tlu_controller, self.config_file)
+        self.tlu_controller.reset_configuration()
         # Resets aidatlu loggers and replaces them with constellation loggers
         logger._reset_all_loggers()
-        self.aidatlu.log = self.log
-        self.aidatlu.io_controller.log = self.log
-        self.aidatlu.dac_controller.log = self.log
-        self.aidatlu.clock_controller.log = self.log
-        self.aidatlu.trigger_logic.log = self.log
-        self.aidatlu.dut_logic.log = self.log
-        self.config_parser.log = self.log
+        self.tlu_controller.log = self.log
+        self.tlu_controller.io_controller.log = self.log
+        self.tlu_controller.dac_controller.log = self.log
+        self.tlu_controller.clock_controller.log = self.log
+        self.tlu_controller.trigger_logic.log = self.log
+        self.tlu_controller.dut_logic.log = self.log
+        self.tlu_configure.log = self.log
 
     def _handle_event(self, evt: list) -> None:
         # Calculate timestamp in nanoseconds from TLU 40MHz clock:
@@ -174,7 +182,7 @@ class AidaTLU(TransmitterSatellite):
         t = threading.current_thread()
         while getattr(t, "do_run", True):
             time.sleep(0.5)
-            last_time = self.aidatlu.get_timestamp()
+            last_time = self.tlu_controller.get_timestamp()
             current_time = (last_time - self.start_time) * 25 / 1000000000
             # Logs and poss. sends status every 1s.
             if current_time - self.last_time > 1:
@@ -188,19 +196,21 @@ class AidaTLU(TransmitterSatellite):
             time (int): current runtime of the TLU
         """
         self.post_veto_rate = (
-            self.aidatlu.get_post_veto_trigger_number() - self.last_post_veto_trigger
+            self.tlu_controller.get_post_veto_trigger_number()
+            - self.last_post_veto_trigger
         ) / (time - self.last_time)
         self.pre_veto_rate = (
-            self.aidatlu.get_pre_veto_trigger_number() - self.last_pre_veto_trigger
+            self.tlu_controller.get_pre_veto_trigger_number()
+            - self.last_pre_veto_trigger
         ) / (time - self.last_time)
         self.run_time = time
-        self.total_post_veto = self.aidatlu.get_post_veto_trigger_number()
-        self.total_pre_veto = self.aidatlu.get_pre_veto_trigger_number()
-        s0, s1, s2, s3, s4, s5 = self.aidatlu.get_scalers()
+        self.total_post_veto = self.tlu_controller.get_post_veto_trigger_number()
+        self.total_pre_veto = self.tlu_controller.get_pre_veto_trigger_number()
+        s0, s1, s2, s3, s4, s5 = self.tlu_controller.get_scalers()
 
         self.last_time = time
-        self.last_post_veto_trigger = self.aidatlu.get_post_veto_trigger_number()
-        self.last_pre_veto_trigger = self.aidatlu.get_pre_veto_trigger_number()
+        self.last_post_veto_trigger = self.tlu_controller.get_post_veto_trigger_number()
+        self.last_pre_veto_trigger = self.tlu_controller.get_pre_veto_trigger_number()
 
         self.log.debug(
             "Run time: %.1f s, Pre veto: %s, Post veto: %s, Pre veto rate: %.f Hz, Post veto rate.: %.f Hz"
@@ -212,7 +222,7 @@ class AidaTLU(TransmitterSatellite):
                 self.post_veto_rate,
             )
         )
-        if self.aidatlu.get_event_fifo_csr() == 0x10:
+        if self.tlu_controller.get_event_fifo_csr() == 0x10:
             self.log.warning("FIFO is full")
 
     @schedule_metric("Hz", MetricsType.LAST_VALUE, 1)
@@ -236,56 +246,56 @@ class AidaTLU(TransmitterSatellite):
     @schedule_metric("", MetricsType.LAST_VALUE, 1)
     def post_veto(self) -> Any:
         if self.fsm.current_state_value == SatelliteState.RUN:
-            return self.aidatlu.get_post_veto_trigger_number()
+            return self.tlu_controller.get_post_veto_trigger_number()
         else:
             return None
 
     @schedule_metric("", MetricsType.LAST_VALUE, 1)
     def pre_veto(self) -> Any:
         if self.fsm.current_state_value == SatelliteState.RUN:
-            return self.aidatlu.get_pre_veto_trigger_number()
+            return self.tlu_controller.get_pre_veto_trigger_number()
         else:
             return None
 
     @schedule_metric("", MetricsType.LAST_VALUE, 1)
     def sc0(self) -> Any:
         if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
-            self.log.debug("sc0: %s" % self.aidatlu.get_scaler(0))
-            return self.aidatlu.get_scaler(0)
+            self.log.debug("sc0: %s" % self.tlu_controller.get_scaler(0))
+            return self.tlu_controller.get_scaler(0)
         else:
             return None
 
     @schedule_metric("", MetricsType.LAST_VALUE, 1)
     def sc1(self) -> Any:
         if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
-            return self.aidatlu.get_scaler(1)
+            return self.tlu_controller.get_scaler(1)
         else:
             return None
 
     @schedule_metric("", MetricsType.LAST_VALUE, 1)
     def sc2(self) -> Any:
         if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
-            return self.aidatlu.get_scaler(2)
+            return self.tlu_controller.get_scaler(2)
         else:
             return None
 
     @schedule_metric("", MetricsType.LAST_VALUE, 1)
     def sc3(self) -> Any:
         if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
-            return self.aidatlu.get_scaler(3)
+            return self.tlu_controller.get_scaler(3)
         else:
             return None
 
     @schedule_metric("", MetricsType.LAST_VALUE, 1)
     def sc4(self) -> Any:
         if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
-            return self.aidatlu.get_scaler(4)
+            return self.tlu_controller.get_scaler(4)
         else:
             return None
 
     @schedule_metric("", MetricsType.LAST_VALUE, 1)
     def sc5(self) -> Any:
         if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
-            return self.aidatlu.get_scaler(5)
+            return self.tlu_controller.get_scaler(5)
         else:
             return None
