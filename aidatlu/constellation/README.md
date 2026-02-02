@@ -12,7 +12,6 @@ The AIDA-2020 Trigger Logic Unit is designed to provide flexible trigger configu
 
 The Python-based control software for the AIDA-2020 TLU provides a comprehensive interface for controlling the TLU.
 The software establishes a connection to the hardware and allows for easy configuration of different trigger setups.
-Information about each individual trigger signal is saved in a compressed (blosc) and human-readable HDF5 format.
 
 The satellite connects the AIDA-2020 TLU to the [Constellation](https://constellation.pages.desy.de/) control and data acquisition framework.
 
