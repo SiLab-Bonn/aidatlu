@@ -30,13 +30,13 @@ A more detailed description of the prerequisites can also be found [here](https:
 Add the chosen cactus library path, where the default install location is `/opt/cactus/`:
 
 ```sh
-export LD_LIBRARY_PATH=<install_location>/lib
+export LD_LIBRARY_PATH=/opt/cactus/lib
 ```
 
 You also need to start the control hub:
 
 ```sh
-<install_location>/bin/controlhub_start
+/opt/cactus/bin/controlhub_start
 ```
 
 Finally, start the satellite with:
