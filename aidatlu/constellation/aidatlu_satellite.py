@@ -121,10 +121,10 @@ class AidaTLU(TransmitterSatellite):
                     self._handle_event([data_queue.popleft() for _ in range(6)])
 
         t.do_run = False
-        self.aidatlu.stop_run()
         return "Do running complete"
 
     def do_stopping(self) -> str:
+        self.aidatlu.stop_run()
         self.aidatlu.pull_fifo_event()
         self.log.info("Run finished")
         return "Do stopping complete"
