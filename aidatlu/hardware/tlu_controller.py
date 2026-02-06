@@ -285,6 +285,7 @@ class TLUConfigure:
         """Parse the configuration for the DUT interface to the AIDATLU."""
         dut = [0, 0, 0, 0]
         dut_mode = [0, 0, 0, 0]
+        ignore_busy = 0
         for i in range(4):
             if self.conf["DUT_%s" % (i + 1)] == "eudet":
                 self.tlu.io_controller.switch_led(i + 1, "g")
@@ -303,6 +304,9 @@ class TLUConfigure:
                 dut_mode[i] = 3 * (2) ** (2 * i)
                 self.tlu.io_controller.clock_hdmi_output(i + 1, "chip")
             self.tlu.io_controller.configure_hdmi(i + 1, "0111")
+            ignore_busy ^= self.conf["DUT_%s_ignore_busy" % (i + 1)] << i
+            if ["DUT_%s_ignore_busy" % (i + 1)] == True:
+                self.log.info("DUT interface %i ignores busy" % (i + 1))
 
         [
             self.log.info(
@@ -327,7 +331,7 @@ class TLUConfigure:
         )
         # Special configs
         self.tlu.dut_logic.set_dut_mask_mode_modifier(0)
-        self.tlu.dut_logic.set_dut_ignore_busy(0)
+        self.tlu.dut_logic.set_dut_ignore_busy(ignore_busy)
         self.tlu.dut_logic.set_dut_ignore_shutter(0x1)
 
     def conf_trigger_logic(self) -> None:
