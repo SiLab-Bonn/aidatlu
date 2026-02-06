@@ -8,9 +8,9 @@ import tables as tb
 import zmq
 
 from aidatlu import logger
-from aidatlu.hardware.tlu_controller import TLUControl
+from aidatlu.hardware.tlu_controller import TLUControl, TLUConfigure
 from aidatlu.hardware.i2c import I2CCore
-from aidatlu.main.config_parser import Configure, yaml_parser
+from aidatlu.main.config_parser import yaml_parser
 from aidatlu.main.data_parser import interpret_data
 
 
@@ -22,14 +22,14 @@ class AidaTLU:
         self.tlu_controller.write_clock_config(clock_config_path)
 
         self.reset_configuration()
-        self.config_parser = Configure(self.tlu_controller, config_dict)
+        self.tlu_configure = TLUConfigure(self.tlu_controller, config_dict)
 
         self.log.success("TLU initialized")
 
     def configure(self) -> None:
         """loads the conf.yaml and configures the TLU accordingly."""
-        self.config_parser.configure()
-        self.conf_list = self.config_parser.get_configuration_table()
+        self.tlu_configure.configure()
+        self.conf_list = self.tlu_configure.get_configuration_table()
         self.tlu_controller.get_event_fifo_fill_level()
         self.tlu_controller.get_event_fifo_csr()
         self.tlu_controller.get_scalers()
@@ -210,12 +210,12 @@ class AidaTLU:
         )
         self.stop_condition = False
         # prepare data handling and zmq connection
-        self.save_data = self.config_parser.get_data_handling()
-        self.zmq_address = self.config_parser.get_zmq_connection()
-        self.max_trigger, self.timeout = self.config_parser.get_stop_condition()
+        self.save_data = self.tlu_configure.get_data_handling()
+        self.zmq_address = self.tlu_configure.get_zmq_connection()
+        self.max_trigger, self.timeout = self.tlu_configure.get_stop_condition()
 
         if self.save_data:
-            self.path = self.config_parser.get_output_data_path()
+            self.path = self.tlu_configure.get_output_data_path()
             if self.path == None:
                 self.path = Path(__file__).parent.parent / "tlu_data/"
             self.raw_data_path = str(self.path) + "/tlu_raw_run%s_%s.h5" % (
