@@ -1,5 +1,5 @@
 # Generate TLU internal trigger with given rate in Hz
-internal_trigger_rate: 1000
+internal_trigger_rate: 0
 
 # Set operating mode of the DUT, supported are three operating modes 'aida', 'aidatrig' and 'eudet'
 # Set unused DUT interfaces to off, false or None
@@ -9,7 +9,7 @@ dut_module:
   dut_2:
     mode: aida
   dut_3:
-    mode: aida
+    mode: eudet
   dut_4:
     mode: off
 
