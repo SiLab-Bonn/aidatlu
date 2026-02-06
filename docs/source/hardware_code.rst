@@ -38,6 +38,9 @@ TLU Control
 .. autoclass:: aidatlu.hardware.tlu_controller.TLUControl
     :members:
 
+.. autoclass:: aidatlu.hardware.tlu_controller.TLUConfigure
+    :members:
+
 Trigger Control
 --------------------
 

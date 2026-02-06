@@ -11,8 +11,9 @@ Trigger Logic Unit
 Configuration parser
 ####################
 
-.. autoclass:: aidatlu.main.config_parser.Configure
-    :members:
+.. autofunction:: aidatlu.main.config_parser.yaml_parser
+
+.. autofunction:: aidatlu.main.config_parser.toml_parser
 
 Data interpretation
 ####################

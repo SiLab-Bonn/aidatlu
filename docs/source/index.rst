@@ -4,8 +4,7 @@ AIDA-2020-TLU
 
 The **AIDA-2020 Trigger Logic Unit (TLU)** software package provides tools for configuring, controlling,
 and monitoring the TLU hardware system.
-This documentation is organized to guide you from setup and configuration to
-code references.
+This documentation is organized to guide you from setup and configuration to code references.
 
 ----
 
