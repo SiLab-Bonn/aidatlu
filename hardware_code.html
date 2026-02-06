@@ -1,0 +1,1460 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Hardware Level &#8212; AIDA-TLU  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'hardware_code';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Main Level" href="main_code.html" />
+    <link rel="prev" title="Constellation" href="Constellation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.2.0" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">AIDA-TLU  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="Introduction.html">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="Configuration.html">
+    Configuration
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="Documentation.html">
+    Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="Constellation.html">
+    Constellation
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" current active">
+  <a class="nav-link dropdown-item nav-internal" href="#">
+    Hardware Level
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="main_code.html">
+    Main Level
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="Introduction.html">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="Configuration.html">
+    Configuration
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="Documentation.html">
+    Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="Constellation.html">
+    Constellation
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Hardware Level
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="main_code.html">
+    Main Level
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#clock-control">Clock Control</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.clock_controller.ClockControl"><code class="docutils literal notranslate"><span class="pre">ClockControl</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.clock_controller.ClockControl.check_design_id"><code class="docutils literal notranslate"><span class="pre">ClockControl.check_design_id()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.clock_controller.ClockControl.get_device_version"><code class="docutils literal notranslate"><span class="pre">ClockControl.get_device_version()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.clock_controller.ClockControl.parse_clock_conf"><code class="docutils literal notranslate"><span class="pre">ClockControl.parse_clock_conf()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.clock_controller.ClockControl.read_clock_register"><code class="docutils literal notranslate"><span class="pre">ClockControl.read_clock_register()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.clock_controller.ClockControl.write_clock_conf"><code class="docutils literal notranslate"><span class="pre">ClockControl.write_clock_conf()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.clock_controller.ClockControl.write_clock_register"><code class="docutils literal notranslate"><span class="pre">ClockControl.write_clock_register()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dac-control">DAC Control</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.dac_controller.DacControl"><code class="docutils literal notranslate"><span class="pre">DacControl</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.dac_controller.DacControl.set_threshold"><code class="docutils literal notranslate"><span class="pre">DacControl.set_threshold()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.dac_controller.DacControl.set_voltage"><code class="docutils literal notranslate"><span class="pre">DacControl.set_voltage()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dut-control">DUT Control</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.dut_controller.DUTLogic"><code class="docutils literal notranslate"><span class="pre">DUTLogic</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.dut_controller.DUTLogic.get_dut_ignore_busy"><code class="docutils literal notranslate"><span class="pre">DUTLogic.get_dut_ignore_busy()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.dut_controller.DUTLogic.get_dut_mask"><code class="docutils literal notranslate"><span class="pre">DUTLogic.get_dut_mask()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.dut_controller.DUTLogic.get_dut_mask_mode"><code class="docutils literal notranslate"><span class="pre">DUTLogic.get_dut_mask_mode()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.dut_controller.DUTLogic.get_dut_mask_mode_modifier"><code class="docutils literal notranslate"><span class="pre">DUTLogic.get_dut_mask_mode_modifier()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.dut_controller.DUTLogic.set_dut_ignore_busy"><code class="docutils literal notranslate"><span class="pre">DUTLogic.set_dut_ignore_busy()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.dut_controller.DUTLogic.set_dut_mask"><code class="docutils literal notranslate"><span class="pre">DUTLogic.set_dut_mask()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.dut_controller.DUTLogic.set_dut_mask_mode"><code class="docutils literal notranslate"><span class="pre">DUTLogic.set_dut_mask_mode()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.dut_controller.DUTLogic.set_dut_mask_mode_modifier"><code class="docutils literal notranslate"><span class="pre">DUTLogic.set_dut_mask_mode_modifier()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#i2c">I2C</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.i2c.I2CCore"><code class="docutils literal notranslate"><span class="pre">I2CCore</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.i2c.I2CCore.read_register"><code class="docutils literal notranslate"><span class="pre">I2CCore.read_register()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.i2c.I2CCore.write_register"><code class="docutils literal notranslate"><span class="pre">I2CCore.write_register()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#io-expander-control">IO Expander Control</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.ioexpander_controller.IOControl"><code class="docutils literal notranslate"><span class="pre">IOControl</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.ioexpander_controller.IOControl.all_off"><code class="docutils literal notranslate"><span class="pre">IOControl.all_off()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.ioexpander_controller.IOControl.all_on"><code class="docutils literal notranslate"><span class="pre">IOControl.all_on()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.ioexpander_controller.IOControl.clock_hdmi_output"><code class="docutils literal notranslate"><span class="pre">IOControl.clock_hdmi_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.ioexpander_controller.IOControl.clock_lemo_output"><code class="docutils literal notranslate"><span class="pre">IOControl.clock_lemo_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.ioexpander_controller.IOControl.configure_hdmi"><code class="docutils literal notranslate"><span class="pre">IOControl.configure_hdmi()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.ioexpander_controller.IOControl.init_led_expander"><code class="docutils literal notranslate"><span class="pre">IOControl.init_led_expander()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.ioexpander_controller.IOControl.init_output_expander"><code class="docutils literal notranslate"><span class="pre">IOControl.init_output_expander()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.ioexpander_controller.IOControl.switch_led"><code class="docutils literal notranslate"><span class="pre">IOControl.switch_led()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tlu-control">TLU Control</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl"><code class="docutils literal notranslate"><span class="pre">TLUControl</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.get_device_id"><code class="docutils literal notranslate"><span class="pre">TLUControl.get_device_id()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.get_event_fifo_csr"><code class="docutils literal notranslate"><span class="pre">TLUControl.get_event_fifo_csr()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.get_event_fifo_fill_level"><code class="docutils literal notranslate"><span class="pre">TLUControl.get_event_fifo_fill_level()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.get_post_veto_trigger_number"><code class="docutils literal notranslate"><span class="pre">TLUControl.get_post_veto_trigger_number()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.get_pre_veto_trigger_number"><code class="docutils literal notranslate"><span class="pre">TLUControl.get_pre_veto_trigger_number()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.get_run_active"><code class="docutils literal notranslate"><span class="pre">TLUControl.get_run_active()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.get_scaler"><code class="docutils literal notranslate"><span class="pre">TLUControl.get_scaler()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.get_scalers"><code class="docutils literal notranslate"><span class="pre">TLUControl.get_scalers()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.get_timestamp"><code class="docutils literal notranslate"><span class="pre">TLUControl.get_timestamp()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.pull_fifo_event"><code class="docutils literal notranslate"><span class="pre">TLUControl.pull_fifo_event()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.reset_counters"><code class="docutils literal notranslate"><span class="pre">TLUControl.reset_counters()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.reset_fifo"><code class="docutils literal notranslate"><span class="pre">TLUControl.reset_fifo()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.reset_status"><code class="docutils literal notranslate"><span class="pre">TLUControl.reset_status()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.reset_timestamp"><code class="docutils literal notranslate"><span class="pre">TLUControl.reset_timestamp()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.set_enable_record_data"><code class="docutils literal notranslate"><span class="pre">TLUControl.set_enable_record_data()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.set_event_fifo_csr"><code class="docutils literal notranslate"><span class="pre">TLUControl.set_event_fifo_csr()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.set_run_active"><code class="docutils literal notranslate"><span class="pre">TLUControl.set_run_active()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.start_run"><code class="docutils literal notranslate"><span class="pre">TLUControl.start_run()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.stop_run"><code class="docutils literal notranslate"><span class="pre">TLUControl.stop_run()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUControl.write_status"><code class="docutils literal notranslate"><span class="pre">TLUControl.write_status()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUConfigure"><code class="docutils literal notranslate"><span class="pre">TLUConfigure</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUConfigure.conf_auxillary"><code class="docutils literal notranslate"><span class="pre">TLUConfigure.conf_auxillary()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUConfigure.conf_dut"><code class="docutils literal notranslate"><span class="pre">TLUConfigure.conf_dut()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUConfigure.conf_trigger_inputs"><code class="docutils literal notranslate"><span class="pre">TLUConfigure.conf_trigger_inputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUConfigure.conf_trigger_logic"><code class="docutils literal notranslate"><span class="pre">TLUConfigure.conf_trigger_logic()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUConfigure.configure"><code class="docutils literal notranslate"><span class="pre">TLUConfigure.configure()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUConfigure.get_configuration_table"><code class="docutils literal notranslate"><span class="pre">TLUConfigure.get_configuration_table()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUConfigure.get_data_handling"><code class="docutils literal notranslate"><span class="pre">TLUConfigure.get_data_handling()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUConfigure.get_output_data_path"><code class="docutils literal notranslate"><span class="pre">TLUConfigure.get_output_data_path()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUConfigure.get_stop_condition"><code class="docutils literal notranslate"><span class="pre">TLUConfigure.get_stop_condition()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.tlu_controller.TLUConfigure.get_zmq_connection"><code class="docutils literal notranslate"><span class="pre">TLUConfigure.get_zmq_connection()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trigger-control">Trigger Control</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.trigger_controller.TriggerLogic"><code class="docutils literal notranslate"><span class="pre">TriggerLogic</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.trigger_controller.TriggerLogic.get_internal_trigger_frequency"><code class="docutils literal notranslate"><span class="pre">TriggerLogic.get_internal_trigger_frequency()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.trigger_controller.TriggerLogic.get_post_veto_trigger"><code class="docutils literal notranslate"><span class="pre">TriggerLogic.get_post_veto_trigger()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.trigger_controller.TriggerLogic.get_pre_veto_trigger"><code class="docutils literal notranslate"><span class="pre">TriggerLogic.get_pre_veto_trigger()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.trigger_controller.TriggerLogic.get_pulse_delay_pack"><code class="docutils literal notranslate"><span class="pre">TriggerLogic.get_pulse_delay_pack()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.trigger_controller.TriggerLogic.get_pulse_stretch_pack"><code class="docutils literal notranslate"><span class="pre">TriggerLogic.get_pulse_stretch_pack()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.trigger_controller.TriggerLogic.get_trigger_mask"><code class="docutils literal notranslate"><span class="pre">TriggerLogic.get_trigger_mask()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.trigger_controller.TriggerLogic.get_trigger_veto"><code class="docutils literal notranslate"><span class="pre">TriggerLogic.get_trigger_veto()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.trigger_controller.TriggerLogic.set_internal_trigger_frequency"><code class="docutils literal notranslate"><span class="pre">TriggerLogic.set_internal_trigger_frequency()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.trigger_controller.TriggerLogic.set_pulse_delay_pack"><code class="docutils literal notranslate"><span class="pre">TriggerLogic.set_pulse_delay_pack()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.trigger_controller.TriggerLogic.set_pulse_stretch_pack"><code class="docutils literal notranslate"><span class="pre">TriggerLogic.set_pulse_stretch_pack()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.trigger_controller.TriggerLogic.set_trigger_mask"><code class="docutils literal notranslate"><span class="pre">TriggerLogic.set_trigger_mask()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.trigger_controller.TriggerLogic.set_trigger_mask_from_full_word"><code class="docutils literal notranslate"><span class="pre">TriggerLogic.set_trigger_mask_from_full_word()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.trigger_controller.TriggerLogic.set_trigger_polarity"><code class="docutils literal notranslate"><span class="pre">TriggerLogic.set_trigger_polarity()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aidatlu.hardware.trigger_controller.TriggerLogic.set_trigger_veto"><code class="docutils literal notranslate"><span class="pre">TriggerLogic.set_trigger_veto()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+        <div class="sidebar-primary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/hardware_code.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item"><nav class="sidebar-indices-items" aria-labelledby="pst-indices-navigation-heading-2">
+  <p id="pst-indices-navigation-heading-2" class="sidebar-indices-items__title" role="heading" aria-level="1">Indices</p>
+  <ul class="indices-link">
+        <li class="toctree-l1">
+          <a class="reference internal"
+             href="genindex.html"
+             accesskey="I">General Index</a>
+        </li>
+  </ul>
+</nav></div>
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Hardware Level</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="hardware-level">
+<h1>Hardware Level<a class="headerlink" href="#hardware-level" title="Link to this heading">#</a></h1>
+<section id="clock-control">
+<h2>Clock Control<a class="headerlink" href="#clock-control" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aidatlu.hardware.clock_controller.ClockControl">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aidatlu.hardware.clock_controller.</span></span><span class="sig-name descname"><span class="pre">ClockControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#aidatlu.hardware.i2c.I2CCore" title="aidatlu.hardware.i2c.I2CCore"><span class="pre">I2CCore</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">io_control</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#aidatlu.hardware.ioexpander_controller.IOControl" title="aidatlu.hardware.ioexpander_controller.IOControl"><span class="pre">IOControl</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aidatlu/hardware/clock_controller.html#ClockControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.clock_controller.ClockControl" title="Link to this definition">#</a></dt>
+<dd><p>The control class for the Si5344 clock chip.
+Main purpose is to read/write the clock configuration file to the chip.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.clock_controller.ClockControl.check_design_id">
+<span class="sig-name descname"><span class="pre">check_design_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/clock_controller.html#ClockControl.check_design_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.clock_controller.ClockControl.check_design_id" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>Checks the Chip ID. If the chip is correctly configured the list corresponds</dt><dd><p>to the data in the clock configuration file between the addresses 0x026B and 0x0272.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hex_str</strong> (<em>bool</em>) – Returns the design ID as a list of hex strings. Defaults to False.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of the design ID contains 8 integers or hex strings.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.clock_controller.ClockControl.get_device_version">
+<span class="sig-name descname"><span class="pre">get_device_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/clock_controller.html#ClockControl.get_device_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.clock_controller.ClockControl.get_device_version" title="Link to this definition">#</a></dt>
+<dd><p>Get Chip information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Chip ID.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.clock_controller.ClockControl.parse_clock_conf">
+<span class="sig-name descname"><span class="pre">parse_clock_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/clock_controller.html#ClockControl.parse_clock_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.clock_controller.ClockControl.parse_clock_conf" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>reads the clock config file and returns a list with two rows Address and Data</dt><dd><p>The configuration file is produced by Clockbuilder Pro (Silicon Labs).</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – File path to the configuration file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>2-dim. list, consisting of the address and data values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.clock_controller.ClockControl.read_clock_register">
+<span class="sig-name descname"><span class="pre">read_clock_register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/clock_controller.html#ClockControl.read_clock_register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.clock_controller.ClockControl.read_clock_register" title="Link to this definition">#</a></dt>
+<dd><p>Reads register of the clock chip.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>address</strong> (<em>int</em>) – Address of the register.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Integer from the register address.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.clock_controller.ClockControl.write_clock_conf">
+<span class="sig-name descname"><span class="pre">write_clock_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/clock_controller.html#ClockControl.write_clock_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.clock_controller.ClockControl.write_clock_conf" title="Link to this definition">#</a></dt>
+<dd><p>Writes clock configuration consecutivly in register. This takes a few seconds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – File path to the clock configuration file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.clock_controller.ClockControl.write_clock_register">
+<span class="sig-name descname"><span class="pre">write_clock_register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/clock_controller.html#ClockControl.write_clock_register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.clock_controller.ClockControl.write_clock_register" title="Link to this definition">#</a></dt>
+<dd><p>Write data in specific Clock Chip register.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>address</strong> (<em>int</em>) – Destination register.</p></li>
+<li><p><strong>data</strong> (<em>int</em>) – Data to be written in address.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="dac-control">
+<h2>DAC Control<a class="headerlink" href="#dac-control" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aidatlu.hardware.dac_controller.DacControl">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aidatlu.hardware.dac_controller.</span></span><span class="sig-name descname"><span class="pre">DacControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#aidatlu.hardware.i2c.I2CCore" title="aidatlu.hardware.i2c.I2CCore"><span class="pre">I2CCore</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">int_ref</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aidatlu/hardware/dac_controller.html#DacControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.dac_controller.DacControl" title="Link to this definition">#</a></dt>
+<dd><p>Control class for the three AD5665R. One controls the PMT control power (pwr_dac).
+Two set the trigger input thresholds (dac_1, dac_2).
+Each AD5665R has four parallel outputs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.dac_controller.DacControl.set_threshold">
+<span class="sig-name descname"><span class="pre">set_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trigger_channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold_voltage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.3</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/dac_controller.html#DacControl.set_threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.dac_controller.DacControl.set_threshold" title="Link to this definition">#</a></dt>
+<dd><p>Sets the Threshold voltage for the trigger input channel. Use channel = 7 to set threshold for all channels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trigger_channel</strong> (<em>int</em>) – Trigger input channel. From 1 to 7, where 7 controls all input channels.</p></li>
+<li><p><strong>threshold_voltage</strong> (<em>float</em>) – Threshold voltage in volt.</p></li>
+<li><p><strong>ref_v</strong> (<em>float</em>) – Reference voltage of the DAC. Defaults to the external reference voltage 1.3 V.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.dac_controller.DacControl.set_voltage">
+<span class="sig-name descname"><span class="pre">set_voltage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pmt_channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voltage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/dac_controller.html#DacControl.set_voltage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.dac_controller.DacControl.set_voltage" title="Link to this definition">#</a></dt>
+<dd><p>Sets given PMT DAC to given output voltage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pmt_channel</strong> (<em>int</em>) – DAC channel for the PMT from 1 to 5, where channel 5 sets the voltage of all PMT channels.</p></li>
+<li><p><strong>voltage</strong> (<em>float</em>) – DAC output voltage</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="dut-control">
+<h2>DUT Control<a class="headerlink" href="#dut-control" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aidatlu.hardware.dut_controller.DUTLogic">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aidatlu.hardware.dut_controller.</span></span><span class="sig-name descname"><span class="pre">DUTLogic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#aidatlu.hardware.i2c.I2CCore" title="aidatlu.hardware.i2c.I2CCore"><span class="pre">I2CCore</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aidatlu/hardware/dut_controller.html#DUTLogic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.dut_controller.DUTLogic" title="Link to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.dut_controller.DUTLogic.get_dut_ignore_busy">
+<span class="sig-name descname"><span class="pre">get_dut_ignore_busy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/dut_controller.html#DUTLogic.get_dut_ignore_busy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.dut_controller.DUTLogic.get_dut_ignore_busy" title="Link to this definition">#</a></dt>
+<dd><p>Reads the content in the register ‘IgnoreDUTBusyR’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Integer content of the register.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.dut_controller.DUTLogic.get_dut_mask">
+<span class="sig-name descname"><span class="pre">get_dut_mask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/dut_controller.html#DUTLogic.get_dut_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.dut_controller.DUTLogic.get_dut_mask" title="Link to this definition">#</a></dt>
+<dd><p>Reads the contend in the register ‘DUTMaskR’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Integer content of the register.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.dut_controller.DUTLogic.get_dut_mask_mode">
+<span class="sig-name descname"><span class="pre">get_dut_mask_mode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/dut_controller.html#DUTLogic.get_dut_mask_mode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.dut_controller.DUTLogic.get_dut_mask_mode" title="Link to this definition">#</a></dt>
+<dd><p>Reads the contend in the register ‘DUTInterfaceModeR’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Integer content of the register.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.dut_controller.DUTLogic.get_dut_mask_mode_modifier">
+<span class="sig-name descname"><span class="pre">get_dut_mask_mode_modifier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/dut_controller.html#DUTLogic.get_dut_mask_mode_modifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.dut_controller.DUTLogic.get_dut_mask_mode_modifier" title="Link to this definition">#</a></dt>
+<dd><p>Reads the content in the register ‘DUTInterfaceModeModifierR’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Integer content of the register.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.dut_controller.DUTLogic.set_dut_ignore_busy">
+<span class="sig-name descname"><span class="pre">set_dut_ignore_busy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/dut_controller.html#DUTLogic.set_dut_ignore_busy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.dut_controller.DUTLogic.set_dut_ignore_busy" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>If set the TLU ignores the BUSY signal from a DUT in AIDA mode.</dt><dd><p>Channels consists of a 4-bit WORD describing the DUT interfaces.
+With DUT interface 1 = bit 0, interface 2 = bit 1, interface 3 = bit 2 and interface 4 = bit 3.
+#TODO not sure if this is true here. No answers in documentation.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>channels</strong> (<em>int</em><em> | </em><em>str</em>) – _description_#TODO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.dut_controller.DUTLogic.set_dut_mask">
+<span class="sig-name descname"><span class="pre">set_dut_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/dut_controller.html#DUTLogic.set_dut_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.dut_controller.DUTLogic.set_dut_mask" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>Enables HDMI Outputs the enable is here an 4-bit WORD as integer or binary string to enable each HDMI channel.</dt><dd><p>With HDMI channel 1 = bit 0, channel 2 = bit 2, channel 3 = bit 3 and channel 4 = bit 4.
+E.q. 0b0001 or ‘0001’ enables HDMI channel 1, ‘0011’ enables channel 1 and 2 and so on.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em><em> | </em><em>str</em>) – 4-bit WORD to enable the the HDMI outputs. Can be an integer or binary string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.dut_controller.DUTLogic.set_dut_mask_mode">
+<span class="sig-name descname"><span class="pre">set_dut_mask_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/dut_controller.html#DUTLogic.set_dut_mask_mode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.dut_controller.DUTLogic.set_dut_mask_mode" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>Sets the DUT interface mode. Mode consists of one 8-bit WORD or more specific 4 2-bit WORDs.</dt><dd><p>Each 2-bit WORD corresponds to one HDMI output and its mode.
+With HDMI channel 1 = bit 0 and 1, channel 2 = bit 2 and 3, channel 3 = bit 4 and 5 and channel 4 = bit 6 and 7.
+The mode is set with X0 = EUDET and X1 = AIDA. #TODO They mention the leading bit X can be used for future modes. Is this still up to date?
+E.q. 0b00000011 sets HDMI channel 1 to AIDA mode and channels 2,3 and 4 to EUDET.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mode</strong> (<em>int</em><em> | </em><em>str</em>) – 8-bit WORD to set the mode for each DUT. Can be an integer or binary string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.dut_controller.DUTLogic.set_dut_mask_mode_modifier">
+<span class="sig-name descname"><span class="pre">set_dut_mask_mode_modifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/dut_controller.html#DUTLogic.set_dut_mask_mode_modifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.dut_controller.DUTLogic.set_dut_mask_mode_modifier" title="Link to this definition">#</a></dt>
+<dd><p>#TODO Only affects the EUDET mode of operation, looks like some special EUDET configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em>) – _description_ #TODO</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="i2c">
+<h2>I2C<a class="headerlink" href="#i2c" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aidatlu.hardware.i2c.I2CCore">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aidatlu.hardware.i2c.</span></span><span class="sig-name descname"><span class="pre">I2CCore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hw_int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aidatlu/hardware/i2c.html#I2CCore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.i2c.I2CCore" title="Link to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.i2c.I2CCore.read_register">
+<span class="sig-name descname"><span class="pre">read_register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">register</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/i2c.html#I2CCore.read_register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.i2c.I2CCore.read_register" title="Link to this definition">#</a></dt>
+<dd><p>register: str  Name of node in address file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.i2c.I2CCore.write_register">
+<span class="sig-name descname"><span class="pre">write_register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">register</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/i2c.html#I2CCore.write_register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.i2c.I2CCore.write_register" title="Link to this definition">#</a></dt>
+<dd><p>register: str  Name of node in address file
+value:    int  Value to be written</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="io-expander-control">
+<h2>IO Expander Control<a class="headerlink" href="#io-expander-control" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aidatlu.hardware.ioexpander_controller.IOControl">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aidatlu.hardware.ioexpander_controller.</span></span><span class="sig-name descname"><span class="pre">IOControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#aidatlu.hardware.i2c.I2CCore" title="aidatlu.hardware.i2c.I2CCore"><span class="pre">I2CCore</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aidatlu/hardware/ioexpander_controller.html#IOControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.ioexpander_controller.IOControl" title="Link to this definition">#</a></dt>
+<dd><p>Main class for the control of the IO expander PCA9539PW.
+Four I/O expanders are in use, two for the 11 front panel LEDs. and two
+for the HDMI DUT interfaces.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.ioexpander_controller.IOControl.all_off">
+<span class="sig-name descname"><span class="pre">all_off</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/ioexpander_controller.html#IOControl.all_off"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.ioexpander_controller.IOControl.all_off" title="Link to this definition">#</a></dt>
+<dd><p>Turn off all LEDs</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.ioexpander_controller.IOControl.all_on">
+<span class="sig-name descname"><span class="pre">all_on</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'w'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/ioexpander_controller.html#IOControl.all_on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.ioexpander_controller.IOControl.all_on" title="Link to this definition">#</a></dt>
+<dd><p>Set all LEDs to same color</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>color</strong> (<em>str</em><em>, </em><em>optional</em>) – Color code [white: “w”, red: “r”, green: “g”, blue: “b”] Defaults to “w”.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.ioexpander_controller.IOControl.clock_hdmi_output">
+<span class="sig-name descname"><span class="pre">clock_hdmi_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hdmi_channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/ioexpander_controller.html#IOControl.clock_hdmi_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.ioexpander_controller.IOControl.clock_hdmi_output" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>Enables the Clock output for one HDMI channel.</dt><dd><p>Valid Clock sources are Si5453 clock chip ‘chip’ and FPGA ‘fpga’.
+#TODO does FPGA work?</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hdmi_channel</strong> (<em>int</em>) – HDMI channels from 1 to 4</p></li>
+<li><p><strong>clock_source</strong> (<em>str</em>) – Clock source valid options are ‘off’, ‘chip’ and ‘fpga’.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.ioexpander_controller.IOControl.clock_lemo_output">
+<span class="sig-name descname"><span class="pre">clock_lemo_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/ioexpander_controller.html#IOControl.clock_lemo_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.ioexpander_controller.IOControl.clock_lemo_output" title="Link to this definition">#</a></dt>
+<dd><p>Enables the clock LEMO output. #TODO only with ~40MHz default clock</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>enable</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable clock LEMO output. Defaults to True.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.ioexpander_controller.IOControl.configure_hdmi">
+<span class="sig-name descname"><span class="pre">configure_hdmi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hdmi_channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/ioexpander_controller.html#IOControl.configure_hdmi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.ioexpander_controller.IOControl.configure_hdmi" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>This enables the pins of one HDMI channel as input (0) or output (1).</dt><dd><p>Enable is a 4-bit WORD for each pin as integer or binary string. With CONT = bit 0, SPARE = bit 1, TRIG = bit 2 and BUSY = bit 3.
+E.q. 0b0111 or ‘0111’ sets CONT, SPARE and TRIGGER as outputs and BUSY as input. ‘1100’ sets CONT and SPARE as input and BUSY and TRIG as output.
+The clock runs with the separate function: clock_hdmi_output.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hdmi_num</strong> (<em>int</em>) – HDMI channels from 1 to 4</p></li>
+<li><p><strong>enable</strong> (<em>int</em><em> | </em><em>str</em><em>, </em><em>optional</em>) – 4-bit WORD to enable the 4 pins on the HDMI output. Can be an integer or binary string.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.ioexpander_controller.IOControl.init_led_expander">
+<span class="sig-name descname"><span class="pre">init_led_expander</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/ioexpander_controller.html#IOControl.init_led_expander"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.ioexpander_controller.IOControl.init_led_expander" title="Link to this definition">#</a></dt>
+<dd><p>Initialize LED expanders</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.ioexpander_controller.IOControl.init_output_expander">
+<span class="sig-name descname"><span class="pre">init_output_expander</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/ioexpander_controller.html#IOControl.init_output_expander"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.ioexpander_controller.IOControl.init_output_expander" title="Link to this definition">#</a></dt>
+<dd><p>Initialize output expanders</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.ioexpander_controller.IOControl.switch_led">
+<span class="sig-name descname"><span class="pre">switch_led</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">led_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'off'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/ioexpander_controller.html#IOControl.switch_led"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.ioexpander_controller.IOControl.switch_led" title="Link to this definition">#</a></dt>
+<dd><p>changes LED with led_id to specific color</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>led_id</strong> (<em>int</em>) – ID for the 11 LEDs, led_id has to be between 1 and 11</p></li>
+<li><p><strong>color</strong> (<em>str</em><em>, </em><em>optional</em>) – Color code [white: “w”, red: “r”, green: “g”, blue: “b”, off: “off”]
+for Clock LED only [red: “r”, green: “g”, off: “off”].
+Defaults to “off”.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="tlu-control">
+<h2>TLU Control<a class="headerlink" href="#tlu-control" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aidatlu.hardware.tlu_controller.</span></span><span class="sig-name descname"><span class="pre">TLUControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i2c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'aidatlu.hardware.i2c.I2CCore'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl" title="Link to this definition">#</a></dt>
+<dd><p>Controls general TLU functionalities.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.get_device_id">
+<span class="sig-name descname"><span class="pre">get_device_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.get_device_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.get_device_id" title="Link to this definition">#</a></dt>
+<dd><p>Read back board id. Consists of six blocks of hex data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Board id as 48 bits integer</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.get_event_fifo_csr">
+<span class="sig-name descname"><span class="pre">get_event_fifo_csr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.get_event_fifo_csr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.get_event_fifo_csr" title="Link to this definition">#</a></dt>
+<dd><p>Reads value from ‘EventFifoCSR’, corresponds to status flags of the FIFO.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>number of events</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.get_event_fifo_fill_level">
+<span class="sig-name descname"><span class="pre">get_event_fifo_fill_level</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.get_event_fifo_fill_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.get_event_fifo_fill_level" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>Reads value from ‘EventFifoFillLevel’</dt><dd><p>Returns the number of words written in
+the FIFO. The lowest 14-bits are the actual data.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>buffer level of the fifi</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.get_post_veto_trigger_number">
+<span class="sig-name descname"><span class="pre">get_post_veto_trigger_number</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.get_post_veto_trigger_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.get_post_veto_trigger_number" title="Link to this definition">#</a></dt>
+<dd><p>Obtains the number of triggers recorded in the TLU after the veto is applied from the trigger logic register</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.get_pre_veto_trigger_number">
+<span class="sig-name descname"><span class="pre">get_pre_veto_trigger_number</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.get_pre_veto_trigger_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.get_pre_veto_trigger_number" title="Link to this definition">#</a></dt>
+<dd><p>Obtains the number of triggers recorded in the TLU before the veto is applied from the trigger logic register</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.get_run_active">
+<span class="sig-name descname"><span class="pre">get_run_active</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.get_run_active"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.get_run_active" title="Link to this definition">#</a></dt>
+<dd><p>Reads register ‘RunActiveRW’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns bool of the run active register.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.get_scaler">
+<span class="sig-name descname"><span class="pre">get_scaler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.get_scaler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.get_scaler" title="Link to this definition">#</a></dt>
+<dd><p>reads current scaler value from register</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.get_scalers">
+<span class="sig-name descname"><span class="pre">get_scalers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.get_scalers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.get_scalers" title="Link to this definition">#</a></dt>
+<dd><p>reads current sc values from registers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>all 6 trigger sc values</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.get_timestamp">
+<span class="sig-name descname"><span class="pre">get_timestamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.get_timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.get_timestamp" title="Link to this definition">#</a></dt>
+<dd><p>Get current time stamp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Time stamp in 40MHz clock cycles.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.pull_fifo_event">
+<span class="sig-name descname"><span class="pre">pull_fifo_event</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.pull_fifo_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.pull_fifo_event" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>Pulls event from the FIFO. This is needed in the run loop to prevent the buffer to get stuck.</dt><dd><p>if this register is full the fifo needs to be reset or new triggers are generated but not sent out.
+#TODO check here if the FIFO is full and reset it if needed would prob. make sense.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>6 element long vector containing bitwords of the data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.reset_counters">
+<span class="sig-name descname"><span class="pre">reset_counters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.reset_counters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.reset_counters" title="Link to this definition">#</a></dt>
+<dd><p>Resets the trigger counters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.reset_fifo">
+<span class="sig-name descname"><span class="pre">reset_fifo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.reset_fifo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.reset_fifo" title="Link to this definition">#</a></dt>
+<dd><p>Sets 0 to ‘EventFifoCSR’ this resets the FIFO.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.reset_status">
+<span class="sig-name descname"><span class="pre">reset_status</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.reset_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.reset_status" title="Link to this definition">#</a></dt>
+<dd><p>Resets the complete status and all counters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.reset_timestamp">
+<span class="sig-name descname"><span class="pre">reset_timestamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.reset_timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.reset_timestamp" title="Link to this definition">#</a></dt>
+<dd><p>Sets bit to  ‘ResetTimestampW’ register to reset the time stamp.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.set_enable_record_data">
+<span class="sig-name descname"><span class="pre">set_enable_record_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.set_enable_record_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.set_enable_record_data" title="Link to this definition">#</a></dt>
+<dd><p>#TODO not sure what this does. Looks like a separate internal event buffer to the FIFO.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em>) – #TODO I think this does not work</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.set_event_fifo_csr">
+<span class="sig-name descname"><span class="pre">set_event_fifo_csr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.set_event_fifo_csr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.set_event_fifo_csr" title="Link to this definition">#</a></dt>
+<dd><p>Sets value to the EventFifoCSR register.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em>) – 0 resets the FIFO. #TODO can do other stuff that is not implemented</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.set_run_active">
+<span class="sig-name descname"><span class="pre">set_run_active</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.set_run_active"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.set_run_active" title="Link to this definition">#</a></dt>
+<dd><p>Raises internal run active signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>bool</em>) – True sets run active, False disables it.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.start_run">
+<span class="sig-name descname"><span class="pre">start_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.start_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.start_run" title="Link to this definition">#</a></dt>
+<dd><p>Start run configurations</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.stop_run">
+<span class="sig-name descname"><span class="pre">stop_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.stop_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.stop_run" title="Link to this definition">#</a></dt>
+<dd><p>Stop run configurations</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUControl.write_status">
+<span class="sig-name descname"><span class="pre">write_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUControl.write_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUControl.write_status" title="Link to this definition">#</a></dt>
+<dd><p>Sets value to the ‘SerdesRstW’ register.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em>) – Bit 0 resets the status, bit 1 resets trigger counters and bit 2 calibrates IDELAY.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUConfigure">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aidatlu.hardware.tlu_controller.</span></span><span class="sig-name descname"><span class="pre">TLUConfigure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tlu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUConfigure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUConfigure" title="Link to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUConfigure.conf_auxillary">
+<span class="sig-name descname"><span class="pre">conf_auxillary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUConfigure.conf_auxillary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUConfigure.conf_auxillary" title="Link to this definition">#</a></dt>
+<dd><p>Configures PMT power outputs and clock LEMO I/O</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUConfigure.conf_dut">
+<span class="sig-name descname"><span class="pre">conf_dut</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUConfigure.conf_dut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUConfigure.conf_dut" title="Link to this definition">#</a></dt>
+<dd><p>Parse the configuration for the DUT interface to the AIDATLU.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUConfigure.conf_trigger_inputs">
+<span class="sig-name descname"><span class="pre">conf_trigger_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUConfigure.conf_trigger_inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUConfigure.conf_trigger_inputs" title="Link to this definition">#</a></dt>
+<dd><p>Configures the trigger inputs. Each input can have a different threshold.
+The two trigger words mask_low and mask_high are generated with the use of two support functions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUConfigure.conf_trigger_logic">
+<span class="sig-name descname"><span class="pre">conf_trigger_logic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUConfigure.conf_trigger_logic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUConfigure.conf_trigger_logic" title="Link to this definition">#</a></dt>
+<dd><p>Configures the trigger logic. So the trigger polarity and the trigger pulse length and stretch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUConfigure.configure">
+<span class="sig-name descname"><span class="pre">configure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUConfigure.configure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUConfigure.configure" title="Link to this definition">#</a></dt>
+<dd><p>Loads configuration file and configures the TLU accordingly.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUConfigure.get_configuration_table">
+<span class="sig-name descname"><span class="pre">get_configuration_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUConfigure.get_configuration_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUConfigure.get_configuration_table" title="Link to this definition">#</a></dt>
+<dd><p>Creates a list of tuples from the configuration file for the output data files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>configuration list</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUConfigure.get_data_handling">
+<span class="sig-name descname"><span class="pre">get_data_handling</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUConfigure.get_data_handling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUConfigure.get_data_handling" title="Link to this definition">#</a></dt>
+<dd><p>Information about data handling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>save and interpret data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUConfigure.get_output_data_path">
+<span class="sig-name descname"><span class="pre">get_output_data_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUConfigure.get_output_data_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUConfigure.get_output_data_path" title="Link to this definition">#</a></dt>
+<dd><p>Parses the output data path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>output path</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUConfigure.get_stop_condition">
+<span class="sig-name descname"><span class="pre">get_stop_condition</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUConfigure.get_stop_condition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUConfigure.get_stop_condition" title="Link to this definition">#</a></dt>
+<dd><p>Information about tlu stop condition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>maximum trigger number and timeout in seconds.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.tlu_controller.TLUConfigure.get_zmq_connection">
+<span class="sig-name descname"><span class="pre">get_zmq_connection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/tlu_controller.html#TLUConfigure.get_zmq_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.tlu_controller.TLUConfigure.get_zmq_connection" title="Link to this definition">#</a></dt>
+<dd><p>Information about the zmq Address</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ZMQ Address</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="trigger-control">
+<h2>Trigger Control<a class="headerlink" href="#trigger-control" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aidatlu.hardware.trigger_controller.TriggerLogic">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">aidatlu.hardware.trigger_controller.</span></span><span class="sig-name descname"><span class="pre">TriggerLogic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#aidatlu.hardware.i2c.I2CCore" title="aidatlu.hardware.i2c.I2CCore"><span class="pre">I2CCore</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aidatlu/hardware/trigger_controller.html#TriggerLogic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.trigger_controller.TriggerLogic" title="Link to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.trigger_controller.TriggerLogic.get_internal_trigger_frequency">
+<span class="sig-name descname"><span class="pre">get_internal_trigger_frequency</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/trigger_controller.html#TriggerLogic.get_internal_trigger_frequency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.trigger_controller.TriggerLogic.get_internal_trigger_frequency" title="Link to this definition">#</a></dt>
+<dd><p>Reads the internal trigger frequency from the register.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Frequency in Hz</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.trigger_controller.TriggerLogic.get_post_veto_trigger">
+<span class="sig-name descname"><span class="pre">get_post_veto_trigger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/trigger_controller.html#TriggerLogic.get_post_veto_trigger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.trigger_controller.TriggerLogic.get_post_veto_trigger" title="Link to this definition">#</a></dt>
+<dd><p>Gets the number of triggers recorded in the TLU after the veto is applied</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.trigger_controller.TriggerLogic.get_pre_veto_trigger">
+<span class="sig-name descname"><span class="pre">get_pre_veto_trigger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/trigger_controller.html#TriggerLogic.get_pre_veto_trigger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.trigger_controller.TriggerLogic.get_pre_veto_trigger" title="Link to this definition">#</a></dt>
+<dd><p>Number of triggers recorded in the TLU before the veto is applied.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.trigger_controller.TriggerLogic.get_pulse_delay_pack">
+<span class="sig-name descname"><span class="pre">get_pulse_delay_pack</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/trigger_controller.html#TriggerLogic.get_pulse_delay_pack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.trigger_controller.TriggerLogic.get_pulse_delay_pack" title="Link to this definition">#</a></dt>
+<dd><p>Get packed word describing the input pulse stretch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.trigger_controller.TriggerLogic.get_pulse_stretch_pack">
+<span class="sig-name descname"><span class="pre">get_pulse_stretch_pack</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/trigger_controller.html#TriggerLogic.get_pulse_stretch_pack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.trigger_controller.TriggerLogic.get_pulse_stretch_pack" title="Link to this definition">#</a></dt>
+<dd><p>Get packed word describing the input pulse stretch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.trigger_controller.TriggerLogic.get_trigger_mask">
+<span class="sig-name descname"><span class="pre">get_trigger_mask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/trigger_controller.html#TriggerLogic.get_trigger_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.trigger_controller.TriggerLogic.get_trigger_mask" title="Link to this definition">#</a></dt>
+<dd><p>Retrieves the trigger logic words from the registers. The trigger pattern represents one of the 64 possible logic combinations.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.trigger_controller.TriggerLogic.get_trigger_veto">
+<span class="sig-name descname"><span class="pre">get_trigger_veto</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/trigger_controller.html#TriggerLogic.get_trigger_veto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.trigger_controller.TriggerLogic.get_trigger_veto" title="Link to this definition">#</a></dt>
+<dd><p>Reads the trigger veto from the register.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.trigger_controller.TriggerLogic.set_internal_trigger_frequency">
+<span class="sig-name descname"><span class="pre">set_internal_trigger_frequency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/trigger_controller.html#TriggerLogic.set_internal_trigger_frequency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.trigger_controller.TriggerLogic.set_internal_trigger_frequency" title="Link to this definition">#</a></dt>
+<dd><p>Sets the internal trigger frequency.
+The maximum allowed Frequency is 160 MHz.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>frequency</strong> (<em>int</em>) – Frequency in Hz</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.trigger_controller.TriggerLogic.set_pulse_delay_pack">
+<span class="sig-name descname"><span class="pre">set_pulse_delay_pack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/trigger_controller.html#TriggerLogic.set_pulse_delay_pack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.trigger_controller.TriggerLogic.set_pulse_delay_pack" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>Delay word for trigger pulses. Each element of the input vector is delayed by N clock cycles.</dt><dd><p>The vector is packed into a single word.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vector</strong> (<em>list</em>) – A vector containing six integers. Each trigger input is delayed by the integer number of clock cycles.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.trigger_controller.TriggerLogic.set_pulse_stretch_pack">
+<span class="sig-name descname"><span class="pre">set_pulse_stretch_pack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/trigger_controller.html#TriggerLogic.set_pulse_stretch_pack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.trigger_controller.TriggerLogic.set_pulse_stretch_pack" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>Stretch word for trigger pulses. Each element of the input vector is stretched by N clock cycles.</dt><dd><p>The input vector should have 6 elements for the different inputs.
+The vector is packed into a single word.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vector</strong> (<em>list</em>) – A vector containing six integers. Each trigger input is stretched by the integer number of clock cycles.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.trigger_controller.TriggerLogic.set_trigger_mask">
+<span class="sig-name descname"><span class="pre">set_trigger_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask_high</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_low</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/trigger_controller.html#TriggerLogic.set_trigger_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.trigger_controller.TriggerLogic.set_trigger_mask" title="Link to this definition">#</a></dt>
+<dd><p>Sets the trigger logic. Each of the 64 possible combination is divided into two 32-bit words mask high and mask low.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mask_high</strong> (<em>int</em>) – The most significant 32-bit word generated from the trigger configuration.</p></li>
+<li><p><strong>mask_low</strong> (<em>int</em>) – The least significant 32-bit word generated from the trigger configuration.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.trigger_controller.TriggerLogic.set_trigger_mask_from_full_word">
+<span class="sig-name descname"><span class="pre">set_trigger_mask_from_full_word</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/trigger_controller.html#TriggerLogic.set_trigger_mask_from_full_word"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.trigger_controller.TriggerLogic.set_trigger_mask_from_full_word" title="Link to this definition">#</a></dt>
+<dd><p>Sets the trigger logic. Each of the 64 possible combination is divided into two 32-bit words mask high and mask low.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em>) – Sets trigger logic from trigger logic combination word.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.trigger_controller.TriggerLogic.set_trigger_polarity">
+<span class="sig-name descname"><span class="pre">set_trigger_polarity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/trigger_controller.html#TriggerLogic.set_trigger_polarity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.trigger_controller.TriggerLogic.set_trigger_polarity" title="Link to this definition">#</a></dt>
+<dd><p>Sets if the TLU triggers on rising or falling edge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em>) – 1 triggers on falling, 0 on rising. #TODO not tested</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aidatlu.hardware.trigger_controller.TriggerLogic.set_trigger_veto">
+<span class="sig-name descname"><span class="pre">set_trigger_veto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">veto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aidatlu/hardware/trigger_controller.html#TriggerLogic.set_trigger_veto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aidatlu.hardware.trigger_controller.TriggerLogic.set_trigger_veto" title="Link to this definition">#</a></dt>
+<dd><p>Enables or disables new trigger. This can be used to reset the procession of new triggers.
+:param veto: Sets a veto to the trigger logic of the tlu.
+:type veto: bool</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Constellation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Constellation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="main_code.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Main Level</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023, SiLab, Institute of Physics, University of Bonn.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

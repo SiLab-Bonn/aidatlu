@@ -1,0 +1,771 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>aidatlu.main.tlu &#8212; AIDA-TLU  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/aidatlu/main/tlu';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.2.0" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">AIDA-TLU  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../Introduction.html">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../Configuration.html">
+    Configuration
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../Documentation.html">
+    Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../Constellation.html">
+    Constellation
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../hardware_code.html">
+    Hardware Level
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../main_code.html">
+    Main Level
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../Introduction.html">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../Configuration.html">
+    Configuration
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../Documentation.html">
+    Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../Constellation.html">
+    Constellation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../hardware_code.html">
+    Hardware Level
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../main_code.html">
+    Main Level
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item"><nav class="sidebar-indices-items" aria-labelledby="pst-indices-navigation-heading-2">
+  <p id="pst-indices-navigation-heading-2" class="sidebar-indices-items__title" role="heading" aria-level="1">Indices</p>
+  <ul class="indices-link">
+        <li class="toctree-l1">
+          <a class="reference internal"
+             href="../../../genindex.html"
+             accesskey="I">General Index</a>
+        </li>
+  </ul>
+</nav></div>
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">aidatlu.main.tlu</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for aidatlu.main.tlu</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tables</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zmq</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">aidatlu</span><span class="w"> </span><span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aidatlu.hardware.tlu_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">TLUControl</span><span class="p">,</span> <span class="n">TLUConfigure</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aidatlu.hardware.i2c</span><span class="w"> </span><span class="kn">import</span> <span class="n">I2CCore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aidatlu.main.config_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">yaml_parser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aidatlu.main.data_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">interpret_data</span>
+
+
+<div class="viewcode-block" id="AidaTLU">
+<a class="viewcode-back" href="../../../main_code.html#aidatlu.main.tlu.AidaTLU">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AidaTLU</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hw</span><span class="p">,</span> <span class="n">config_dict</span><span class="p">,</span> <span class="n">clock_config_path</span><span class="p">,</span> <span class="n">i2c</span><span class="o">=</span><span class="n">I2CCore</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">setup_main_logger</span><span class="p">(</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span> <span class="o">=</span> <span class="n">TLUControl</span><span class="p">(</span><span class="n">hw</span><span class="o">=</span><span class="n">hw</span><span class="p">,</span> <span class="n">i2c</span><span class="o">=</span><span class="n">i2c</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">write_clock_config</span><span class="p">(</span><span class="n">clock_config_path</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_configuration</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu_configure</span> <span class="o">=</span> <span class="n">TLUConfigure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="p">,</span> <span class="n">config_dict</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;TLU initialized&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AidaTLU.configure">
+<a class="viewcode-back" href="../../../main_code.html#aidatlu.main.tlu.AidaTLU.configure">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;loads the conf.yaml and configures the TLU accordingly.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu_configure</span><span class="o">.</span><span class="n">configure</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conf_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tlu_configure</span><span class="o">.</span><span class="n">get_configuration_table</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">get_event_fifo_fill_level</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">get_event_fifo_csr</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">get_scalers</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">reset_configuration</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_number</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h5_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">stop_run</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_number</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<div class="viewcode-block" id="AidaTLU.init_raw_data_table">
+<a class="viewcode-back" href="../../../main_code.html#aidatlu.main.tlu.AidaTLU.init_raw_data_table">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_raw_data_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the raw data table, where the raw FIFO data is found.&quot;&quot;&quot;</span>
+        <span class="n">data_dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">([(</span><span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="s2">&quot;u4&quot;</span><span class="p">)])</span>
+        <span class="n">config_dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">([(</span><span class="s2">&quot;attribute&quot;</span><span class="p">,</span> <span class="s2">&quot;S32&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;S32&quot;</span><span class="p">)])</span>
+
+        <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">hdf5_filter</span> <span class="o">=</span> <span class="n">tb</span><span class="o">.</span><span class="n">Filters</span><span class="p">(</span><span class="n">complib</span><span class="o">=</span><span class="s2">&quot;blosc&quot;</span><span class="p">,</span> <span class="n">complevel</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h5_file</span> <span class="o">=</span> <span class="n">tb</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_data_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;TLU&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">h5_file</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h5_file</span><span class="o">.</span><span class="n">root</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;raw_data&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">data_dtype</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Raw data&quot;</span><span class="p">,</span>
+            <span class="n">filters</span><span class="o">=</span><span class="n">hdf5_filter</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">config_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">h5_file</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h5_file</span><span class="o">.</span><span class="n">root</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;conf&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">config_dtype</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Configuration&quot;</span><span class="p">,</span>
+            <span class="n">filters</span><span class="o">=</span><span class="n">hdf5_filter</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">config_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf_list</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AidaTLU.handle_status">
+<a class="viewcode-back" href="../../../main_code.html#aidatlu.main.tlu.AidaTLU.handle_status">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Status message handling in separate thread. Calculates run time and obtain trigger information and sent it out every second.&quot;&quot;&quot;</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">current_thread</span><span class="p">()</span>
+        <span class="k">while</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="s2">&quot;do_run&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="n">last_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">get_timestamp</span><span class="p">()</span>
+            <span class="n">current_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">last_time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="p">)</span> <span class="o">*</span> <span class="mi">25</span> <span class="o">/</span> <span class="mi">1000000000</span>
+            <span class="c1"># Logs and poss. sends status every 1s.</span>
+            <span class="k">if</span> <span class="n">current_time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log_sent_status</span><span class="p">(</span><span class="n">current_time</span><span class="p">)</span>
+            <span class="c1"># Stops the TLU after some time in seconds.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">current_time</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stop_condition</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_trigger</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">get_post_veto_trigger</span><span class="p">()</span>
+                    <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_trigger</span>
+                <span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stop_condition</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="AidaTLU.log_sent_status">
+<a class="viewcode-back" href="../../../main_code.html#aidatlu.main.tlu.AidaTLU.log_sent_status">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">log_sent_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Logs the status of the TLU run with runtime, pre- and post-veto numbers/rates.</span>
+<span class="sd">           Also calculates the mean trigger frequency between function calls.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            time (int): current runtime of the TLU</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">post_veto_rate</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">get_post_veto_trigger</span><span class="p">()</span>
+            <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_post_veto_trigger</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pre_veto_rate</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">get_pre_veto_trigger</span><span class="p">()</span>
+            <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_pre_veto_trigger</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_time</span> <span class="o">=</span> <span class="n">time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_post_veto</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">get_post_veto_trigger</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_pre_veto</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">get_pre_veto_trigger</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zmq_address</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">send_string</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">run_time</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">total_post_veto</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">total_pre_veto</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">pre_veto_rate</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">post_veto_rate</span><span class="p">,</span>
+                    <span class="p">]</span>
+                <span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">zmq</span><span class="o">.</span><span class="n">NOBLOCK</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">=</span> <span class="n">time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_post_veto_trigger</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">get_post_veto_trigger</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_pre_veto_trigger</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">get_pre_veto_trigger</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Run time: </span><span class="si">%.1f</span><span class="s2"> s, Pre veto: </span><span class="si">%s</span><span class="s2">, Post veto: </span><span class="si">%s</span><span class="s2">, Pre veto rate: %.f Hz, Post veto rate.: %.f Hz&quot;</span>
+            <span class="o">%</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">run_time</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">total_pre_veto</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">total_post_veto</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pre_veto_rate</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">post_veto_rate</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">get_event_fifo_csr</span><span class="p">()</span> <span class="o">==</span> <span class="mh">0x10</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;FIFO is full&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AidaTLU.log_trigger_inputs">
+<a class="viewcode-back" href="../../../main_code.html#aidatlu.main.tlu.AidaTLU.log_trigger_inputs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">log_trigger_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_vector</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Logs which inputs triggered the event corresponding to the event vector.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event_vector (list): 6 data long event vector from the FIFO.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">w0</span> <span class="o">=</span> <span class="n">event_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">input_1</span> <span class="o">=</span> <span class="p">(</span><span class="n">w0</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x1</span>
+        <span class="n">input_2</span> <span class="o">=</span> <span class="p">(</span><span class="n">w0</span> <span class="o">&gt;&gt;</span> <span class="mi">17</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x1</span>
+        <span class="n">input_3</span> <span class="o">=</span> <span class="p">(</span><span class="n">w0</span> <span class="o">&gt;&gt;</span> <span class="mi">18</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x1</span>
+        <span class="n">input_4</span> <span class="o">=</span> <span class="p">(</span><span class="n">w0</span> <span class="o">&gt;&gt;</span> <span class="mi">19</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x1</span>
+        <span class="n">input_5</span> <span class="o">=</span> <span class="p">(</span><span class="n">w0</span> <span class="o">&gt;&gt;</span> <span class="mi">20</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x1</span>
+        <span class="n">input_6</span> <span class="o">=</span> <span class="p">(</span><span class="n">w0</span> <span class="o">&gt;&gt;</span> <span class="mi">21</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;Input 1: </span><span class="si">%s</span><span class="s2">, Input 2: </span><span class="si">%s</span><span class="s2">, Input 3: </span><span class="si">%s</span><span class="s2">, Input 4: </span><span class="si">%s</span><span class="s2">, Input 5: </span><span class="si">%s</span><span class="s2">, Input 6: </span><span class="si">%s</span><span class="s2">&quot;</span>
+            <span class="o">%</span> <span class="p">(</span><span class="n">input_1</span><span class="p">,</span> <span class="n">input_2</span><span class="p">,</span> <span class="n">input_3</span><span class="p">,</span> <span class="n">input_4</span><span class="p">,</span> <span class="n">input_5</span><span class="p">,</span> <span class="n">input_6</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AidaTLU.setup_zmq">
+<a class="viewcode-back" href="../../../main_code.html#aidatlu.main.tlu.AidaTLU.setup_zmq">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_zmq</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setup the zmq connection, this connection receives status messages.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">PUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zmq_address</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Connected ZMQ socket with address: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">zmq_address</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AidaTLU.run">
+<a class="viewcode-back" href="../../../main_code.html#aidatlu.main.tlu.AidaTLU.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start run of the TLU.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_run_configuration</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_active</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_status</span><span class="p">)</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_active</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">run_loop</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop_condition</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">KeyboardInterrupt</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">run_active</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># If this happens: poss. Hitrate to high for FIFO and or data handling.</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Incomplete event handling...&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_run</span><span class="p">()</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">do_run</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_run_configuration</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="AidaTLU.start_run_configuration">
+<a class="viewcode-back" href="../../../main_code.html#aidatlu.main.tlu.AidaTLU.start_run_configuration">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_run_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start of the run configurations, consists of timestamp resets, data preparations and zmq connections initialization.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">start_run</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">get_fw_version</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">get_device_id</span><span class="p">()</span>
+        <span class="c1"># reset starting parameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">get_timestamp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_post_veto_trigger</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">get_post_veto_trigger</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_pre_veto_trigger</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">get_pre_veto_trigger</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_condition</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># prepare data handling and zmq connection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tlu_configure</span><span class="o">.</span><span class="n">get_data_handling</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zmq_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tlu_configure</span><span class="o">.</span><span class="n">get_zmq_connection</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_trigger</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tlu_configure</span><span class="o">.</span><span class="n">get_stop_condition</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tlu_configure</span><span class="o">.</span><span class="n">get_output_data_path</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;tlu_data/&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">raw_data_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/tlu_raw_run</span><span class="si">%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">.h5&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">run_number</span><span class="p">,</span>
+                <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y_%m_</span><span class="si">%d</span><span class="s2">_%H_%M_%S&quot;</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">interpreted_data_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">path</span>
+            <span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/tlu_interpreted_run</span><span class="si">%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">.h5&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">run_number</span><span class="p">,</span>
+                <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y_%m_</span><span class="si">%d</span><span class="s2">_%H_%M_%S&quot;</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_raw_data_table</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zmq_address</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setup_zmq</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="AidaTLU.run_loop">
+<a class="viewcode-back" href="../../../main_code.html#aidatlu.main.tlu.AidaTLU.run_loop">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A single instance of the run loop. In a TLU run this function needs to be called repeatedly.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            KeyboardInterrupt: The run loop can be interrupted when raising a KeyboardInterrupt.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">current_event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">pull_fifo_event</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_data</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">current_event</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">data_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_event</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop_condition</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">KeyboardInterrupt</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">run_active</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># If this happens: poss. Hitrate to high for FIFO and or Data handling.</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Incomplete Event handling...&quot;</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_active</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="AidaTLU.stop_run_configuration">
+<a class="viewcode-back" href="../../../main_code.html#aidatlu.main.tlu.AidaTLU.stop_run_configuration">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_run_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Cleans remaining FIFO data and closes data files and zmq connections after a run.&quot;&quot;&quot;</span>
+        <span class="c1"># Cleanup of FIFO</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu_controller</span><span class="o">.</span><span class="n">pull_fifo_event</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zmq_address</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h5_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">interpret_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_data_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpreted_data_path</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Run finished&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">uhal</span>
+
+    <span class="n">uhal</span><span class="o">.</span><span class="n">setLogLevelTo</span><span class="p">(</span><span class="n">uhal</span><span class="o">.</span><span class="n">LogLevel</span><span class="o">.</span><span class="n">NOTICE</span><span class="p">)</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">uhal</span><span class="o">.</span><span class="n">ConnectionManager</span><span class="p">(</span><span class="s2">&quot;file://../misc/aida_tlu_connection.xml&quot;</span><span class="p">)</span>
+    <span class="n">hw</span> <span class="o">=</span> <span class="n">uhal</span><span class="o">.</span><span class="n">HwInterface</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">getDevice</span><span class="p">(</span><span class="s2">&quot;aida_tlu.controlhub&quot;</span><span class="p">))</span>
+
+    <span class="n">clock_path</span> <span class="o">=</span> <span class="s2">&quot;../misc/aida_tlu_clk_config.txt&quot;</span>
+    <span class="n">config_path</span> <span class="o">=</span> <span class="s2">&quot;../tlu_configuration.yaml&quot;</span>
+
+    <span class="n">conf_dict</span> <span class="o">=</span> <span class="n">yaml_parser</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
+    <span class="n">tlu</span> <span class="o">=</span> <span class="n">AidaTLU</span><span class="p">(</span><span class="n">hw</span><span class="p">,</span> <span class="n">config_path</span><span class="p">,</span> <span class="n">clock_path</span><span class="p">)</span>
+
+    <span class="n">tlu</span><span class="o">.</span><span class="n">configure</span><span class="p">()</span>
+    <span class="n">tlu</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023, SiLab, Institute of Physics, University of Bonn.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
