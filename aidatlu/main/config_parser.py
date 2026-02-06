@@ -50,6 +50,13 @@ def yaml_parser(conf_file_path: str) -> dict:
         "max_trigger_number": yaml_conf["max_trigger_number"],
         "timeout": yaml_conf["timeout"],
     }
+
+    for i in range(4):
+        if "ignore_busy" in yaml_conf["dut_module"]["dut_%s" % (i + 1)]:
+            conf["DUT_%s_ignore_busy" % (i + 1)] = yaml_conf["dut_module"][
+                "dut_%s" % (i + 1)
+            ]["ignore_busy"]
+
     return conf
 
 
@@ -151,6 +158,10 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
     conf["DUT_2_ignore_busy"] = 0
     conf["DUT_3_ignore_busy"] = 0
     conf["DUT_4_ignore_busy"] = 0
+
+    for i in range(4):
+        if "ignore_busy" in toml_conf:
+            conf["DUT_%s_ignore_busy" % (i + 1)] = toml_conf["ignore_busy"][i]
 
     # Specifically disable some configuration parameters for use with constellation.
     if not constellation:

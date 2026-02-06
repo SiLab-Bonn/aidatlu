@@ -305,7 +305,7 @@ class TLUConfigure:
                 self.tlu.io_controller.clock_hdmi_output(i + 1, "chip")
             self.tlu.io_controller.configure_hdmi(i + 1, "0111")
             ignore_busy ^= self.conf["DUT_%s_ignore_busy" % (i + 1)] << i
-            if ["DUT_%s_ignore_busy" % (i + 1)] == True:
+            if ["DUT_%s_ignore_busy" % (i + 1)] == 1:
                 self.log.info("DUT interface %i ignores busy" % (i + 1))
 
         [
