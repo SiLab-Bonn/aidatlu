@@ -21,6 +21,10 @@ def yaml_parser(conf_file_path: str) -> dict:
         "DUT_2": yaml_conf["dut_module"]["dut_2"]["mode"],
         "DUT_3": yaml_conf["dut_module"]["dut_3"]["mode"],
         "DUT_4": yaml_conf["dut_module"]["dut_4"]["mode"],
+        "DUT_1_ignore_busy": 0,
+        "DUT_2_ignore_busy": 0,
+        "DUT_3_ignore_busy": 0,
+        "DUT_4_ignore_busy": 0,
         "threshold_1": yaml_conf["trigger_inputs"]["threshold"]["threshold_1"],
         "threshold_2": yaml_conf["trigger_inputs"]["threshold"]["threshold_2"],
         "threshold_3": yaml_conf["trigger_inputs"]["threshold"]["threshold_3"],
@@ -46,6 +50,13 @@ def yaml_parser(conf_file_path: str) -> dict:
         "max_trigger_number": yaml_conf["max_trigger_number"],
         "timeout": yaml_conf["timeout"],
     }
+
+    for i in range(4):
+        if "ignore_busy" in yaml_conf["dut_module"]["dut_%s" % (i + 1)]:
+            conf["DUT_%s_ignore_busy" % (i + 1)] = yaml_conf["dut_module"][
+                "dut_%s" % (i + 1)
+            ]["ignore_busy"]
+
     return conf
 
 
@@ -143,6 +154,14 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
     conf["pmt_control_2"] = toml_conf["pmt_power"][1]
     conf["pmt_control_3"] = toml_conf["pmt_power"][2]
     conf["pmt_control_4"] = toml_conf["pmt_power"][3]
+    conf["DUT_1_ignore_busy"] = 0
+    conf["DUT_2_ignore_busy"] = 0
+    conf["DUT_3_ignore_busy"] = 0
+    conf["DUT_4_ignore_busy"] = 0
+
+    for i in range(4):
+        if "ignore_busy" in toml_conf:
+            conf["DUT_%s_ignore_busy" % (i + 1)] = toml_conf["ignore_busy"][i]
 
     # Specifically disable some configuration parameters for use with constellation.
     if not constellation:
