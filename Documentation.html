@@ -1,0 +1,890 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Documentation &#8212; AIDA-TLU  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Documentation';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Constellation" href="Constellation.html" />
+    <link rel="prev" title="Configuration" href="Configuration.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.2.0" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">AIDA-TLU  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="Introduction.html">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="Configuration.html">
+    Configuration
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="Constellation.html">
+    Constellation
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="hardware_code.html">
+    Hardware Level
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="main_code.html">
+    Main Level
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="Introduction.html">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="Configuration.html">
+    Configuration
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="Constellation.html">
+    Constellation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="hardware_code.html">
+    Hardware Level
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="main_code.html">
+    Main Level
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hardware">Hardware</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inter-integrated-circuit-i-2c">Inter-Integrated Circuit I^2C</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#i-o-expander">I/O Expander</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clock-chip">Clock Chip</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#digital-analog-converter-dac">Digital-Analog-Converter DAC</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#power-dac-s">Power DAC’s</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#power-module">Power Module</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#threshold-dac-s">Threshold DAC’s</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dut-interfaces-hdmi-connectors">DUT interfaces (HDMI connectors)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dut-logic">DUT Logic</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trigger-logic">Trigger Logic</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#operating-modes">Operating Modes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eudet-handshake-mode">EUDET Handshake Mode</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aida-mode">AIDA Mode</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aida-mode-with-trigger-number">AIDA Mode with Trigger Number</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-features">Additional features</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#online-monitor">Online Monitor</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tests">Tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#log-level">Log Level</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-into-eudaq2">Integration into EUDAQ2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-setup">Testing setup</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+        <div class="sidebar-primary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Documentation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item"><nav class="sidebar-indices-items" aria-labelledby="pst-indices-navigation-heading-2">
+  <p id="pst-indices-navigation-heading-2" class="sidebar-indices-items__title" role="heading" aria-level="1">Indices</p>
+  <ul class="indices-link">
+        <li class="toctree-l1">
+          <a class="reference internal"
+             href="genindex.html"
+             accesskey="I">General Index</a>
+        </li>
+  </ul>
+</nav></div>
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Documentation</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="documentation">
+<h1>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h1>
+<a class="reference internal image-reference" href="_images/structure.png"><img alt="_images/structure.png" src="_images/structure.png" width="600" />
+</a>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p>The documentation presented here describes a newly adapted Python based control system for the AIDA-2020 Trigger Logic Unit (TLU).
+This system is mostly based upon the EUDAQ2 TLU software (<a class="github reference external" href="https://github.com/eudaq/eudaq/tree/master/user/tlu">eudaq/eudaq</a>)
+with some additional features for better usability and integration into the SiLab-Bonn infrastructure.
+In the following the control of the different hardware components as well as additional features of the control software are described.
+And a rough summary of the original documentation (<a class="reference external" href="https://ohwr.org/project/fmc-mtlu">https://ohwr.org/project/fmc-mtlu</a>) is presented.
+During developing the present software I stumbled over some technical details which are also shown below.</p>
+</section>
+<section id="hardware">
+<h2>Hardware<a class="headerlink" href="#hardware" title="Link to this heading">#</a></h2>
+<section id="inter-integrated-circuit-i-2c">
+<h3>Inter-Integrated Circuit I^2C<a class="headerlink" href="#inter-integrated-circuit-i-2c" title="Link to this heading">#</a></h3>
+<p>The configuration of the different board features and hardware components goes via I^2C interface.
+This interface is widely used as a serial communication bus and provides the protocol for the Ethernet communication driver.
+IPbus (<a class="reference external" href="https://ipbus.web.cern.ch/doc/user/html/">https://ipbus.web.cern.ch/doc/user/html/</a>) allows the access to the FPGA hardware of the TLU.
+The user interface uHAL (<a class="reference external" href="https://ipbus.web.cern.ch/doc/user/html/software/uhalQuickTutorial.html">https://ipbus.web.cern.ch/doc/user/html/software/uhalQuickTutorial.html</a>) is a C++/Python library
+for all needed read/write hardware level functionality.
+Each register has an identifying address. The addresses can be found in a yaml file (take a look at /misc).
+The script i2c.py writes and reads bits to and from each of these registers.</p>
+</section>
+<section id="i-o-expander">
+<h3>I/O Expander<a class="headerlink" href="#i-o-expander" title="Link to this heading">#</a></h3>
+<p>The TLU uses four I/O expander PCA9539PW.
+Each of these chips provide two 8-bit input output expansions and can be used in parallel.
+The 11 front panel LEDs are controlled by two expanders where the other two configure the 4 HDMI inputs and/or outputs of the DUT interfaces.
+To configure the chip and to set for e.q. the polarity of one of the 8-bit expansions a command byte is set to the register.
+Afterwards the actual data follows.
+The script ioexpander_controller.py writes the command byte to the right expander.
+To control the four expanders the script uses an identifier for the two
+LED expanders (io_exp = 1) and two output expanders (io_exp = 2).
+To further differentiate each of the two expanders another identifier is used (exp_id).</p>
+</section>
+<section id="clock-chip">
+<h3>Clock Chip<a class="headerlink" href="#clock-chip" title="Link to this heading">#</a></h3>
+<p>A Si5345 is used for clock generation.
+This clock is used internally in for e.q. the trigger generation, but can also be distributed to each of the DUT’s for synchronous operating mode.
+The chip allows the generation of internal triggers in principle up to 160 MHz.
+The trigger rate is calculated from clock intervals this leads to a rounding error for higher trigger frequencies.
+So higher trigger frequencies are shifted slightly.</p>
+<p>The clock chip needs to be configured. To do so a configuration file containing ~380 address-data pairs is written to the chip via I^2C.
+This configuration file can be generated by software (<a class="reference external" href="https://www.skyworksinc.com/en/application-pages/clockbuilder-pro-software">https://www.skyworksinc.com/en/application-pages/clockbuilder-pro-software</a>).
+The default clock frequency using the default configuration file is 40 MHz. For now this frequency can not be changed.
+The script clock_controller.py configures the chip.
+Most of the other functions are just used for bug fixing.</p>
+</section>
+<section id="digital-analog-converter-dac">
+<h3>Digital-Analog-Converter DAC<a class="headerlink" href="#digital-analog-converter-dac" title="Link to this heading">#</a></h3>
+<p>To transform the different output and input voltages from digital signals to analog signals (or the other way around),
+three AD5665R DAC’s are used.
+Here one DAC’s is used for the photomultiplier (PMT) power outputs the other two for the threshold of the trigger inputs.
+According to the data sheet the DAC’s have an internal reference voltage of 2.5 V.
+Nevertheless an external voltage of 1.3 V is set as default for all implemented user cases.
+Each DAC has four output pins that can be used in parallel.
+Functions to control the DAC’s can be found in voltage_controller.</p>
+<section id="power-dac-s">
+<h4>Power DAC’s<a class="headerlink" href="#power-dac-s" title="Link to this heading">#</a></h4>
+<p>The four output channels of one DAC are dedicated to the control voltage of the four different PMT power outputs.
+Each output has a range of 0 V to 1 V, using the external reference voltage.
+Where an internal reference voltage leads to a possible output voltage of up to 2 V.</p>
+</section>
+<section id="power-module">
+<h4>Power Module<a class="headerlink" href="#power-module" title="Link to this heading">#</a></h4>
+<p>Four 4-pin LEMO connectors not only deliver a control voltage but also distribute power in general to the PMT’s.
+The LEMO has the following pin connections.
+Pin 1 is used for 12 V general power, pin 2 is not connected.
+The control voltage is on pin 3 and has the range [0; 1] V.
+At last pin 4 is connected to ground.</p>
+<a class="reference internal image-reference" href="_images/4_pin_lemo.png"><img alt="_images/4_pin_lemo.png" src="_images/4_pin_lemo.png" width="300" />
+</a>
+<p>Three green LEDs on the front panel indicate the correct functioning of the power module.
+The POWER LED for 12 V supply voltage, the other two are for 5 V voltage regulators.</p>
+</section>
+<section id="threshold-dac-s">
+<h4>Threshold DAC’s<a class="headerlink" href="#threshold-dac-s" title="Link to this heading">#</a></h4>
+<p>To transform the analog signals of the 6 trigger inputs to digital signals two DAC’s are in use.
+The first two inputs are connected to one DAC the last 4 to the other one.
+Each input channel is connected in reverse to the DAC input.
+A mapping in software corrects these connections.
+To set the threshold of one input channel one uses the function set_threshold with the trigger input from 1 to 6
+and set the threshold to Volt. The threshold range is [-1.3; 1.3] V.
+The calculated voltage resolution is about 40 uV.
+These values correspond to the external reference voltage, as the default.
+Also some people say trigger input 2 has some glitches.</p>
+</section>
+</section>
+<section id="dut-interfaces-hdmi-connectors">
+<h3>DUT interfaces (HDMI connectors)<a class="headerlink" href="#dut-interfaces-hdmi-connectors" title="Link to this heading">#</a></h3>
+<p>Four HDMI connectors are used as the interface between the TLU and the different DUT devices.
+Each pin works bidirectional any two differential signal pairs can be set as output or input.
+The direction of the HDMI pins is set by two I/O expanders with the following signal pins.
+Where the first differential signal is a clock signal (CLK).
+This clock signal can be enabled/disabled and is provided either by the Clock Chip or directly from the FPGA clock.
+For now the clock from the FPGA does not work.
+Depending on the operating mode also different trigger words are sent through the clock line (e.q. trigger number in EUDET mode).
+The next signal is the content (CONT). This signal is used by the TLU to issue control commands.
+The BUSY signal is usually set by the DUT and raises a VETO for the generation of new trigger depending on operating mode.
+SPARE is only used by the AIDA mode and raises a reset signal at the start of runs and should also be driven by the TLU.
+Trigger (TRIG) is set by the TLU at default.
+Through the trigger line not only trigger signals are issued but also trigger words depending on the operating mode.
+Setting the correct polarity to these pins is essential for correct operation working of the TLU.
+One should also note that DUT interface should not be used in AIDA mode according to higher sources.</p>
+<a class="reference internal image-reference" href="_images/hdmi.png"><img alt="_images/hdmi.png" src="_images/hdmi.png" width="400" />
+</a>
+<div class="pst-scrollable-table-container"><table class="table table-left">
+<thead>
+<tr class="row-odd"><th class="head"><p>HDMI PIN</p></th>
+<th class="head"><p>HDMI Signal Name</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>CLK</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>GND</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>CLK*</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>CONT</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>GND</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>CONT*</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>BUSY</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>GND</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>BUSY*</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>SPARE</p></td>
+</tr>
+<tr class="row-even"><td><p>11</p></td>
+<td><p>GND</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>SPARE*</p></td>
+</tr>
+<tr class="row-even"><td><p>13</p></td>
+<td><p>n.c.</p></td>
+</tr>
+<tr class="row-odd"><td><p>14</p></td>
+<td><p>POWER</p></td>
+</tr>
+<tr class="row-even"><td><p>15</p></td>
+<td><p>TRIG</p></td>
+</tr>
+<tr class="row-odd"><td><p>16</p></td>
+<td><p>TRIG*</p></td>
+</tr>
+<tr class="row-even"><td><p>17</p></td>
+<td><p>GND</p></td>
+</tr>
+<tr class="row-odd"><td><p>18</p></td>
+<td><p>n.c.</p></td>
+</tr>
+<tr class="row-even"><td><p>19</p></td>
+<td><p>n.c.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="dut-logic">
+<h3>DUT Logic<a class="headerlink" href="#dut-logic" title="Link to this heading">#</a></h3>
+<p>The DUT logic in dut_controller.py sets the DUT operating modes.
+Different DUT devices are enabled or disabled by the function set_dut_mask.
+One important thing is to only enable DUT interfaces that are in use.
+A not connected device configured in handshake mode blocks the working of the TLU.
+The operating mode is set by the function set_dut_mask_mode each DUT is controlled by two bits in an 8-bit WORD.
+Bit 0 and 1 control DUT 1, bit 2 and 3 DUT 2 and so on. AIDA mode is set by setting the bits to 11 and EUDET mode by setting 00.
+So to set DUT 1 to AIDA mode and the rest to EUDET mode one hast to set the bit-WORD ‘00000011’ to the function.</p>
+</section>
+<section id="trigger-logic">
+<h3>Trigger Logic<a class="headerlink" href="#trigger-logic" title="Link to this heading">#</a></h3>
+<p>The TLU can produce valid triggers from six different trigger inputs.
+Each input can accept or veto new triggers.
+Between each trigger input there is also the possibility to set ‘AND’ or ‘OR’.
+This leads to 64 possible combinations of so-called trigger words.
+Where each trigger word describes one specific trigger configuration.
+One obtains the resulting trigger configuration to write into the trigger logic register by adding up all desired valid trigger configurations.
+For example if one need triggers from input 1 or input 2.
+Than all valid trigger combinations, ignoring the inputs channels 3-6 are:</p>
+<div class="pst-scrollable-table-container"><table class="table table-left">
+<thead>
+<tr class="row-odd"><th class="head"><p>Input 1</p></th>
+<th class="head"><p>Input 2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The software uses two different variants of these words.
+A long word variant which is just the 64-bit trigger word.
+For the second variant the long word is split into two 32-bit words (mask_low and mask_high).
+To help with the generation of these trigger words, the software uses a specific function to translate
+the trigger settings in the configuration file to these words.</p>
+<p>The trigger signals from the different trigger inputs can be stretched and delayed accounting for
+different trigger hardware setups.
+Also, the TLU can trigger on the rising or falling edge of incoming trigger signals.</p>
+<p>An additional feature of the trigger logic is the generation of internal triggers.
+In the configuration file a specific trigger frequency can be set and the TLU will then generate triggers with said frequency.
+The theoretical range of these triggers is between 0 Hz and 160 MHz.
+Because the trigger frequency is calculated in reference to a clock interval, there is for now a
+rounding error for higher frequency. This shifts the actual output trigger frequency.</p>
+<p>The number of triggers since the last trigger VETO is stored together with the
+total number of triggers per run.
+From these numbers general status messages for e.q. the trigger rate are generated.
+These status messages can also be distributed over a ZMQ socket using the online monitor.</p>
+</section>
+</section>
+<section id="operating-modes">
+<h2>Operating Modes<a class="headerlink" href="#operating-modes" title="Link to this heading">#</a></h2>
+<p>The TLU runs in different operating modes. This allows more flexibility for different DUT readout setups.
+Different modes can provide clock synchronizations or distributes the trigger number together with the trigger signal.
+Each DUT can be run in different operating modes where a single one vetos new triggers for all devices.
+This vetoing for all devices can be disabled (but is not implemented).</p>
+<section id="eudet-handshake-mode">
+<h3>EUDET Handshake Mode<a class="headerlink" href="#eudet-handshake-mode" title="Link to this heading">#</a></h3>
+<p>The TLU sets TRIGGER to high for 1 clock cycles. Afterwards the DUT asserts BUSY and sends a clock to the TLU through CLOCK.
+This clocks out the trigger number from the TLU to TRIGGER.
+To set the software to the EUDET operating mode a 0b00 is set to the according DUT logic.
+The clock output needs to be disabled for this mode to work.
+If the clock output is enabled then the trigger number is not clocked out correctly.
+Only the least significant 15 bit of the trigger word are sent out.</p>
+</section>
+<section id="aida-mode">
+<h3>AIDA Mode<a class="headerlink" href="#aida-mode" title="Link to this heading">#</a></h3>
+<p>In AIDA mode the clock of the TLU and the DUT is synchronized.
+For this the TLU clock needs to be distributed.
+The distribution of the clock via the LEMO has the problem that the clock signal form no longer arrives cleanly at the device.
+So distributing the clock using the HDMI connectors is advised.
+An important step is to synchronize all delays (e.q. different cable length) of the clock signal with the trigger signal if encountered.</p>
+<p>At the start of a run the TLU sends out a RESET signal to the DUT.
+This signal can then be used by the DUT to synchronize the timestamp of the device and the TLU.
+Then the TLU sends triggers continuously to the DUT.
+Where each trigger signal has a length of one clock cycle.
+To generate a new trigger no answer of the DUT is needed.
+But the DUT can veto new trigger signals at any time by asserting BUSY.
+The following is a checklist for the working of the AIDA mode together with the (SiLab-Bonn) BDAQ board.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>AIDA Mode BDAQ Firmware. Here the external trigger clock is used also internally.</p></li>
+<li><dl class="simple">
+<dt>Changes in testbench yaml.</dt><dd><ul>
+<li><p>Change Trigger Mode from 3 to 2.</p></li>
+<li><p>Change Trigger Handshake Wait Cycle from 5 to 1.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Use special clock cable configuration.
+So enable the clock LEMO output of the TLU
+and connect the clock output to the BDAQ board.
+Or use special HDMI RJ45 AIDA mode adapter.</p></li>
+<li><p>Check Cable lengths to synchronize clock and trigger signals.</p></li>
+<li><p>Note when starting triggering,
+the DUT scan needs to be started before the TLU scan for the timestamp
+RESET to arrive.</p></li>
+<li><p>For now also the AIDA mode needs to be enabled in the scan configurations.
+This can for now only be found on a special TJ DAQ branch.
+Or in the testbench yaml, depending on the setup there is to enable RESET option.</p></li>
+</ul>
+</div></blockquote>
+<p>If only one BDAQ board is used in AIDA mode there is a chance for two very fast trigger to occur right one after the other.
+If the distance between the triggers is smaller than the distance between the first trigger signal and the BUSY signal.
+Then the tlu sends out two triggers because no handshake is awaited.
+This leads to an event number drift.
+This can be prevented by stretching the trigger input signal by some clock cycles.
+Another important thing is to follow the procedure for starting an AIDA run:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>configure TLU</p></li>
+<li><p>start all DUT’s, telescopes and time reference plane scans</p></li>
+<li><p>start TLU run</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="aida-mode-with-trigger-number">
+<h3>AIDA Mode with Trigger Number<a class="headerlink" href="#aida-mode-with-trigger-number" title="Link to this heading">#</a></h3>
+<p>This operating mode is an extension of the AIDA mode.
+The difference to the standard AIDA mode is, that additionally at each trigger
+the trigger number is sent through RESET.</p>
+</section>
+</section>
+<section id="additional-features">
+<h2>Additional features<a class="headerlink" href="#additional-features" title="Link to this heading">#</a></h2>
+<section id="online-monitor">
+<h3>Online Monitor<a class="headerlink" href="#online-monitor" title="Link to this heading">#</a></h3>
+<p>The Online Monitor (<a class="github reference external" href="https://github.com/SiLab-Bonn/online_monitor">SiLab-Bonn/online_monitor</a>) creates real-time plots of a dataset.
+This allows live observation of the trigger rate during operation.
+The TLU scripts sends status information containing the trigger rate, event number, trigger number and run time to a converter script.
+The converter script translates the data format and sends the data to a receiver script.
+The online monitor uses a receiver script to create the real time data plots.
+The Data is sent and received using ZMQ sockets (<a class="reference external" href="https://zeromq.org/">https://zeromq.org/</a>).
+The ZMQ connection can be enabled and disabled in the configuration file.
+To start the online monitor one navigates to the directory and uses for e.q. the terminal command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">start_online_monitor configuration.yaml</span>
+</pre></div>
+</div>
+<p>Another command reliable stops all instances of the running online monitor:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">stop_online_monitor</span>
+</pre></div>
+</div>
+</section>
+<section id="tests">
+<h3>Tests<a class="headerlink" href="#tests" title="Link to this heading">#</a></h3>
+<p>With pytest (<a class="reference external" href="https://docs.pytest.org/en/stable/">https://docs.pytest.org/en/stable/</a>) the AIDA TLU control program can be tested.
+In the test directory different testing scripts can be found.
+The test setup helps to find bugs when further developing the TLU program and also to check for depreciated functions.
+The command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pytest</span>
+</pre></div>
+</div>
+<p>executes the complete testing infrastructure.
+But also the individual log outputs can be displayed.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pytest -sv</span>
+</pre></div>
+</div>
+<p>Tests can be run individually.
+There is also an implemented AIDA-TLU mock, to allow tests and software development without hardware.
+This mock is used as a default.
+To test with connected hardware set an environment variable <code class="docutils literal notranslate"><span class="pre">`HW=True``</span></code>:
+.. code-block:: console</p>
+<blockquote>
+<div><p>HW=True pytest -sv</p>
+</div></blockquote>
+<p>The tests load the configuration file <code class="docutils literal notranslate"><span class="pre">`tlu_test_configuration.yaml`</span></code>.
+Individual settings in the test configuration file can not be changed.</p>
+</section>
+<section id="log-level">
+<h3>Log Level<a class="headerlink" href="#log-level" title="Link to this heading">#</a></h3>
+<p>To set different log levels change the default log level in logger.py ‘setup_main_logger’ and ‘setup_derived_logger’.</p>
+</section>
+<section id="integration-into-eudaq2">
+<h3>Integration into EUDAQ2<a class="headerlink" href="#integration-into-eudaq2" title="Link to this heading">#</a></h3>
+<p>Due to the similarities of the python control software and the established EUDAQ TLU software
+an integration into EUDAQ2 is possible.
+The TLUPyProducer.py is an example skeleton of such integration.</p>
+</section>
+<section id="testing-setup">
+<h3>Testing setup<a class="headerlink" href="#testing-setup" title="Link to this heading">#</a></h3>
+<p>A small test setup inside the lab is realized using a Pulse Generator.
+With this pseudo scintillator pulses are generated.
+The TLU then processes these pulses and sends them to one or multiple BDAQ boards.
+One can then compare the Data recorded inside the TLU with the one recorded on the BDAQ boards.</p>
+<a class="reference internal image-reference" href="_images/test_setup_2.png"><img alt="_images/test_setup_2.png" src="_images/test_setup_2.png" width="650" />
+</a>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Configuration.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Configuration</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Constellation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Constellation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023, SiLab, Institute of Physics, University of Bonn.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

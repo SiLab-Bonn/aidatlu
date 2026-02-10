@@ -1,0 +1,1008 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>aidatlu.hardware.tlu_controller &#8212; AIDA-TLU  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/aidatlu/hardware/tlu_controller';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.2.0" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">AIDA-TLU  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../Introduction.html">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../Configuration.html">
+    Configuration
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../Documentation.html">
+    Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../Constellation.html">
+    Constellation
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../hardware_code.html">
+    Hardware Level
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../main_code.html">
+    Main Level
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../Introduction.html">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../Configuration.html">
+    Configuration
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../Documentation.html">
+    Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../Constellation.html">
+    Constellation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../hardware_code.html">
+    Hardware Level
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../main_code.html">
+    Main Level
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item"><nav class="sidebar-indices-items" aria-labelledby="pst-indices-navigation-heading-2">
+  <p id="pst-indices-navigation-heading-2" class="sidebar-indices-items__title" role="heading" aria-level="1">Indices</p>
+  <ul class="indices-link">
+        <li class="toctree-l1">
+          <a class="reference internal"
+             href="../../../genindex.html"
+             accesskey="I">General Index</a>
+        </li>
+  </ul>
+</nav></div>
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">aidatlu.hardware.tlu_controller</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for aidatlu.hardware.tlu_controller</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">aidatlu</span><span class="w"> </span><span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aidatlu.hardware.clock_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClockControl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aidatlu.hardware.dac_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">DacControl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aidatlu.hardware.dut_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">DUTLogic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aidatlu.hardware.i2c</span><span class="w"> </span><span class="kn">import</span> <span class="n">I2CCore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aidatlu.hardware.ioexpander_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">IOControl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aidatlu.hardware.trigger_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">TriggerLogic</span>
+
+
+<div class="viewcode-block" id="TLUControl">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TLUControl</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Controls general TLU functionalities.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hw</span><span class="p">,</span> <span class="n">i2c</span><span class="o">=</span><span class="n">I2CCore</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">setup_main_logger</span><span class="p">(</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i2c</span> <span class="o">=</span> <span class="n">i2c</span><span class="p">(</span><span class="n">hw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i2c_hw</span> <span class="o">=</span> <span class="n">hw</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Initializing IPbus interface&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;eeprom&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Found device with ID </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">hex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_device_id</span><span class="p">()))</span>
+
+        <span class="c1"># TODO some configuration also sends out ~70 triggers.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">io_controller</span> <span class="o">=</span> <span class="n">IOControl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dac_controller</span> <span class="o">=</span> <span class="n">DacControl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clock_controller</span> <span class="o">=</span> <span class="n">ClockControl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">io_controller</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trigger_logic</span> <span class="o">=</span> <span class="n">TriggerLogic</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dut_logic</span> <span class="o">=</span> <span class="n">DUTLogic</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="p">)</span>
+
+    <span class="c1">### General TLU Functions ###</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Disable all outputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">io_controller</span><span class="o">.</span><span class="n">clock_lemo_output</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">io_controller</span><span class="o">.</span><span class="n">configure_hdmi</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dac_controller</span><span class="o">.</span><span class="n">set_voltage</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">io_controller</span><span class="o">.</span><span class="n">all_off</span><span class="p">()</span>
+        <span class="c1"># sets all thresholds to 1.2 V</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dac_controller</span><span class="o">.</span><span class="n">set_threshold</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># Resets all internal counters and raise the trigger veto.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_run_active</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_status</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_counters</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">set_trigger_veto</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_fifo</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_timestamp</span><span class="p">()</span>
+
+<div class="viewcode-block" id="TLUControl.start_run">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.start_run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start run configurations&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_counters</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_fifo</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_timestamp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_run_active</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">set_trigger_veto</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.stop_run">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.stop_run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stop run configurations&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">set_trigger_veto</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_run_active</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+    <span class="c1">### Basic TLU Control Functions ###</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_clock_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clock_config_path</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clock_controller</span><span class="o">.</span><span class="n">write_clock_conf</span><span class="p">(</span><span class="n">clock_config_path</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TLUControl.get_device_id">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.get_device_id">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_device_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read back board id. Consists of six blocks of hex data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Board id as 48 bits integer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
+            <span class="nb">id</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;eeprom&quot;</span><span class="p">],</span> <span class="mh">0xFA</span> <span class="o">+</span> <span class="n">addr</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="s2">&quot;0x&quot;</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;</span><span class="si">{:x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">id</span><span class="p">]),</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFFFFFF</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_fw_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TLUControl.reset_timestamp">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.reset_timestamp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets bit to  &#39;ResetTimestampW&#39; register to reset the time stamp.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span><span class="s2">&quot;Event_Formatter.ResetTimestampW&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.reset_counters">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.reset_counters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_counters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resets the trigger counters.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_status</span><span class="p">(</span><span class="mh">0x2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_status</span><span class="p">(</span><span class="mh">0x0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.reset_status">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.reset_status">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resets the complete status and all counters.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_status</span><span class="p">(</span><span class="mh">0x3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_status</span><span class="p">(</span><span class="mh">0x0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_status</span><span class="p">(</span><span class="mh">0x4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_status</span><span class="p">(</span><span class="mh">0x0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.reset_fifo">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.reset_fifo">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_fifo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets 0 to &#39;EventFifoCSR&#39; this resets the FIFO.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_event_fifo_csr</span><span class="p">(</span><span class="mh">0x0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.set_event_fifo_csr">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.set_event_fifo_csr">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_event_fifo_csr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets value to the EventFifoCSR register.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (int): 0 resets the FIFO. #TODO can do other stuff that is not implemented</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span><span class="s2">&quot;eventBuffer.EventFifoCSR&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.write_status">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.write_status">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets value to the &#39;SerdesRstW&#39; register.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (int): Bit 0 resets the status, bit 1 resets trigger counters and bit 2 calibrates IDELAY.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span><span class="s2">&quot;triggerInputs.SerdesRstW&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.set_run_active">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.set_run_active">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_run_active</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Raises internal run active signal.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state (bool): True sets run active, False disables it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;State has to be bool&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span><span class="s2">&quot;Shutter.RunActiveRW&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Run active: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_run_active</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.get_run_active">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.get_run_active">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_run_active</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reads register &#39;RunActiveRW&#39;</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Returns bool of the run active register.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s2">&quot;Shutter.RunActiveRW&quot;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.set_enable_record_data">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.set_enable_record_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_enable_record_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;#TODO not sure what this does. Looks like a separate internal event buffer to the FIFO.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (int): #TODO I think this does not work</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span><span class="s2">&quot;Event_Formatter.Enable_Record_Data&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.get_event_fifo_csr">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.get_event_fifo_csr">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_event_fifo_csr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reads value from &#39;EventFifoCSR&#39;, corresponds to status flags of the FIFO.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: number of events</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s2">&quot;eventBuffer.EventFifoCSR&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.get_event_fifo_fill_level">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.get_event_fifo_fill_level">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_event_fifo_fill_level</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reads value from &#39;EventFifoFillLevel&#39;</span>
+<span class="sd">           Returns the number of words written in</span>
+<span class="sd">           the FIFO. The lowest 14-bits are the actual data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: buffer level of the fifi</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s2">&quot;eventBuffer.EventFifoFillLevel&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.get_timestamp">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.get_timestamp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current time stamp.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Time stamp in 40MHz clock cycles.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s2">&quot;Event_Formatter.CurrentTimestampHR&quot;</span><span class="p">)</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">time</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">time</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s2">&quot;Event_Formatter.CurrentTimestampLR&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">time</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.pull_fifo_event">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.pull_fifo_event">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pull_fifo_event</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pulls event from the FIFO. This is needed in the run loop to prevent the buffer to get stuck.</span>
+<span class="sd">            if this register is full the fifo needs to be reset or new triggers are generated but not sent out.</span>
+<span class="sd">            #TODO check here if the FIFO is full and reset it if needed would prob. make sense.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: 6 element long vector containing bitwords of the data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">event_numb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_event_fifo_fill_level</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">event_numb</span><span class="p">:</span>
+            <span class="n">fifo_content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i2c_hw</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="s2">&quot;eventBuffer.EventFifoData&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">readBlock</span><span class="p">(</span>
+                <span class="n">event_numb</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">i2c_hw</span><span class="o">.</span><span class="n">dispatch</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fifo_content</span><span class="p">)</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.get_scaler">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.get_scaler">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_scaler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;reads current scaler value from register&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">channel</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">channel</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only channels 0 to 5 are valid&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">i2c</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;triggerInputs.ThrCount</span><span class="si">{</span><span class="n">channel</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">R&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.get_scalers">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.get_scalers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_scalers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;reads current sc values from registers</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: all 6 trigger sc values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_scaler</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.get_pre_veto_trigger_number">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.get_pre_veto_trigger_number">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_pre_veto_trigger_number</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Obtains the number of triggers recorded in the TLU before the veto is applied from the trigger logic register&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">get_pre_veto_trigger</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TLUControl.get_post_veto_trigger_number">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUControl.get_post_veto_trigger_number">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_post_veto_trigger_number</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Obtains the number of triggers recorded in the TLU after the veto is applied from the trigger logic register&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">get_post_veto_trigger</span><span class="p">()</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="TLUConfigure">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUConfigure">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TLUConfigure</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tlu</span><span class="p">,</span> <span class="n">config_dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">setup_main_logger</span><span class="p">(</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span> <span class="o">=</span> <span class="n">tlu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conf</span> <span class="o">=</span> <span class="n">config_dict</span>
+
+<div class="viewcode-block" id="TLUConfigure.configure">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUConfigure.configure">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads configuration file and configures the TLU accordingly.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conf_dut</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conf_trigger_inputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conf_trigger_logic</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conf_auxillary</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">set_enable_record_data</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;TLU configured&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TLUConfigure.get_data_handling">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUConfigure.get_data_handling">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_data_handling</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Information about data handling.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: save and interpret data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;save_data&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TLUConfigure.get_stop_condition">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUConfigure.get_stop_condition">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_stop_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Information about tlu stop condition.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: maximum trigger number and timeout in seconds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">max_trigger_number</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="kc">None</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;max_trigger_number&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">]</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;max_trigger_number&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">timeout</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;timeout&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;timeout&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">max_trigger_number</span><span class="p">,</span> <span class="n">timeout</span></div>
+
+
+<div class="viewcode-block" id="TLUConfigure.get_output_data_path">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUConfigure.get_output_data_path">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_data_path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses the output data path</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: output path</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;output_data_path&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TLUConfigure.get_zmq_connection">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUConfigure.get_zmq_connection">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_zmq_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Information about the zmq Address</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: ZMQ Address</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;zmq_connection&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TLUConfigure.conf_auxillary">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUConfigure.conf_auxillary">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">conf_auxillary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Configures PMT power outputs and clock LEMO I/O&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">io_controller</span><span class="o">.</span><span class="n">clock_lemo_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;enable_clock_lemo_output&quot;</span><span class="p">])</span>
+        <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">dac_controller</span><span class="o">.</span><span class="n">set_voltage</span><span class="p">(</span>
+                <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;pmt_control_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TLUConfigure.conf_dut">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUConfigure.conf_dut">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">conf_dut</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the configuration for the DUT interface to the AIDATLU.&quot;&quot;&quot;</span>
+        <span class="n">dut</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">dut_mode</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">ignore_busy</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;DUT_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">==</span> <span class="s2">&quot;eudet&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">io_controller</span><span class="o">.</span><span class="n">switch_led</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">)</span>
+                <span class="n">dut</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">i</span>
+                <span class="c1"># Clock output needs to be disabled for EUDET mode.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">io_controller</span><span class="o">.</span><span class="n">clock_hdmi_output</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;DUT_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">==</span> <span class="s2">&quot;aidatrig&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">io_controller</span><span class="o">.</span><span class="n">switch_led</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+                <span class="n">dut</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">i</span>
+                <span class="n">dut_mode</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span>
+                <span class="c1"># In AIDA mode the clock output is needed.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">io_controller</span><span class="o">.</span><span class="n">clock_hdmi_output</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;chip&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;DUT_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">==</span> <span class="s2">&quot;aida&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">io_controller</span><span class="o">.</span><span class="n">switch_led</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">)</span>
+                <span class="n">dut</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">i</span>
+                <span class="n">dut_mode</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">io_controller</span><span class="o">.</span><span class="n">clock_hdmi_output</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;chip&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">io_controller</span><span class="o">.</span><span class="n">configure_hdmi</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;0111&quot;</span><span class="p">)</span>
+            <span class="n">ignore_busy</span> <span class="o">^=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;DUT_</span><span class="si">%s</span><span class="s2">_ignore_busy&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">&lt;&lt;</span> <span class="n">i</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;DUT_</span><span class="si">%s</span><span class="s2">_ignore_busy&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;DUT interface </span><span class="si">%i</span><span class="s2"> ignores busy&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;DUT </span><span class="si">%i</span><span class="s2"> configured in </span><span class="si">%s</span><span class="s2">&quot;</span>
+                <span class="o">%</span> <span class="p">(</span>
+                    <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;DUT_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)],</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="c1"># This sets the right bits to the set dut mask registers according to the configuration parameter.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">dut_logic</span><span class="o">.</span><span class="n">set_dut_mask</span><span class="p">(</span><span class="n">dut</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">|</span> <span class="n">dut</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">|</span> <span class="n">dut</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">|</span> <span class="n">dut</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">dut_logic</span><span class="o">.</span><span class="n">set_dut_mask_mode</span><span class="p">(</span>
+            <span class="n">dut_mode</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">|</span> <span class="n">dut_mode</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">|</span> <span class="n">dut_mode</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">|</span> <span class="n">dut_mode</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Set DUT mask: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dut</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">|</span> <span class="n">dut</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">|</span> <span class="n">dut</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">|</span> <span class="n">dut</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;Set DUT mask mode: </span><span class="si">%s</span><span class="s2">&quot;</span>
+            <span class="o">%</span> <span class="p">(</span><span class="n">dut_mode</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">|</span> <span class="n">dut_mode</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">|</span> <span class="n">dut_mode</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">|</span> <span class="n">dut_mode</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="p">)</span>
+        <span class="c1"># Special configs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">dut_logic</span><span class="o">.</span><span class="n">set_dut_mask_mode_modifier</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">dut_logic</span><span class="o">.</span><span class="n">set_dut_ignore_busy</span><span class="p">(</span><span class="n">ignore_busy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">dut_logic</span><span class="o">.</span><span class="n">set_dut_ignore_shutter</span><span class="p">(</span><span class="mh">0x1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TLUConfigure.conf_trigger_logic">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUConfigure.conf_trigger_logic">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">conf_trigger_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Configures the trigger logic. So the trigger polarity and the trigger pulse length and stretch.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;trigger_polarity&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;rising&quot;</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">set_trigger_polarity</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;trigger_polarity&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;falling&quot;</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">set_trigger_polarity</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">set_pulse_stretch_pack</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;trigger_signal_shape_stretch&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">set_pulse_delay_pack</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;trigger_signal_shape_delay&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Trigger input stretch: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;trigger_signal_shape_stretch&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Trigger input delay  : </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;trigger_signal_shape_delay&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">set_internal_trigger_frequency</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;internal_trigger_rate&quot;</span><span class="p">]</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TLUConfigure.conf_trigger_inputs">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUConfigure.conf_trigger_inputs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">conf_trigger_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Configures the trigger inputs. Each input can have a different threshold.</span>
+<span class="sd">        The two trigger words mask_low and mask_high are generated with the use of two support functions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">dac_controller</span><span class="o">.</span><span class="n">set_threshold</span><span class="p">(</span>
+                <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;threshold_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)],</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="n">trigger_configuration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;trigger_inputs_logic&quot;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Trigger Configuration: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">trigger_configuration</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">trigger_configuration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Sets the Trigger Leds to green if the Input is enabled and to red if the input is set to VETO.</span>
+            <span class="c1"># TODO this breaks when there are multiple enabled and veto statements for the same trigger input.</span>
+            <span class="k">for</span> <span class="n">trigger_led</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
+                <span class="k">if</span> <span class="s2">&quot;not CH</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">trigger_led</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">in</span> <span class="n">trigger_configuration</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">io_controller</span><span class="o">.</span><span class="n">switch_led</span><span class="p">(</span><span class="n">trigger_led</span> <span class="o">+</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="s2">&quot;CH</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">trigger_led</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">in</span> <span class="n">trigger_configuration</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">io_controller</span><span class="o">.</span><span class="n">switch_led</span><span class="p">(</span><span class="n">trigger_led</span> <span class="o">+</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">)</span>
+
+            <span class="n">long_word</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_trigger_masking_word</span><span class="p">(</span><span class="n">trigger_configuration</span><span class="p">)</span>
+            <span class="n">mask_low</span><span class="p">,</span> <span class="n">mask_high</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mask_words</span><span class="p">(</span><span class="n">long_word</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;mask high: </span><span class="si">%s</span><span class="s2">, mask low: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">mask_high</span><span class="p">),</span> <span class="nb">hex</span><span class="p">(</span><span class="n">mask_low</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tlu</span><span class="o">.</span><span class="n">trigger_logic</span><span class="o">.</span><span class="n">set_trigger_mask</span><span class="p">(</span><span class="n">mask_high</span><span class="p">,</span> <span class="n">mask_low</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No trigger configuration provided!&quot;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_trigger_masking_word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trigger_configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create specific long trigger configuration word by iterating over all possible</span>
+<span class="sd">        configurations and comparing with the one provided in the configuration file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            trigger_configuration (str): Evaluates configurations, trigger inputs are denoted as CH1-CH6.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: long trigger configuration word</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">long_word</span> <span class="o">=</span> <span class="mh">0x0</span>
+        <span class="c1"># Goes through all possible trigger combinations and checks if the combination is valid with the trigger logic.</span>
+        <span class="c1"># When the word is valid this is added to the longword.</span>
+        <span class="k">for</span> <span class="n">combination</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">64</span><span class="p">):</span>
+            <span class="n">pattern_list</span> <span class="o">=</span> <span class="p">[(</span><span class="n">combination</span> <span class="o">&gt;&gt;</span> <span class="n">element</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x1</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
+            <span class="n">CCH5</span> <span class="o">=</span> <span class="n">pattern_list</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+            <span class="n">CCH4</span> <span class="o">=</span> <span class="n">pattern_list</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+            <span class="n">CCH3</span> <span class="o">=</span> <span class="n">pattern_list</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">CCH2</span> <span class="o">=</span> <span class="n">pattern_list</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">CCH1</span> <span class="o">=</span> <span class="n">pattern_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">CCH0</span> <span class="o">=</span> <span class="n">pattern_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">CH1</span><span class="p">,</span> <span class="n">CH2</span><span class="p">,</span> <span class="n">CH3</span><span class="p">,</span> <span class="n">CH4</span><span class="p">,</span> <span class="n">CH5</span><span class="p">,</span> <span class="n">CH6</span><span class="p">:</span> <span class="nb">eval</span><span class="p">(</span><span class="n">trigger_configuration</span><span class="p">))(</span>
+                <span class="n">CCH0</span><span class="p">,</span> <span class="n">CCH1</span><span class="p">,</span> <span class="n">CCH2</span><span class="p">,</span> <span class="n">CCH3</span><span class="p">,</span> <span class="n">CCH4</span><span class="p">,</span> <span class="n">CCH5</span>
+            <span class="p">)</span>
+            <span class="n">long_word</span> <span class="o">=</span> <span class="p">(</span><span class="n">valid</span> <span class="o">&lt;&lt;</span> <span class="n">combination</span><span class="p">)</span> <span class="o">|</span> <span class="n">long_word</span>
+
+        <span class="k">return</span> <span class="n">long_word</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_mask_words</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transforms the long word variant of the trigger word to the mask_low mask_high variant.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">        word (int): Long word variant of the trigger word.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        tuple: mask_low and mask_high trigger words</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mask_low</span> <span class="o">=</span> <span class="mh">0xFFFFFFFF</span> <span class="o">&amp;</span> <span class="n">word</span>
+        <span class="n">mask_high</span> <span class="o">=</span> <span class="n">word</span> <span class="o">&gt;&gt;</span> <span class="mi">32</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">mask_low</span><span class="p">,</span> <span class="n">mask_high</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TLUConfigure.get_configuration_table">
+<a class="viewcode-back" href="../../../hardware_code.html#aidatlu.hardware.tlu_controller.TLUConfigure.get_configuration_table">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_configuration_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a list of tuples from the configuration file for the output data files</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: configuration list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">conf_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">conf_table</span><span class="p">[</span><span class="s2">&quot;trigger_signal_shape_stretch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;trigger_signal_shape_stretch&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">conf_table</span><span class="p">[</span><span class="s2">&quot;trigger_signal_shape_delay&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;trigger_signal_shape_delay&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">conf_table</span><span class="p">[</span><span class="s2">&quot;trigger_polarity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;trigger_polarity&quot;</span><span class="p">])</span>
+        <span class="n">conf_table</span><span class="p">[</span><span class="s2">&quot;trigger_inputs_logic&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;trigger_inputs_logic&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration table: </span><span class="si">{</span><span class="n">conf_table</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">conf_table</span><span class="o">.</span><span class="n">items</span><span class="p">())</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023, SiLab, Institute of Physics, University of Bonn.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
