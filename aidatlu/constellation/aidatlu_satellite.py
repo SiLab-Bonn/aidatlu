@@ -32,6 +32,12 @@ class AidaTLU(TransmitterSatellite):
             ", ".join(config.get_keys()),
         )
 
+        try:
+            self.status_interval = config["status_interval"]
+        except:
+            self.status_interval = 1
+        self.log.debug("Calculating status every %.3f s" % self.status_interval)
+
         self.file_path = Path(__file__).parent
 
         if not self.use_mock:
@@ -183,12 +189,22 @@ class AidaTLU(TransmitterSatellite):
             time.sleep(0.5)
             last_time = self.tlu_controller.get_timestamp()
             current_time = (last_time - self.start_time) * 25 / 1000000000
-            # Logs and poss. sends status every 1s.
-            if current_time - self.last_time > 1:
-                self.log_status(current_time)
+            # Calculate and poss. sends status every self.status_interval seconds.
+            if current_time - self.last_time > self.status_interval:
+                self.check_status(current_time)
+                self.log.debug(
+                    "Run time: %.1f s, Pre veto: %s, Post veto: %s, Pre veto rate: %.f Hz, Post veto rate.: %.f Hz"
+                    % (
+                        self.run_time,
+                        self.total_pre_veto,
+                        self.total_post_veto,
+                        self.pre_veto_rate,
+                        self.post_veto_rate,
+                    )
+                )
 
-    def log_status(self, time: int) -> None:
-        """Logs the status of the TLU run with runtime, pre- and post-veto numbers/rates.
+    def check_status(self, time: int) -> None:
+        """Calculates operation status of the TLU run with runtime, pre- and post-veto numbers/rates.
            Also calculates the mean trigger frequency between function calls.
 
         Args:
@@ -211,16 +227,6 @@ class AidaTLU(TransmitterSatellite):
         self.last_post_veto_trigger = self.tlu_controller.get_post_veto_trigger_number()
         self.last_pre_veto_trigger = self.tlu_controller.get_pre_veto_trigger_number()
 
-        self.log.debug(
-            "Run time: %.1f s, Pre veto: %s, Post veto: %s, Pre veto rate: %.f Hz, Post veto rate.: %.f Hz"
-            % (
-                self.run_time,
-                self.total_pre_veto,
-                self.total_post_veto,
-                self.pre_veto_rate,
-                self.post_veto_rate,
-            )
-        )
         if self.tlu_controller.get_event_fifo_csr() == 0x10:
             self.log.warning("FIFO is full")
 

@@ -74,6 +74,7 @@ This means DUT interface signals (e.g. clock signals) are disrupted during these
 | `enable_clock_lemo_output` | (Optional) Enable the LEMO clock output. | String | False |
 | `pmt_power` | (Required) Sets the four PMT control voltages in V | List | None |
 | `clock_config` | (Optional) Specify a custom clock configuration. If no path is provided, the TLU uses the default configuration. | String | None |
+| `status_interval` | (Optional) Set status calculation interval in seconds. Affects logging and calculation interval (pre and post trigger rates).| float | 1 |
 
 The default clock configuration can be found in [`aidatlu/misc/aida_tlu_clk_config.txt`](https://github.com/SiLab-Bonn/aidatlu/blob/main/aidatlu/misc/aida_tlu_clk_config.txt).
 
