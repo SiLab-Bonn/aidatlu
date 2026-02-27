@@ -151,7 +151,6 @@ class AidaTLU(TransmitterSatellite):
         self.tlu_configure = TLUConfigure(self.tlu_controller, self.config_file)
         self.tlu_controller.reset_configuration()
         # Resets aidatlu loggers and replaces them with constellation loggers
-        logger._reset_all_loggers()
         self.tlu_controller.log = self.log
         self.tlu_controller.io_controller.log = self.log
         self.tlu_controller.dac_controller.log = self.log
