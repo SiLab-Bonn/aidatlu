@@ -27,10 +27,25 @@ class AidaTLU(TransmitterSatellite):
         self.use_mock = os.environ.get("TLU_MOCK")
 
     def do_initializing(self, config: Configuration) -> str:
-        self.log.info(
-            "Received configuration with parameters: %s",
-            ", ".join(config.get_keys()),
-        )
+
+        config.set_default(key="clock_config", value=None)
+        config.set_default(key="ignore_busy", value=[0, 0, 0, 0])
+        config.set_default(key="internal_trigger_rate", value=0)
+        config.set_default(key="enable_clock_lemo_output", value=False)
+
+        configuration = {
+            "internal_trigger_rate": config.get_int(key="internal_trigger_rate"),
+            "dut_interfaces": config.get_array(key="dut_interfaces"),
+            "trigger_threshold": config.get_array(key="trigger_threshold"),
+            "trigger_inputs_logic": config.get(key="trigger_inputs_logic"),
+            "trigger_polarity": config.get(key="trigger_polarity"),
+            "trigger_signal_stretch": config.get_array(key="trigger_signal_stretch"),
+            "trigger_signal_delay": config.get_array(key="trigger_signal_delay"),
+            "enable_clock_lemo_output": config.get(key="enable_clock_lemo_output"),
+            "pmt_power": config.get_array(key="pmt_power"),
+            "clock_config": config.get(key="clock_config"),
+            "ignore_busy": config.get_array(key="ignore_busy"),
+        }
 
         config.set_default(key="status_interval", value=1)
         self.status_interval = config["status_interval"]
@@ -51,7 +66,7 @@ class AidaTLU(TransmitterSatellite):
             self.i2c_method = MockI2C
             self.hw = None
 
-        self._init_tlu(config)
+        self._init_tlu(configuration)
 
         return "Initializing complete"
 
@@ -145,7 +160,7 @@ class AidaTLU(TransmitterSatellite):
     def _init_tlu(self, config: Configuration) -> None:
         "Parse configuration file to TLU and initialize, set loggers"
         self.config_file = toml_parser(config, constellation=True)
-        if self.config_file["clock_config"] in [None, "None", False]:
+        if config["clock_config"] in [None, "None", False]:
             self.log.info("No clock configuration provided, using default file")
             self.clock_file = str(self.file_path) + "/../misc/aida_tlu_clk_config.txt"
         else:
