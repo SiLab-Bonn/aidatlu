@@ -21,7 +21,7 @@ def interpret_data(
         filepath_in (str | Path): raw data file path as string or Path object
         filepath_out (str | Path): output path of the interpreted data as string or Path object
     """
-    log = logger.setup_main_logger("Data Interpreter")
+    log = logger.setup_derived_logger("Data Interpreter")
     features = np.dtype(
         [
             ("eventnumber", "u4"),

@@ -2,6 +2,7 @@ from pathlib import Path
 import time
 import os
 import pytest
+import aidatlu.logger as logger
 from aidatlu.main.tlu import AidaTLU
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.tlu_controller import TLUControl
@@ -28,6 +29,8 @@ else:
     )
     HW = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
     I2CMETHOD = I2CCore
+
+logger.setup_main_logger(name="AIDA-TLU", level="INFO")
 
 TLU = AidaTLU(
     HW,

@@ -13,11 +13,11 @@ from constellation.core.message.cscp1 import SatelliteState
 from constellation.core.monitoring import schedule_metric
 from constellation.core.transmitter_satellite import TransmitterSatellite
 
-from aidatlu import logger
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.main.config_parser import toml_parser
 from aidatlu.hardware.tlu_controller import TLUControl, TLUConfigure
 from aidatlu.test.utils import MockI2C
+import aidatlu.logger as logger
 
 
 class AidaTLU(TransmitterSatellite):
@@ -155,14 +155,6 @@ class AidaTLU(TransmitterSatellite):
 
         self.tlu_configure = TLUConfigure(self.tlu_controller, self.config_file)
         self.tlu_controller.reset_configuration()
-        # Resets aidatlu loggers and replaces them with constellation loggers
-        self.tlu_controller.log = self.log
-        self.tlu_controller.io_controller.log = self.log
-        self.tlu_controller.dac_controller.log = self.log
-        self.tlu_controller.clock_controller.log = self.log
-        self.tlu_controller.trigger_logic.log = self.log
-        self.tlu_controller.dut_logic.log = self.log
-        self.tlu_configure.log = self.log
 
     def _handle_event(self, evt: list) -> None:
         # Calculate timestamp in nanoseconds from TLU 40MHz clock:
