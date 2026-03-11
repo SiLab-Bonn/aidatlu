@@ -129,13 +129,12 @@ class AidaTLU(TransmitterSatellite):
                     self._handle_event([data_queue.popleft() for _ in range(6)])
 
         t.do_run = False
-        self.tlu_controller.stop_run()
         return "Do running complete"
 
     def do_stopping(self) -> str:
+        self.tlu_controller.stop_run()
         self.tlu_controller.pull_fifo_event()
-        self.log.info("Run finished")
-        return "Do stopping complete"
+        return "Do running complete"
 
     def _init_tlu(self, config: Configuration) -> None:
         "Parse configuration file to TLU and initialize, set loggers"
