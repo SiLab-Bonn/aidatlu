@@ -104,6 +104,8 @@ class AidaTLU(TransmitterSatellite):
         self.last_pre_veto_trigger = (
             self.tlu_controller.trigger_logic.get_pre_veto_trigger()
         )
+        self._pre_veto_rate = 0.0
+        self._post_veto_rate = 0.0
 
         # Set Begin-of-run tags
         self.bor["BoardID"] = self.tlu_controller.get_device_id()
@@ -193,11 +195,11 @@ class AidaTLU(TransmitterSatellite):
         Args:
             time (int): current runtime of the TLU
         """
-        self.post_veto_rate = (
+        self._post_veto_rate = (
             self.tlu_controller.get_post_veto_trigger_number()
             - self.last_post_veto_trigger
         ) / (time - self.last_time)
-        self.pre_veto_rate = (
+        self._pre_veto_rate = (
             self.tlu_controller.get_pre_veto_trigger_number()
             - self.last_pre_veto_trigger
         ) / (time - self.last_time)
@@ -224,22 +226,16 @@ class AidaTLU(TransmitterSatellite):
             self.log.warning("FIFO is full")
 
     @schedule_metric("Hz", 1)
-    def pre_veto_rate(self) -> Any:
-        if self.fsm.current_state_value == SatelliteState.RUN and hasattr(
-            self, "pre_veto_rate"
-        ):
-            return self.pre_veto_rate
-        else:
-            return None
+    def pre_veto_rate(self) -> float | None:
+        if self.fsm.state == SatelliteState.RUN:
+            return self._pre_veto_rate
+        return None
 
     @schedule_metric("Hz", 1)
-    def post_veto_rate(self) -> Any:
-        if self.fsm.current_state_value == SatelliteState.RUN and hasattr(
-            self, "post_veto_rate"
-        ):
-            return self.post_veto_rate
-        else:
-            return None
+    def post_veto_rate(self) -> float | None:
+        if self.fsm.state == SatelliteState.RUN:
+            return self._post_veto_rate
+        return None
 
     @schedule_metric("", 1)
     def post_veto(self) -> Any:
