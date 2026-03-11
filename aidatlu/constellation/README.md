@@ -83,10 +83,10 @@ The default clock configuration can be found in [`aidatlu/misc/aida_tlu_clk_conf
 An example configuration for the AIDA-TLU satellite which could be dropped into a Constellation configuration as a starting point:
 
 ```toml
-[satellites.AidaTLU]
+[AidaTLU.2020]
 
 internal_trigger_rate = 0
-dut_interfaces = ['aida', 'aida', 'eudet', 'off']
+dut_interfaces = ['aida', 'aidatrig', 'eudet', 'off']
 
 trigger_threshold = [-0.1, -0.1, -0.1, -0.1, -0.1, -0.1]
 trigger_inputs_logic = 'CH1 and CH2'
@@ -94,8 +94,9 @@ trigger_polarity = 'falling'
 trigger_signal_stretch = [2, 2, 2, 2, 2, 2]
 trigger_signal_delay = [0, 0, 0, 0, 0, 0]
 
-enable_clock_lemo_output = false
 pmt_power = [0.8, 0.8, 0.0, 0.0]
+
+enable_clock_lemo_output = false
 ```
 
 ## Metrics
