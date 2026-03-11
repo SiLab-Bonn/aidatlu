@@ -16,7 +16,7 @@ authors = [
 dependencies = [
     "numpy",
     "tables",
-    "coloredlogs",
+    "rich",
     "pyzmq",
     "tqdm",
     "PyYAML",

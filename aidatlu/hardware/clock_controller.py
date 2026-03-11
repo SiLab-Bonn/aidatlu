@@ -9,7 +9,7 @@ class ClockControl:
     """
 
     def __init__(self, i2c: I2CCore, io_control: IOControl) -> None:
-        self.log = logger.setup_derived_logger("Clock Controller")
+        self.log = logger.setup_derived_logger(__class__.__name__)
         self.log.info("Initializing Clock Chip")
         self.i2c = i2c
         self.io_control = io_control

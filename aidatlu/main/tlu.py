@@ -16,7 +16,7 @@ from aidatlu.main.data_parser import interpret_data
 
 class AidaTLU:
     def __init__(self, hw, config_dict, clock_config_path, i2c=I2CCore) -> None:
-        self.log = logger.setup_main_logger(__class__.__name__)
+        self.log = logger.setup_derived_logger(__class__.__name__)
 
         self.tlu_controller = TLUControl(hw=hw, i2c=i2c)
         self.tlu_controller.write_clock_config(clock_config_path)

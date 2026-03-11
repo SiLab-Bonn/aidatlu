@@ -2,11 +2,10 @@ from pathlib import Path
 import os
 import pytest
 from aidatlu.main.config_parser import yaml_parser, toml_parser
-from aidatlu.hardware.ioexpander_controller import IOControl
-from aidatlu.main.tlu import AidaTLU
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.tlu_controller import TLUControl, TLUConfigure
 from aidatlu.test.utils import MockI2C
+import aidatlu.logger as logger
 
 FILEPATH = Path(__file__).parent
 CONFIG_FILE_PATH = FILEPATH / "fixtures" / "tlu_test_configuration.yaml"
@@ -29,6 +28,8 @@ else:
     )
     HW = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
     I2CMETHOD = I2CCore
+
+logger.setup_main_logger(name="AIDA-TLU", level="INFO")
 
 TLU = TLUControl(
     HW,

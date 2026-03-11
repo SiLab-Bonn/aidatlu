@@ -13,7 +13,7 @@ class TLUControl:
     """Controls general TLU functionalities."""
 
     def __init__(self, hw, i2c=I2CCore) -> None:
-        self.log = logger.setup_main_logger(__class__.__name__)
+        self.log = logger.setup_derived_logger(__class__.__name__)
         self.i2c = i2c(hw)
         self.i2c_hw = hw
         self.log.info("Initializing IPbus interface")
@@ -216,7 +216,7 @@ class TLUControl:
 
 class TLUConfigure:
     def __init__(self, tlu, config_dict):
-        self.log = logger.setup_main_logger(__class__.__name__)
+        self.log = logger.setup_derived_logger(__class__.__name__)
 
         self.tlu = tlu
         self.conf = config_dict
