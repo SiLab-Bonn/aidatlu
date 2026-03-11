@@ -46,7 +46,7 @@ pip install -e .
 
 To connect to the hardware, you need to install the `hw` component as well.
 ```bash
-pip install -e .[bash]
+pip install -e .[hw]
 ```
 
 # Usage
