@@ -32,10 +32,8 @@ class AidaTLU(TransmitterSatellite):
             ", ".join(config.get_keys()),
         )
 
-        try:
-            self.status_interval = config["status_interval"]
-        except:
-            self.status_interval = 1
+        config.set_default(key="status_interval", value=1)
+        self.status_interval = config["status_interval"]
         self.log.debug("Calculating status every %.3f s" % self.status_interval)
 
         self.file_path = Path(__file__).parent
