@@ -43,8 +43,7 @@ class TLULogger(logging.Logger):
 def setup_main_logger(name="AidaTLU", level="INFO"):
     """Sets up the CLI logging configuration"""
     # Get log level integer
-    levelno = logging.getLevelNamesMapping()[level.upper()]
-
+    level_number = logging.getLevelNamesMapping()[level.upper()]
     console_theme = Theme(
         {
             "logging.level.debug": "magenta",
@@ -57,7 +56,7 @@ def setup_main_logger(name="AidaTLU", level="INFO"):
         }
     )
     handler = RichHandler(
-        level=levelno,
+        level=level_number,
         console=Console(theme=console_theme),
         show_path=False,
         show_time=True,
@@ -78,19 +77,3 @@ def setup_derived_logger(name):
     logger = logging.getLogger(name)
 
     return logger
-
-
-def _add_success_level(logger):
-    logging.SUCCESS = 35
-    logging.addLevelName(logging.SUCCESS, "SUCCESS")
-    logger.success = lambda msg, *args, **kwargs: logger.log(
-        logging.SUCCESS, msg, *args, **kwargs
-    )
-
-
-def _add_notice_level(logger):
-    logging.NOTICE = 25
-    logging.addLevelName(logging.NOTICE, "NOTICE")
-    logger.notice = lambda msg, *args, **kwargs: logger.log(
-        logging.NOTICE, msg, *args, **kwargs
-    )
