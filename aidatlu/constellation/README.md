@@ -12,32 +12,41 @@ The AIDA-2020 Trigger Logic Unit is designed to provide flexible trigger configu
 
 The Python-based control software for the AIDA-2020 TLU provides a comprehensive interface for controlling the TLU.
 The software establishes a connection to the hardware and allows for easy configuration of different trigger setups.
-Information about each individual trigger signal is saved in a compressed (blosc) and human-readable HDF5 format.
 
 The satellite connects the AIDA-2020 TLU to the [Constellation](https://constellation.pages.desy.de/) control and data acquisition framework.
 
 ## Building
 
-After installing [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html) with Python bindings (`uhal`), install the [Aida-TLU](https://github.com/SiLab-Bonn/aidatlu) package with the constellation requirement.
+After installing [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html) with Python bindings (`uhal`), install the [Aida-TLU](https://github.com/SiLab-Bonn/aidatlu) package with the `constellation` requirement:
 
 ```bash
 pip install .[constellation]
 ```
 
-A more detailed description of the prerequisites can also be found [here](https://silab-bonn.github.io/aidatlu/Introduction.html#installation).
+````{hint}
+When installing the `aidatlu` in a virtual environment, it is required to link the `uhal` module into virtual environment, for example via:
+
+```sh
+ln -s /usr/local/lib/python3.11/dist-packages/uhal-2.8.22-py3.11.egg/uhal venv/lib/python3.11/uhal
+```
+````
 
 ## Usage
 
 Add the chosen cactus library path, where the default install location is `/opt/cactus/`:
 
 ```sh
-export LD_LIBRARY_PATH=<install_location>/lib
+export LD_LIBRARY_PATH=/opt/cactus/lib
+```
+
+```{hint}
+When working in a virtual environment, one can add this line to the beginning of the `venv/bin/activate` script to avoid having to type it every time.
 ```
 
 You also need to start the control hub:
 
 ```sh
-<install_location>/bin/controlhub_start
+/opt/cactus/bin/controlhub_start
 ```
 
 Finally, start the satellite with:
@@ -57,6 +66,7 @@ This means DUT interface signals (e.g. clock signals) are disrupted during these
 |-----------|-------------|------| ------|
 | `internal_trigger_rate` | (Optional) Generates internal triggers with a given frequency given in Hz. | Integer | 0 |
 | `dut_interfaces` | (Required) Specify the operation mode of the DUT interface (`aida`, `eudet`, `aidatrig`, `off`), given as list with a required length of 4. `aida` and `eudet` correspond to the classic AIDA and EUDET mode respectively and `aidatrig` to the AIDA-mode with handshake. Disable a DUT interface with `off`. | List | None |
+| `ignore_busy` | (Optional) Specific DUT interface ignores busy signals. | List | [0, 0, 0, 0] |
 | `trigger_threshold` | (Required) Threshold setting of each individual trigger input channel given in V. | List | None |
 | `trigger_inputs_logic` | (Required) Trigger Logic configuration accepts a Python expression for the trigger inputs. The logic is set by using the variables for the input channels `CH1`, `CH2`, `CH3`, `CH4`, `CH5` and `CH6` and the Python logic operators `and`, `or`, `not` and so on. Don't forget to use brackets... | String | None |
 | `trigger_polarity` | (Optional) TLU can trigger on a rising or falling edge. Set to `rising` or `falling` | String | `falling` |
