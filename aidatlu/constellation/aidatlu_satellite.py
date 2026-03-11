@@ -28,28 +28,7 @@ class AidaTLU(TransmitterSatellite):
 
     def do_initializing(self, config: Configuration) -> str:
 
-        config.set_default(key="clock_config", value=None)
-        config.set_default(key="ignore_busy", value=[0, 0, 0, 0])
-        config.set_default(key="internal_trigger_rate", value=0)
-        config.set_default(key="enable_clock_lemo_output", value=False)
-
-        configuration = {
-            "internal_trigger_rate": config.get_int(key="internal_trigger_rate"),
-            "dut_interfaces": config.get_array(key="dut_interfaces"),
-            "trigger_threshold": config.get_array(key="trigger_threshold"),
-            "trigger_inputs_logic": config.get(key="trigger_inputs_logic"),
-            "trigger_polarity": config.get(key="trigger_polarity"),
-            "trigger_signal_stretch": config.get_array(key="trigger_signal_stretch"),
-            "trigger_signal_delay": config.get_array(key="trigger_signal_delay"),
-            "enable_clock_lemo_output": config.get(key="enable_clock_lemo_output"),
-            "pmt_power": config.get_array(key="pmt_power"),
-            "clock_config": config.get(key="clock_config"),
-            "ignore_busy": config.get_array(key="ignore_busy"),
-        }
-
-        config.set_default(key="status_interval", value=1)
-        self.status_interval = config["status_interval"]
-        self.log.debug("Calculating status every %.3f s" % self.status_interval)
+        configuration = self._read_config(config)
 
         self.file_path = Path(__file__).parent
 
@@ -86,7 +65,8 @@ class AidaTLU(TransmitterSatellite):
         return "Do landing complete"
 
     def do_reconfigure(self, config: Configuration) -> str:
-        self._init_tlu(config)
+        configuration = self._read_config(config)
+        self._init_tlu(configuration)
         return "Do reconfigure complete"
 
     def do_starting(self, run_identifier: str = None) -> str:
@@ -157,6 +137,38 @@ class AidaTLU(TransmitterSatellite):
         self.tlu_controller.pull_fifo_event()
         return "Do running complete"
 
+    def _read_config(self, config: Configuration):
+        config.set_default(key="clock_config", value=None)
+        config.set_default(key="ignore_busy", value=[0, 0, 0, 0])
+        config.set_default(key="internal_trigger_rate", value=0)
+        config.set_default(key="enable_clock_lemo_output", value=False)
+        config.set_default(key="status_interval", value=1.0)
+
+        configuration = {
+            "internal_trigger_rate": config.get_int(key="internal_trigger_rate"),
+            "dut_interfaces": config.get_array(key="dut_interfaces", element_type=str),
+            "trigger_threshold": config.get_array(
+                key="trigger_threshold", element_type=float
+            ),
+            "trigger_inputs_logic": config.get(key="trigger_inputs_logic"),
+            "trigger_polarity": config.get(key="trigger_polarity"),
+            "trigger_signal_stretch": config.get_array(
+                key="trigger_signal_stretch", element_type=int
+            ),
+            "trigger_signal_delay": config.get_array(
+                key="trigger_signal_delay", element_type=int
+            ),
+            "enable_clock_lemo_output": config.get(key="enable_clock_lemo_output"),
+            "pmt_power": config.get_array(key="pmt_power", element_type=float),
+            "clock_config": config.get(key="clock_config"),
+            "ignore_busy": config.get_array(key="ignore_busy", element_type=int),
+        }
+
+        self.status_interval = config.get_float("status_interval")
+        self.log.debug("Calculating status every %.3f s" % self.status_interval)
+
+        return configuration
+
     def _init_tlu(self, config: Configuration) -> None:
         "Parse configuration file to TLU and initialize, set loggers"
         self.config_file = toml_parser(config, constellation=True)
@@ -211,8 +223,8 @@ class AidaTLU(TransmitterSatellite):
                         self.run_time,
                         self.total_pre_veto,
                         self.total_post_veto,
-                        self.pre_veto_rate,
-                        self.post_veto_rate,
+                        self._pre_veto_rate,
+                        self._post_veto_rate,
                     )
                 )
 
