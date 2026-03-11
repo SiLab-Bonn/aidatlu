@@ -76,7 +76,7 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
     else:
         toml_conf = conf_file_path
 
-    keys = conf_file_path.keys()
+    keys = toml_conf.keys()
 
     # Throw an error when the length of the list of required parameters does not match.
     if len(toml_conf["dut_interfaces"]) != 4:
