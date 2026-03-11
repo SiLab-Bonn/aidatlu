@@ -19,7 +19,7 @@ logging.NOTICE = 25
 logging.addLevelName(logging.NOTICE, "NOTICE")
 logging.SUCCESS = 40
 logging.addLevelName(logging.SUCCESS, "SUCCESS")
-FORMAT = "%(asctime)s [%(name)-18s] - %(levelname)-7s %(message)s"
+FORMAT = "[%(name)-16s] %(message)s"
 
 
 class TLULogger(logging.Logger):
