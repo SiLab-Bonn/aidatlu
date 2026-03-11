@@ -28,7 +28,8 @@ dependencies = [
 
 [project.optional-dependencies]
 constellation = ["ConstellationDAQ"]
-hw = ["online_monitor"]  # uhal package needs to be installed manually!
+hw = ["uhal"]
+monitor = ["online_monitor"]
 test = ["pytest", "pytest-cov", "pytest-sugar"]
 doc = ["sphinx", "myst_parser", "sphinx_mdinclude", "pydata-sphinx-theme", "sphinx_design"]
 

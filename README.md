@@ -11,34 +11,27 @@ For a more in-depth look at the hardware components please take a look at the of
 Additionally, take a look at the [documentation](https://silab-bonn.github.io/aidatlu/) for this software.
 # Installation
 ## IPbus
-You need to install [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html) and its Python bindings to the desired interpreter.
+You need to install the ControlHub from the [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html) software.
 Follow the linked tutorial for prerequisites and general installation.
 Install prerequisites.
 ```bash
-sudo apt-get install -y make erlang g++ libboost-all-dev libpugixml-dev python-all-dev rsyslog
-sudo touch /usr/lib/erlang/man/man1/x86_64-linux-gnu-gcov-tool.1.gz
-sudo touch /usr/lib/erlang/man/man1/gcov-tool.1.gz
+sudo apt-get install -y make erlang
 ```
 Checkout from git and compile the repository.
 ```bash
-git clone --depth=1 -b v2.8.12 --recurse-submodules https://github.com/ipbus/ipbus-software.git
+git clone --depth=1 -b v2.8.22 https://github.com/ipbus/ipbus-software.git
 cd ipbus-software
-make
+make Set=controlhub
+sudo make Set=controlhub install
 ```
-Next install against the current Python environment.
+In case they are errors about missing man pages, you need to create them.
 ```bash
-# Pass current PATH to su shell to build against current environment python
-sudo env PATH=$PATH make install
-```
-Afterwards you should be able to import uhal in your specific Python environment.
-When using a custom installation path for IPbus you need to import the library path.
-```bash
-export LD_LIBRARY_PATH=<install_location>/lib
+sudo touch /usr/lib/erlang/man/man1/gcov-tool.1.gz # example
 ```
 The default install location is located in /opt/cactus/.
-Then start the controlhub from ipbus-software/controlhub/scripts.
+Then start the ControlHub.
 ```bash
-./controlhub_start
+/opt/cactus/bin/controlhub_start
 ```
 The contolhub needs to run for the working of the AIDA TLU, so needs to be started again each time the controlhub is stopped.
 The default IP address of the TLU is:
@@ -47,8 +40,13 @@ The default IP address of the TLU is:
 ```
 ## Python packages
 Install the Python package as usual.
-```
+```bash
 pip install -e .
+```
+
+To connect to the hardware, you need to install the `hw` component as well.
+```bash
+pip install -e .[bash]
 ```
 
 # Usage
