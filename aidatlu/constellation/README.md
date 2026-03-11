@@ -103,18 +103,18 @@ enable_clock_lemo_output = false
 
 The following metrics are distributed by this satellite and can be subscribed to. Timed metrics provide an interval in units of time, triggered metrics in number of calls.
 
-| Metric | Description | Value Type | Metric Type | Interval |
-|--------|-------------|------------|-------------|----------|
-| `PRE_VETO_RATE` | Trigger rate after trigger logic (before DUT veto) in Hertz | Integer | `LAST_VALUE` | 1s |
-| `POST_VETO_RATE` | Outgoing trigger rate to the devices (after DUT veto) in Hertz | Integer | `LAST_VALUE` | 1s |
-| `TOTAL_PRE_VETO` | Total number of pre veto trigger | Integer | `LAST_VALUE` | 1s |
-| `TOTAL_POST_VETO` | Total number of post veto trigger | Integer | `LAST_VALUE` | 1s |
-| `SC1` | Total number that trigger input 1 received a valid signal | Integer | `LAST_VALUE` | 1s |
-| `SC2` | Total number that trigger input 2 received a valid signal | Integer | `LAST_VALUE` | 1s |
-| `SC3` | Total number that trigger input 3 received a valid signal | Integer | `LAST_VALUE` | 1s |
-| `SC4` | Total number that trigger input 4 received a valid signal | Integer | `LAST_VALUE` | 1s |
-| `SC5` | Total number that trigger input 5 received a valid signal | Integer | `LAST_VALUE` | 1s |
-| `SC6` | Total number that trigger input 6 received a valid signal | Integer | `LAST_VALUE` | 1s |
+| Metric | Description | Value Type | Interval |
+|--------|-------------|------------|----------|
+| `PRE_VETO_RATE` | Trigger rate after trigger logic (before DUT veto) in Hertz | Float | 1s |
+| `POST_VETO_RATE` | Outgoing trigger rate to the devices (after DUT veto) in Hertz | Float | 1s |
+| `TOTAL_PRE_VETO` | Total number of pre veto trigger | Integer | 1s |
+| `TOTAL_POST_VETO` | Total number of post veto trigger | Integer | 1s |
+| `SC1` | Total number that trigger input 1 received a valid signal | Integer | 1s |
+| `SC2` | Total number that trigger input 2 received a valid signal | Integer | 1s |
+| `SC3` | Total number that trigger input 3 received a valid signal | Integer | 1s |
+| `SC4` | Total number that trigger input 4 received a valid signal | Integer | 1s |
+| `SC5` | Total number that trigger input 5 received a valid signal | Integer | 1s |
+| `SC6` | Total number that trigger input 6 received a valid signal | Integer | 1s |
 
 ## Data
 
