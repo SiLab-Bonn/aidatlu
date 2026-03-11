@@ -53,3 +53,12 @@ Two optional stop conditions can be set in tlu_configuration.yaml.
 The maximum number of trigger events (max_trigger_number, e.g. max_trigger_number: 1000000)
 and a timeout in seconds (timeout, e.g. timeout: 100) can be set.
 These configurations are not included by default in the tlu_configuration file, so add them manually if needed.
+
+### Ignore Busy (ignore_busy)
+Optional configuration, specific DUT interface ignores busy signals.
+Set it for example with
+```
+dut_1:
+    mode: eudet
+    ignore_busy: 1
+```
