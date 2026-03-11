@@ -238,58 +238,49 @@ class AidaTLU(TransmitterSatellite):
         return None
 
     @schedule_metric("", 1)
-    def post_veto(self) -> Any:
-        if self.fsm.current_state_value == SatelliteState.RUN:
+    def post_veto(self) -> int | None:
+        if self.fsm.state == SatelliteState.RUN:
             return self.tlu_controller.get_post_veto_trigger_number()
-        else:
-            return None
+        return None
 
     @schedule_metric("", 1)
-    def pre_veto(self) -> Any:
-        if self.fsm.current_state_value == SatelliteState.RUN:
+    def pre_veto(self) -> int | None:
+        if self.fsm.state == SatelliteState.RUN:
             return self.tlu_controller.get_pre_veto_trigger_number()
-        else:
-            return None
+        return None
 
     @schedule_metric("", 1)
-    def sc0(self) -> Any:
-        if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
-            self.log.debug("sc0: %s" % self.tlu_controller.get_scaler(0))
+    def sc1(self) -> int | None:
+        if self.fsm.state in [SatelliteState.ORBIT, SatelliteState.RUN]:
             return self.tlu_controller.get_scaler(0)
-        else:
-            return None
+        return None
 
     @schedule_metric("", 1)
-    def sc1(self) -> Any:
-        if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
+    def sc2(self) -> int | None:
+        if self.fsm.state in [SatelliteState.ORBIT, SatelliteState.RUN]:
             return self.tlu_controller.get_scaler(1)
-        else:
-            return None
+        return None
 
     @schedule_metric("", 1)
-    def sc2(self) -> Any:
-        if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
+    def sc3(self) -> int | None:
+        if self.fsm.state in [SatelliteState.ORBIT, SatelliteState.RUN]:
             return self.tlu_controller.get_scaler(2)
-        else:
-            return None
+        return None
 
     @schedule_metric("", 1)
-    def sc3(self) -> Any:
-        if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
+    def sc4(self) -> int | None:
+        if self.fsm.state in [SatelliteState.ORBIT, SatelliteState.RUN]:
             return self.tlu_controller.get_scaler(3)
-        else:
-            return None
+        return None
 
     @schedule_metric("", 1)
-    def sc4(self) -> Any:
-        if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
+    def sc5(self) -> int | None:
+        if self.fsm.state in [SatelliteState.ORBIT, SatelliteState.RUN]:
             return self.tlu_controller.get_scaler(4)
-        else:
-            return None
+        return None
 
     @schedule_metric("", 1)
-    def sc5(self) -> Any:
-        if self.fsm.current_state_value in [SatelliteState.ORBIT, SatelliteState.RUN]:
+    def sc6(self) -> int | None:
+        if self.fsm.state in [SatelliteState.ORBIT, SatelliteState.RUN]:
             return self.tlu_controller.get_scaler(5)
-        else:
-            return None
+        return None
