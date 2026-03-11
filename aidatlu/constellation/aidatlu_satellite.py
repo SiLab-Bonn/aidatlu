@@ -138,6 +138,7 @@ class AidaTLU(TransmitterSatellite):
         return "Do running complete"
 
     def _read_config(self, config: Configuration):
+        "Reads and checks Constellation configuration"
         config.set_default(key="clock_config", value=None)
         config.set_default(key="ignore_busy", value=[0, 0, 0, 0])
         config.set_default(key="internal_trigger_rate", value=0)
@@ -176,7 +177,7 @@ class AidaTLU(TransmitterSatellite):
             self.log.info("No clock configuration provided, using default file")
             self.clock_file = str(self.file_path) + "/../misc/aida_tlu_clk_config.txt"
         else:
-            self.clock_file = self.config_file["clock_config"]
+            self.clock_file = str(config["clock_config"])
         self.tlu_controller = TLUControl(self.hw, i2c=self.i2c_method)
         self.tlu_controller.write_clock_config(self.clock_file)
 
