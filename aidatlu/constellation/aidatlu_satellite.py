@@ -68,6 +68,7 @@ class AidaTLU(TransmitterSatellite):
         self.conf_list = self.tlu_configure.get_configuration_table()
         self.tlu_controller.get_event_fifo_fill_level()
         self.tlu_controller.get_event_fifo_csr()
+        self.tlu_controller.reset_counters()
         self.tlu_controller.get_scalers()
         return "Do launching complete"
 
