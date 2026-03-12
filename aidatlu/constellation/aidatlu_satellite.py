@@ -13,7 +13,6 @@ from constellation.core.message.cscp1 import SatelliteState
 from constellation.core.monitoring import schedule_metric
 from constellation.core.transmitter_satellite import TransmitterSatellite
 
-from aidatlu import logger
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.main.config_parser import toml_parser
 from aidatlu.hardware.tlu_controller import TLUControl, TLUConfigure
