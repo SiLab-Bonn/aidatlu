@@ -36,12 +36,11 @@ class AidaTLU(TransmitterSatellite):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.use_mock = os.environ.get("TLU_MOCK")
+        self.file_path = Path(__file__).parent
 
     def do_initializing(self, config: Configuration) -> str:
 
         configuration = self._read_config(config)
-
-        self.file_path = Path(__file__).parent
 
         if not self.use_mock:
             import uhal
