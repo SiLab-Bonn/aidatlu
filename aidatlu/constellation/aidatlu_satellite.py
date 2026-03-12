@@ -139,8 +139,11 @@ class AidaTLU(TransmitterSatellite):
 
     def _read_config(self, config: Configuration):
         "Reads and checks Constellation configuration"
-        config.set_default(key="clock_config", value=None)
-        config.set_default(key="ignore_busy", value=[0, 0, 0, 0])
+        config.set_default(
+            key="clock_config",
+            value=f"{self.file_path}/../misc/aida_tlu_clk_config.txt",
+        )
+        config.set_default(key="ignore_busy", value=[False, False, False, False])
         config.set_default(key="internal_trigger_rate", value=0)
         config.set_default(key="enable_clock_lemo_output", value=False)
         config.set_default(key="status_interval", value=1.0)
@@ -161,8 +164,8 @@ class AidaTLU(TransmitterSatellite):
             ),
             "enable_clock_lemo_output": config.get(key="enable_clock_lemo_output"),
             "pmt_power": config.get_array(key="pmt_power", element_type=float),
-            "clock_config": config.get(key="clock_config"),
-            "ignore_busy": config.get_array(key="ignore_busy", element_type=int),
+            "clock_config": config.get_path(key="clock_config", check_exists=True),
+            "ignore_busy": config.get_array(key="ignore_busy", element_type=bool),
         }
 
         self.status_interval = config.get_float("status_interval")
@@ -172,16 +175,12 @@ class AidaTLU(TransmitterSatellite):
 
     def _init_tlu(self, config: Configuration) -> None:
         "Parse configuration file to TLU and initialize, set loggers"
-        self.config_file = toml_parser(config, constellation=True)
-        if config["clock_config"] in [None, "None", False]:
-            self.log.info("No clock configuration provided, using default file")
-            self.clock_file = str(self.file_path) + "/../misc/aida_tlu_clk_config.txt"
-        else:
-            self.clock_file = str(config["clock_config"])
+        self.tlu_config = toml_parser(config, constellation=True)
+        self.clock_file = config["clock_config"]
         self.tlu_controller = TLUControl(self.hw, i2c=self.i2c_method)
         self.tlu_controller.write_clock_config(self.clock_file)
 
-        self.tlu_configure = TLUConfigure(self.tlu_controller, self.config_file)
+        self.tlu_configure = TLUConfigure(self.tlu_controller, self.tlu_config)
         self.tlu_controller.reset_configuration()
         # Resets aidatlu loggers and replaces them with constellation loggers
         self.tlu_controller.log = self.log
