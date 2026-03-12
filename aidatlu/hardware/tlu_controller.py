@@ -384,6 +384,10 @@ class TLUConfigure:
 
         self.log.info("Trigger Configuration: %s" % (trigger_configuration))
 
+        # Empty trigger configuration => disable all inputs => logically always false
+        if trigger_configuration == "":
+            trigger_configuration = "False"
+
         if trigger_configuration is not None:
             # Sets the Trigger Leds to green if the Input is enabled and to red if the input is set to VETO.
             # TODO this breaks when there are multiple enabled and veto statements for the same trigger input.

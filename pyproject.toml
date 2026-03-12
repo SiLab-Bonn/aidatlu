@@ -39,5 +39,8 @@ version = {attr = "aidatlu.__version__"}
 [project.scripts]
 SatelliteAidaTLU = "aidatlu.constellation.__main__:main"
 
+[project.entry-points."constellation.satellites"]
+AidaTLU = "aidatlu.constellation"
+
 [tool.setuptools.package-data]
 "aidatlu.misc" = ["*.xml", "*.txt"]
