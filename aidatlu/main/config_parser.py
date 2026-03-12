@@ -73,10 +73,10 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
     if not constellation:
         with open(conf_file_path, "rb") as file:
             toml_conf = tomllib.load(file)
-            keys = toml_conf.keys()
     else:
         toml_conf = conf_file_path
-        keys = conf_file_path.get_keys()
+
+    keys = toml_conf.keys()
 
     # Throw an error when the length of the list of required parameters does not match.
     if len(toml_conf["dut_interfaces"]) != 4:
@@ -198,11 +198,5 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
         conf["max_trigger_number"] = None
         conf["timeout"] = None
         conf["save_data"] = False
-
-        # Loads custom clock configuration file if provided
-        try:
-            conf["clock_config"] = toml_conf["clock_config"]
-        except:
-            conf["clock_config"] = None
 
     return conf

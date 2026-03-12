@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
 from collections import deque
+from enum import StrEnum
 import os
 import threading
 import time
@@ -20,23 +20,28 @@ from aidatlu.test.utils import MockI2C
 import aidatlu.logger as logger
 
 
+class DUTInterfaceType(StrEnum):
+    EUDET = "eudet"
+    AIDA = "aida"
+    AIDATRIG = "aidatrig"
+    OFF = "off"
+
+
+class TriggerPolarity(StrEnum):
+    RISING = "rising"
+    FALLING = "falling"
+
+
 class AidaTLU(TransmitterSatellite):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.use_mock = os.environ.get("TLU_MOCK")
+        self.file_path = Path(__file__).parent
 
     def do_initializing(self, config: Configuration) -> str:
-        self.log.info(
-            "Received configuration with parameters: %s",
-            ", ".join(config.get_keys()),
-        )
 
-        config.set_default(key="status_interval", value=1)
-        self.status_interval = config["status_interval"]
-        self.log.debug("Calculating status every %.3f s" % self.status_interval)
-
-        self.file_path = Path(__file__).parent
+        configuration = self._read_config(config)
 
         if not self.use_mock:
             import uhal
@@ -51,7 +56,7 @@ class AidaTLU(TransmitterSatellite):
             self.i2c_method = MockI2C
             self.hw = None
 
-        self._init_tlu(config)
+        self._init_tlu(configuration)
 
         return "Initializing complete"
 
@@ -71,7 +76,8 @@ class AidaTLU(TransmitterSatellite):
         return "Do landing complete"
 
     def do_reconfigure(self, config: Configuration) -> str:
-        self._init_tlu(config)
+        configuration = self._read_config(config)
+        self._init_tlu(configuration)
         return "Do reconfigure complete"
 
     def do_starting(self, run_identifier: str = None) -> str:
@@ -142,18 +148,58 @@ class AidaTLU(TransmitterSatellite):
         self.tlu_controller.pull_fifo_event()
         return "Do running complete"
 
+    def _read_config(self, config: Configuration):
+        "Reads and checks Constellation configuration"
+        config.set_default(
+            key="clock_config",
+            value=str(
+                (self.file_path / ".." / "misc" / "aida_tlu_clk_config.txt").resolve()
+            ),
+        )
+        config.set_default(key="ignore_busy", value=[False, False, False, False])
+        config.set_default(key="internal_trigger_rate", value=0)
+        config.set_default(key="enable_clock_lemo_output", value=False)
+        config.set_default(key="status_interval", value=1.0)
+
+        configuration = {
+            "internal_trigger_rate": config.get_int(key="internal_trigger_rate"),
+            "dut_interfaces": config.get_array(
+                key="dut_interfaces",
+                element_type=lambda x: DUTInterfaceType[str(x).upper()].value,
+            ),
+            "trigger_threshold": config.get_array(
+                key="trigger_threshold", element_type=float
+            ),
+            "trigger_inputs_logic": config.get(key="trigger_inputs_logic"),
+            "trigger_polarity": config.get(
+                key="trigger_polarity",
+                return_type=lambda x: TriggerPolarity[str(x).upper()].value,
+            ),
+            "trigger_signal_stretch": config.get_array(
+                key="trigger_signal_stretch", element_type=int
+            ),
+            "trigger_signal_delay": config.get_array(
+                key="trigger_signal_delay", element_type=int
+            ),
+            "enable_clock_lemo_output": config.get(key="enable_clock_lemo_output"),
+            "pmt_power": config.get_array(key="pmt_power", element_type=float),
+            "clock_config": config.get_path(key="clock_config", check_exists=True),
+            "ignore_busy": config.get_array(key="ignore_busy", element_type=bool),
+        }
+
+        self.status_interval = config.get_float("status_interval")
+        self.log.debug("Calculating status every %.3f s" % self.status_interval)
+
+        return configuration
+
     def _init_tlu(self, config: Configuration) -> None:
         "Parse configuration file to TLU and initialize, set loggers"
-        self.config_file = toml_parser(config, constellation=True)
-        if self.config_file["clock_config"] in [None, "None", False]:
-            self.log.info("No clock configuration provided, using default file")
-            self.clock_file = str(self.file_path) + "/../misc/aida_tlu_clk_config.txt"
-        else:
-            self.clock_file = self.config_file["clock_config"]
+        self.tlu_config = toml_parser(config, constellation=True)
+        self.clock_file = config["clock_config"]
         self.tlu_controller = TLUControl(self.hw, i2c=self.i2c_method)
         self.tlu_controller.write_clock_config(self.clock_file)
 
-        self.tlu_configure = TLUConfigure(self.tlu_controller, self.config_file)
+        self.tlu_configure = TLUConfigure(self.tlu_controller, self.tlu_config)
         self.tlu_controller.reset_configuration()
 
     def _handle_event(self, evt: list) -> None:
@@ -188,8 +234,8 @@ class AidaTLU(TransmitterSatellite):
                         self.run_time,
                         self.total_pre_veto,
                         self.total_post_veto,
-                        self.pre_veto_rate,
-                        self.post_veto_rate,
+                        self._pre_veto_rate,
+                        self._post_veto_rate,
                     )
                 )
 
