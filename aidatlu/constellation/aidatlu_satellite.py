@@ -1,4 +1,5 @@
 from collections import deque
+from enum import StrEnum
 import os
 import threading
 import time
@@ -16,6 +17,18 @@ from aidatlu.hardware.i2c import I2CCore
 from aidatlu.main.config_parser import toml_parser
 from aidatlu.hardware.tlu_controller import TLUControl, TLUConfigure
 from aidatlu.test.utils import MockI2C
+
+
+class DUTInterfaceType(StrEnum):
+    EUDET = "eudet"
+    AIDA = "aida"
+    AIDATRIG = "aidatrig"
+    OFF = "off"
+
+
+class TriggerPolarity(StrEnum):
+    RISING = "rising"
+    FALLING = "falling"
 
 
 class AidaTLU(TransmitterSatellite):
@@ -148,12 +161,18 @@ class AidaTLU(TransmitterSatellite):
 
         configuration = {
             "internal_trigger_rate": config.get_int(key="internal_trigger_rate"),
-            "dut_interfaces": config.get_array(key="dut_interfaces", element_type=str),
+            "dut_interfaces": config.get_array(
+                key="dut_interfaces",
+                element_type=lambda x: DUTInterfaceType[str(x).upper()].value,
+            ),
             "trigger_threshold": config.get_array(
                 key="trigger_threshold", element_type=float
             ),
             "trigger_inputs_logic": config.get(key="trigger_inputs_logic"),
-            "trigger_polarity": config.get(key="trigger_polarity"),
+            "trigger_polarity": config.get(
+                key="trigger_polarity",
+                return_type=lambda x: TriggerPolarity[str(x).upper()].value,
+            ),
             "trigger_signal_stretch": config.get_array(
                 key="trigger_signal_stretch", element_type=int
             ),
