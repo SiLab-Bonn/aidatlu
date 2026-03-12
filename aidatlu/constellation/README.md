@@ -20,7 +20,7 @@ The satellite connects the AIDA-2020 TLU to the [Constellation](https://constell
 Install the [Aida-TLU](https://github.com/SiLab-Bonn/aidatlu) package with the `constellation` and `hw` requirement:
 
 ```bash
-pip install .[constellation,hw]
+pip install aidatlu[constellation,hw]
 ```
 
 Building the ControlHub from the [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html) software is required for connection with the TLU.
