@@ -151,7 +151,9 @@ class AidaTLU(TransmitterSatellite):
         "Reads and checks Constellation configuration"
         config.set_default(
             key="clock_config",
-            value=f"{self.file_path}/../misc/aida_tlu_clk_config.txt",
+            value=str(
+                (self.file_path / ".." / "misc" / "aida_tlu_clk_config.txt").resolve()
+            ),
         )
         config.set_default(key="ignore_busy", value=[False, False, False, False])
         config.set_default(key="internal_trigger_rate", value=0)
