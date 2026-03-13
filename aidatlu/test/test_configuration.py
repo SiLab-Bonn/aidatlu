@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 import pytest
-from aidatlu.main.config_parser import yaml_parser, toml_parser
+from aidatlu.main.config_parser import yaml_parser
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.tlu_controller import TLUControl, TLUConfigure
 from aidatlu.test.utils import MockI2C
