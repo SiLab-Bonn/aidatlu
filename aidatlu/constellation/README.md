@@ -40,8 +40,8 @@ SatelliteAidaTLU -g testbeam -n TLU
 ```
 
 ```{note}
-The TLU configuration resets during launching and landing.
-This means DUT interface signals (e.g. clock signals) are disrupted during these transitions.
+The TLU configuration resets during initializing.
+This means DUT interface signals (e.g. clock signals) are disrupted here.
 ```
 
 ## Parameters

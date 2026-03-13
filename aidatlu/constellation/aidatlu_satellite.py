@@ -57,15 +57,16 @@ class AidaTLU(TransmitterSatellite):
             self.hw = None
 
         self._init_tlu(configuration)
-
+        self.tlu_configure.configure()
+        self.tlu_controller.get_event_fifo_fill_level()
+        self.tlu_controller.get_event_fifo_csr()
+        self.tlu_controller.reset_counters()
+        self.tlu_controller.get_scalers()
         return "Initializing complete"
 
     def do_launching(self, payload: Any = None) -> str:
-        self.tlu_controller.reset_counters()
         self.tlu_controller.reset_fifo()
         self.tlu_controller.reset_timestamp()
-        self.tlu_configure.configure()
-        self.conf_list = self.tlu_configure.get_configuration_table()
         self.tlu_controller.get_event_fifo_fill_level()
         self.tlu_controller.get_event_fifo_csr()
         self.tlu_controller.reset_counters()
@@ -73,12 +74,16 @@ class AidaTLU(TransmitterSatellite):
         return "Do launching complete"
 
     def do_landing(self) -> str:
-        self.tlu_controller.reset_configuration()
         return "Do landing complete"
 
     def do_reconfigure(self, config: Configuration) -> str:
         configuration = self._read_config(config)
         self._init_tlu(configuration)
+        self.tlu_configure.configure()
+        self.tlu_controller.get_event_fifo_fill_level()
+        self.tlu_controller.get_event_fifo_csr()
+        self.tlu_controller.reset_counters()
+        self.tlu_controller.get_scalers()
         return "Do reconfigure complete"
 
     def do_starting(self, run_identifier: str = None) -> str:
