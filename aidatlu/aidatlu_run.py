@@ -70,6 +70,8 @@ class AIDATLU:
             I2CMETHOD = MockI2C
             hw = None
 
+        if type(conf_dict["clock_config"]) == str:
+            self.clock_file = conf_dict["clock_config"]
         self.aidatlu = AidaTLU(hw, conf_dict, self.clock_file, i2c=I2CMETHOD)
 
     def help(self):
