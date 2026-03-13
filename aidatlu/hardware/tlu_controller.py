@@ -352,16 +352,18 @@ class TLUConfigure:
             self.tlu.trigger_logic.set_trigger_polarity(1)
 
         self.tlu.trigger_logic.set_pulse_stretch_pack(
-            self.conf["trigger_signal_shape_stretch"]
+            [self.conf["stretch_%s" % (i + 1)] for i in range(6)]
         )
         self.tlu.trigger_logic.set_pulse_delay_pack(
-            self.conf["trigger_signal_shape_delay"]
+            [self.conf["delay_%s" % (i + 1)] for i in range(6)]
         )
-        self.log.info(
-            "Trigger input stretch: %s" % self.conf["trigger_signal_shape_stretch"]
+        self.log.debug(
+            "Trigger input stretch: %s"
+            % [self.conf["stretch_%s" % (i + 1)] for i in range(6)]
         )
-        self.log.info(
-            "Trigger input delay  : %s" % self.conf["trigger_signal_shape_delay"]
+        self.log.debug(
+            "Trigger input delay  : %s"
+            % [self.conf["delay_%s" % (i + 1)] for i in range(6)]
         )
 
         self.tlu.trigger_logic.set_internal_trigger_frequency(
@@ -454,12 +456,6 @@ class TLUConfigure:
             list: configuration list
         """
         conf_table = self.conf.copy()
-        conf_table["trigger_signal_shape_stretch"] = str(
-            self.conf["trigger_signal_shape_stretch"]
-        )
-        conf_table["trigger_signal_shape_delay"] = str(
-            self.conf["trigger_signal_shape_delay"]
-        )
         conf_table["trigger_polarity"] = str(self.conf["trigger_polarity"])
         conf_table["trigger_inputs_logic"] = str(self.conf["trigger_inputs_logic"])
         self.log.debug(f"Configuration table: {conf_table}")

@@ -48,16 +48,16 @@ This means DUT interface signals (e.g. clock signals) are disrupted during these
 
 | Configuration | Description | Type | Default Value |
 |-----------|-------------|------| ------|
+| `mode` | (Required) Specify the operation mode of the DUT interface (`aida`, `eudet`, `aidatrig`, `off`), given as list with a required length of 4. `aida` and `eudet` correspond to the classic AIDA and EUDET mode respectively and `aidatrig` to the AIDA-mode with handshake. Disable a DUT interface with `off`. | String | None |
+| `control_voltage` | (Required) Sets the four PMT control voltages in V | Float | None |
+| `stretch` | (Required) Stretches each individual trigger input by a given number of clock cycles (corresponds to `6.25ns` steps) | Integer | None |
+| `delay` | (Required) Delays each individual trigger input by a given number of clock cycles (corresponds to `6.25ns` steps) | Integer | None |
+| `threshold` | (Required) Threshold setting of each individual trigger input channel given in V. | Float | None |
+| `input_logic` | (Required) Trigger Logic configuration accepts a Python expression for the trigger inputs. The logic is set by using the variables for the input channels `CH1`, `CH2`, `CH3`, `CH4`, `CH5` and `CH6` and the Python logic operators `and`, `or`, `not` and so on. Don't forget to use brackets... | String | None |
 | `internal_trigger_rate` | (Optional) Generates internal triggers with a given frequency given in Hz. | Integer | 0 |
-| `dut_interfaces` | (Required) Specify the operation mode of the DUT interface (`aida`, `eudet`, `aidatrig`, `off`), given as list with a required length of 4. `aida` and `eudet` correspond to the classic AIDA and EUDET mode respectively and `aidatrig` to the AIDA-mode with handshake. Disable a DUT interface with `off`. | List | None |
-| `ignore_busy` | (Optional) Specific DUT interface ignores busy signals. | List | `[false, false, false, false]` |
-| `trigger_threshold` | (Required) Threshold setting of each individual trigger input channel given in V. | List | None |
-| `trigger_inputs_logic` | (Required) Trigger Logic configuration accepts a Python expression for the trigger inputs. The logic is set by using the variables for the input channels `CH1`, `CH2`, `CH3`, `CH4`, `CH5` and `CH6` and the Python logic operators `and`, `or`, `not` and so on. Don't forget to use brackets... | String | None |
-| `trigger_polarity` | (Optional) TLU can trigger on a rising or falling edge. Set to `rising` or `falling` | String | `falling` |
-| `trigger_signal_stretch` | (Required) Stretches each individual trigger input by a given number of clock cycles (corresponds to `6.25ns` steps) | List | None |
-| `trigger_signal_delay` | (Required) Delays each individual trigger input by a given number of clock cycles (corresponds to `6.25ns` steps) | List | None |
-| `enable_clock_lemo_output` | (Optional) Enable the LEMO clock output. | String | False |
-| `pmt_power` | (Required) Sets the four PMT control voltages in V | List | None |
+| `polarity` | (Optional) TLU can trigger on a rising or falling edge. Set to `rising` or `falling` | String | `falling` |
+| `enable_clock_lemo_output` | (Optional) Enable the LEMO clock output. | Bool | False |
+| `ignore_busy` | (Optional) Specific DUT interface ignores busy signals. | Bool | False |
 | `clock_config` | (Optional) Specify a custom clock configuration. If no path is provided, the TLU uses the default configuration. | String | None |
 | `status_interval` | (Optional) Set status calculation interval in seconds. Affects logging and calculation interval (pre and post trigger rates).| float | 1 |
 
@@ -67,21 +67,54 @@ The default clock configuration can be found in [`aidatlu/misc/aida_tlu_clk_conf
 
 An example configuration for the AIDA-TLU satellite which could be dropped into a Constellation configuration as a starting point:
 
-```toml
-[AidaTLU.2020]
+```yaml
+AIDATLU:
+  TLU:
+    internal_trigger_rate: 0
 
-internal_trigger_rate = 0
-dut_interfaces = ['aida', 'aidatrig', 'eudet', 'off']
+    dut_interfaces:
+      dut_1:
+        mode: aida
+      dut_2:
+        mode: aidatrig
+      dut_3:
+        mode: eudet
+      dut_4:
+        mode: off
 
-trigger_threshold = [-0.1, -0.1, -0.1, -0.1, -0.1, -0.1]
-trigger_inputs_logic = 'CH1 and CH2'
-trigger_polarity = 'falling'
-trigger_signal_stretch = [2, 2, 2, 2, 2, 2]
-trigger_signal_delay = [0, 0, 0, 0, 0, 0]
+    trigger_inputs:
+      input_logic: 'CH1 and CH2'
+      polarity: falling
+      input_1:
+        threshold: -0.1
+        stretch: 2
+        delay: 0
+      input_2:
+        threshold: -0.1
+        stretch: 2
+        delay: 0
+      input_3:
+        threshold: -0.1
+        stretch: 2
+        delay: 0
+      input_4:
+        threshold: -0.1
+        stretch: 2
+        delay: 0
+      input_5:
+        threshold: -0.1
+        stretch: 2
+        delay: 0
+      input_6:
+        threshold: -0.1
+        stretch: 2
+        delay: 0
 
-pmt_power = [0.8, 0.8, 0.0, 0.0]
-
-enable_clock_lemo_output = false
+    pmt_power:
+      control_voltage_1: 0.8
+      control_voltage_2: 0.8
+      control_voltage_3: 0.0
+      control_voltage_4: 0.0
 ```
 
 ## Metrics
