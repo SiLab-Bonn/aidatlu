@@ -9,7 +9,9 @@ The software is a lightweight version written in Python with a focus on readabil
 Most user cases can be set with a .yaml configuration file and started by executing a single Python script.
 For a more in-depth look at the hardware components please take a look at the official [AIDA-2020 TLU project](https://gitlab.com/ohwr/project/fmc-mtlu).
 Additionally, take a look at the [documentation](https://silab-bonn.github.io/aidatlu/) for this software.
+
 # Installation
+
 ## IPbus
 You need to install the ControlHub from the [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html) software.
 Follow the linked tutorial for prerequisites and general installation.
@@ -58,7 +60,7 @@ pip install aidatlu
 
 # Usage
 
-## Standalone Python Implementation
+## Stand-Alone Python Implementation
 Connect to the TLU, configure and start a run via:
 ```bash
     pyaidatlu -c path/to/configuration.yaml
@@ -77,6 +79,7 @@ with the following commands:
     tlu.run()
 ```
 Runs are stopped with the keyboard interrupt `ctr+c`.
+
 ## Constellation
 Start a satellite with:
 ```bash
@@ -85,7 +88,8 @@ Start a satellite with:
 For more information take a look at the [constellation readme](https://github.com/SiLab-Bonn/aidatlu/tree/main/aidatlu/constellation).
 
 # Tests
-Test the software by using the TLU mock.
+
+Test the software by using a TLU mock.
 Just set the environment variable:
 ```bash
     TEST=True pyaidatlu -c path/to/configuration.yaml
@@ -98,7 +102,7 @@ The mock is used as a default.
 ```bash
     pytest -sv
 ```
-To test with connected hardware set an environment variable ```HW=True````:
+To test with connected hardware set an environment variable:
 
 ```bash
     HW=True pytest -sv
