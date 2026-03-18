@@ -77,9 +77,8 @@ class AidaTLU(TransmitterSatellite):
         return "Do landing complete"
 
     def do_reconfigure(self, config: Configuration) -> str:
-        configuration = self._read_config(config)
-        self._init_tlu(configuration)
-        self.tlu_configure.configure()
+        self.tlu_controller.reset_fifo()
+        self.tlu_controller.reset_timestamp()
         self.tlu_controller.get_event_fifo_fill_level()
         self.tlu_controller.get_event_fifo_csr()
         self.tlu_controller.reset_counters()
