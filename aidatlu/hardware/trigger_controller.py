@@ -84,7 +84,6 @@ class TriggerLogic:
 
         """
         trigger_polarity = 0x3F & value
-        trigger_polarity.reverse() # channel 0 is the LSB, channel 5 is the MSB
         self.i2c.write_register("triggerInputs.InvertEdgeW", trigger_polarity)
         # print polarity for each channel
         for channel in range(6):
