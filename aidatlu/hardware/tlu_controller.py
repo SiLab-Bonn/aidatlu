@@ -338,18 +338,22 @@ class TLUConfigure:
     def conf_trigger_logic(self) -> None:
         """Configures the trigger logic. So the trigger polarity and the trigger pulse length and stretch."""
 
-        if self.conf["trigger_polarity"] in [
-            0,
-            "0",
-            "rising",
-        ]:
-            self.tlu.trigger_logic.set_trigger_polarity(0)
-        elif self.conf["trigger_polarity"] in [
-            1,
-            "1",
-            "falling",
-        ]:
-            self.tlu.trigger_logic.set_trigger_polarity(1)
+        trigger_polarity_word = 0
+        trigger_polarity = self.conf["trigger_polarity"]
+        for channel in trigger_polarity:
+            if channel in [
+                0,
+                "0",
+                "rising",
+            ]:
+                trigger_polarity_word << 1
+            elif channel in [
+                1,
+                "1",
+                "falling",
+            ]:
+                trigger_polarity_word << 0
+        self.tlu.trigger_logic.set_trigger_polarity(trigger_polarity_word)
 
         self.tlu.trigger_logic.set_pulse_stretch_pack(
             self.conf["trigger_signal_shape_stretch"]

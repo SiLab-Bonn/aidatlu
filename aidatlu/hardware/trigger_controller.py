@@ -84,8 +84,14 @@ class TriggerLogic:
 
         """
         trigger_polarity = 0x3F & value
+        trigger_polarity.reverse() # channel 0 is the LSB, channel 5 is the MSB
         self.i2c.write_register("triggerInputs.InvertEdgeW", trigger_polarity)
-        self.log.info("Trigger on %s edge" % ("falling" if value == 1 else "rising"))
+        # print polarity for each channel
+        for channel in range(6):
+            if trigger_polarity & (1 << channel):
+                self.log.info("Trigger channel %i set to falling edge" % channel)
+            else:
+                self.log.info("Trigger channel %i set to rising edge" % channel)
 
     def set_trigger_mask(self, mask_high: int, mask_low: int) -> None:
         """Sets the trigger logic. Each of the 64 possible combination is divided into two 32-bit words mask high and mask low.
