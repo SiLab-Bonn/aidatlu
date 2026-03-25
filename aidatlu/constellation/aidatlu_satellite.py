@@ -161,7 +161,10 @@ class AidaTLU(TransmitterSatellite):
         config.set_default(key="internal_trigger_rate", value=0)
         config.set_default(key="enable_clock_lemo_output", value=False)
         config.set_default(key="status_interval", value=1.0)
-        config.set_default(key="trigger_polarity", value=["falling", "falling", "falling", "falling", "falling", "falling"])
+        config.set_default(
+            key="trigger_polarity",
+            value=["falling", "falling", "falling", "falling", "falling", "falling"],
+        )
 
         configuration = {
             "internal_trigger_rate": config.get_int(key="internal_trigger_rate"),
@@ -173,7 +176,10 @@ class AidaTLU(TransmitterSatellite):
                 key="trigger_threshold", element_type=float
             ),
             "trigger_inputs_logic": config.get(key="trigger_inputs_logic"),
-            "trigger_polarity": config.get_array(key="trigger_polarity", element_type=str),
+            "trigger_polarity": config.get_array(
+                key="trigger_polarity",
+                element_type=lambda x: TriggerPolarity[str(x).upper()].value,
+            ),
             "trigger_signal_stretch": config.get_array(
                 key="trigger_signal_stretch", element_type=int
             ),
