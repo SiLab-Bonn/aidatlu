@@ -342,21 +342,15 @@ class TLUConfigure:
 
         trigger_polarity_word = 0
         trigger_polarity = self.conf["trigger_polarity"]
-        trigger_polarity.reverse() # channel 0 is the LSB, channel 5 is the MSB
+        trigger_polarity.reverse()  # channel 0 is the LSB, channel 5 is the MSB
         for channel in trigger_polarity:
-            if channel in [
-                0,
-                "0",
-                "rising",
-            ]:
-                trigger_polarity_word = (trigger_polarity_word << 1)
-            elif channel in [
-                1,
-                "1",
-                "falling",
-            ]:
+            if channel == "rising":
+                trigger_polarity_word = trigger_polarity_word << 1
+            elif channel == "falling":
                 trigger_polarity_word = (trigger_polarity_word << 1) + 1
-        self.log.debug("Constructed trigger polarity word: %s" % bin(trigger_polarity_word))
+        self.log.debug(
+            "Constructed trigger polarity word: %s" % bin(trigger_polarity_word)
+        )
         self.tlu.trigger_logic.set_trigger_polarity(trigger_polarity_word)
 
         self.tlu.trigger_logic.set_pulse_stretch_pack(
