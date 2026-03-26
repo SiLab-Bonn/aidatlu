@@ -1,12 +1,17 @@
 import os
 import time
+import argparse
+from pathlib import Path
 
 import uhal
-from main.tlu import AidaTLU
-from main.config_parser import yaml_parser
+from aidatlu.main.tlu import AidaTLU
+from aidatlu.main.config_parser import yaml_parser
 import aidatlu.logger as logger
-from test.utils import MockI2C
-from hardware.i2c import I2CCore
+from aidatlu.test.utils import MockI2C
+from aidatlu.hardware.i2c import I2CCore
+
+
+FILEPATH = Path(__file__).parent
 
 
 class AIDATLU:
@@ -18,7 +23,6 @@ class AIDATLU:
         print(r" /_/ \_\___|___/_/ \_\   |_| |____\___/ ")
         print(r"                                        ")
         print(r"----------------------------------------")
-        print("tlu.help()\n")
 
         self.config_file = config_path
         self.clock_file = clock_path
@@ -62,13 +66,16 @@ class AIDATLU:
         conf_dict = yaml_parser(self.config_file)
         try:
             self.MOCK = os.environ["TEST"] == "True"
+            I2CMETHOD = MockI2C
+            hw = None
         except KeyError:
             self.MOCK = False
             I2CMETHOD = I2CCore
-
-        if self.MOCK:
-            I2CMETHOD = MockI2C
-            hw = None
+            uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
+            manager = uhal.ConnectionManager(
+                "file://" + str(FILEPATH) + "/misc/aida_tlu_connection.xml"
+            )
+            hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
 
         self.aidatlu = AidaTLU(hw, conf_dict, self.clock_file, i2c=I2CMETHOD)
 
@@ -80,17 +87,30 @@ class AIDATLU:
         print("for access to the main tlu functions: tlu.aidatlu....")
 
 
-if __name__ == "__main__":
-    uhal.setLogLevelTo(uhal.LogLevel.NOTICE)
-    manager = uhal.ConnectionManager("file://./misc/aida_tlu_connection.xml")
-    hw = uhal.HwInterface(manager.getDevice("aida_tlu.controlhub"))
+def start():
+    parser = argparse.ArgumentParser(
+        prog="aidatlu",
+        description="Control the 2020-Aida-TLU using a Python based interface.",
+    )
+    parser.add_argument(
+        "-c", "--config", type=str, help="Path to configuration yaml", nargs="*"
+    )
+    args = vars(parser.parse_args())
 
+    config_path = args["config"][0]
+    clock_path = str(FILEPATH) + "/misc/aida_tlu_clk_config.txt"
+
+    logger.setup_main_logger(name="AIDA-TLU", level="INFO")
+    tlu = AIDATLU(config_path, clock_path)
+    tlu.configure()
+    tlu.run()
+
+
+if __name__ == "__main__":
     config_path = "tlu_configuration.yaml"
     clock_path = "misc/aida_tlu_clk_config.txt"
 
     logger.setup_main_logger(name="AIDA-TLU", level="INFO")
     tlu = AIDATLU(config_path, clock_path)
 
-    # Uncomment if you just want to use EUDET mode and just plug and play TLU.
-    # tlu.configure
-    # tlu.run
+    print("tlu.help()")

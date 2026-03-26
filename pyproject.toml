@@ -37,6 +37,7 @@ doc = ["sphinx", "myst_parser", "sphinx_mdinclude", "pydata-sphinx-theme", "sphi
 version = {attr = "aidatlu.__version__"}
 
 [project.scripts]
+pyaidatlu = "aidatlu.aidatlu_run:start"
 SatelliteAidaTLU = "aidatlu.constellation.__main__:main"
 
 [project.entry-points."constellation.satellites"]
