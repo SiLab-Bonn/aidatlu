@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 import pytest
-from aidatlu.main.config_parser import yaml_parser, toml_parser
+from aidatlu.main.config_parser import yaml_parser
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.hardware.tlu_controller import TLUControl, TLUConfigure
 from aidatlu.test.utils import MockI2C
@@ -36,6 +36,56 @@ TLU = TLUControl(
     i2c=I2CMETHOD,
 )
 
+TESTCONF = {
+    "internal_trigger_rate": 100000,
+    "DUT_1": "aida",
+    "DUT_2": "eudet",
+    "DUT_3": "aidatrig",
+    "DUT_4": False,
+    "DUT_1_ignore_busy": 0,
+    "DUT_2_ignore_busy": 0,
+    "DUT_3_ignore_busy": 0,
+    "DUT_4_ignore_busy": 0,
+    "threshold_1": -0.1,
+    "threshold_2": -0.2,
+    "threshold_3": -0.3,
+    "threshold_4": -0.4,
+    "threshold_5": -0.5,
+    "threshold_6": -0.6,
+    "trigger_inputs_logic": "(CH1 and (not CH2) and (not CH3) and (not CH4) and (CH5) and (not CH6))",
+    "stretch_1": 2,
+    "stretch_2": 2,
+    "stretch_3": 3,
+    "stretch_4": 2,
+    "stretch_5": 2,
+    "stretch_6": 2,
+    "delay_1": 0,
+    "delay_2": 1,
+    "delay_3": 0,
+    "delay_4": 0,
+    "delay_5": 3,
+    "delay_6": 0,
+    "trigger_polarity": [
+        "falling",
+        "falling",
+        "falling",
+        "falling",
+        "falling",
+        "falling",
+    ],
+    "enable_clock_lemo_output": True,
+    "pmt_control_1": 0.8,
+    "pmt_control_2": 0.8,
+    "pmt_control_3": 0.0,
+    "pmt_control_4": -0.2,
+    "save_data": True,
+    "output_data_path": "aidatlu/aidatlu/test/fixtures/test_output_data",
+    "zmq_connection": False,
+    "max_trigger_number": None,
+    "timeout": 5,
+    "clock_config": "path/to/clock/config.txt",
+}
+
 
 def test_config_parser():
     """Test parsing the configuration file"""
@@ -50,8 +100,7 @@ def test_config_parser():
     assert (None, CONFIG_FILE["timeout"]) == tlu_configure.get_stop_condition()
     assert CONFIG_FILE["zmq_connection"] == tlu_configure.get_zmq_connection()
 
-    config_toml_path = FILEPATH / "fixtures" / "tlu_test_configuration.toml"
-    assert toml_parser(config_toml_path) == yaml_parser(CONFIG_FILE_PATH)
+    assert yaml_parser(CONFIG_FILE_PATH) == TESTCONF
 
 
 def test_dut_configuration():
