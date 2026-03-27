@@ -1,0 +1,61 @@
+
+AIDATLU:
+  TLU:
+    internal_trigger_rate: 0
+
+    dut_interfaces:
+      dut_1:
+        mode: aida
+        ignore_busy: false
+      dut_2:
+        mode: aidatrig
+        ignore_busy: false
+      dut_3:
+        mode: eudet
+        ignore_busy: true
+      dut_4:
+        mode: off
+        ignore_busy: false
+
+    trigger_inputs:
+      input_logic: 'CH1 and CH2'
+      input_1:
+        threshold: -0.1
+        stretch: 2
+        delay: 0
+        polarity: falling
+      input_2:
+        threshold: -0.1
+        stretch: 2
+        delay: 0
+        polarity: falling
+      input_3:
+        threshold: -0.1
+        stretch: 2
+        delay: 0
+        polarity: falling
+      input_4:
+        threshold: -0.1
+        stretch: 2
+        delay: 0
+        polarity: falling
+      input_5:
+        threshold: -0.1
+        stretch: 2
+        delay: 0
+        polarity: falling
+      input_6:
+        threshold: -0.1
+        stretch: 2
+        delay: 0
+        polarity: falling
+
+    pmt_power:
+      control_voltage_1: 0.8
+      control_voltage_2: 0.8
+      control_voltage_3: 0.0
+      control_voltage_4: 0.0
+
+    enable_clock_lemo_output: false
+    status_interval: 1.0
+    clock_config: False
