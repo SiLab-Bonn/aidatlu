@@ -101,6 +101,12 @@ The following metrics are distributed by this satellite and can be subscribed to
 | `SC5` | Total number that trigger input 5 received a valid signal | Integer | 1s |
 | `SC6` | Total number that trigger input 6 received a valid signal | Integer | 1s |
 
+## Custom Commands
+
+| Command | Description | Arguments | Return Value | Allowed States |
+|---------|-------------|-----------|--------------|----------------|
+| `reset_counters` | Resets all internal counters of the TLU | - | String | `INIT`, `ORBIT`, `RUN` |
+
 ## Data
 
 This satellite sends the raw data read from the TLU FIFO, consisting of six 32bit words with the following data:

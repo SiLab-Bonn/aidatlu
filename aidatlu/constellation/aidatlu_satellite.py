@@ -12,6 +12,7 @@ from constellation.core.configuration import Configuration
 from constellation.core.message.cscp1 import SatelliteState
 from constellation.core.monitoring import schedule_metric
 from constellation.core.transmitter_satellite import TransmitterSatellite
+from constellation.core.commandmanager import cscp_requestable
 
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.main.config_parser import toml_parser
@@ -75,15 +76,6 @@ class AidaTLU(TransmitterSatellite):
 
     def do_landing(self) -> str:
         return "Do landing complete"
-
-    def do_reconfigure(self, config: Configuration) -> str:
-        self.tlu_controller.reset_fifo()
-        self.tlu_controller.reset_timestamp()
-        self.tlu_controller.get_event_fifo_fill_level()
-        self.tlu_controller.get_event_fifo_csr()
-        self.tlu_controller.reset_counters()
-        self.tlu_controller.get_scalers()
-        return "Do reconfigure complete"
 
     def do_starting(self, run_identifier: str = None) -> str:
         if self.use_mock:
@@ -270,6 +262,16 @@ class AidaTLU(TransmitterSatellite):
 
         if self.tlu_controller.get_event_fifo_csr() == 0x10:
             self.log.warning("FIFO is full")
+
+    @cscp_requestable
+    def reset_counters(self) -> str:
+        self.tlu_controller.reset_fifo()
+        self.tlu_controller.reset_timestamp()
+        self.tlu_controller.get_event_fifo_fill_level()
+        self.tlu_controller.get_event_fifo_csr()
+        self.tlu_controller.reset_counters()
+        self.tlu_controller.get_scalers()
+        return "Counters reset"
 
     @schedule_metric("Hz", 1)
     def pre_veto_rate(self) -> float | None:
