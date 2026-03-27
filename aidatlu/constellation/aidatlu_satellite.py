@@ -15,7 +15,6 @@ from constellation.core.transmitter_satellite import TransmitterSatellite
 from constellation.core.commandmanager import cscp_requestable
 
 from aidatlu.hardware.i2c import I2CCore
-from aidatlu.main.config_parser import toml_parser
 from aidatlu.hardware.tlu_controller import TLUControl, TLUConfigure
 from aidatlu.test.utils import MockI2C
 
@@ -207,12 +206,13 @@ class AidaTLU(TransmitterSatellite):
             tlu_conf["delay_%i" % (i + 1)] = trigger_inputs.get_section(
                 "input_%i" % (i + 1)
             ).get_int(key="delay")
-            tlu_conf["trigger_polarity"] = trigger_inputs.get_section(
-                "input_%i" % (i + 1)
-            ).get(
+        tlu_conf["trigger_polarity"] = [
+            trigger_inputs.get_section("input_%i" % (i + 1)).get(
                 key="polarity",
                 return_type=lambda x: TriggerPolarity[str(x).upper()].value,
             )
+            for i in range(6)
+        ]
 
         tlu_conf["trigger_inputs_logic"] = trigger_inputs.get(
             key="input_logic", return_type=str
