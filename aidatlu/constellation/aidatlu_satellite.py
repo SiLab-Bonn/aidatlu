@@ -195,6 +195,9 @@ class AidaTLU(TransmitterSatellite):
                 )
 
         for i in range(6):
+            trigger_inputs.get_section("input_%i" % (i + 1)).set_default(
+                key="polarity", value="falling"
+            )
             tlu_conf["threshold_%i" % (i + 1)] = trigger_inputs.get_section(
                 "input_%i" % (i + 1)
             ).get_float(key="threshold")
@@ -206,8 +209,10 @@ class AidaTLU(TransmitterSatellite):
             ).get_int(key="delay")
             tlu_conf["trigger_polarity"] = trigger_inputs.get_section(
                 "input_%i" % (i + 1)
-            ).get(key="polarity", return_type=lambda x: TriggerPolarity[str(x).upper()].value,
-        )
+            ).get(
+                key="polarity",
+                return_type=lambda x: TriggerPolarity[str(x).upper()].value,
+            )
 
         tlu_conf["trigger_inputs_logic"] = trigger_inputs.get(
             key="input_logic", return_type=str
