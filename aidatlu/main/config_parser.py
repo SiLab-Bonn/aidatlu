@@ -43,7 +43,10 @@ def yaml_parser(conf_file_path: str) -> dict:
         "delay_4": yaml_conf["trigger_inputs"]["input_4"]["delay"],
         "delay_5": yaml_conf["trigger_inputs"]["input_5"]["delay"],
         "delay_6": yaml_conf["trigger_inputs"]["input_6"]["delay"],
-        "trigger_polarity": [yaml_conf["trigger_inputs"]["input_%s" % (i + 1)]["polarity"] for i in range(6)],
+        "trigger_polarity": [
+            yaml_conf["trigger_inputs"]["input_%s" % (i + 1)]["polarity"]
+            for i in range(6)
+        ],
         "enable_clock_lemo_output": yaml_conf["enable_clock_lemo_output"],
         "pmt_control_1": yaml_conf["pmt_power"]["control_voltage_1"],
         "pmt_control_2": yaml_conf["pmt_power"]["control_voltage_2"],

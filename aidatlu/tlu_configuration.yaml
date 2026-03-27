@@ -26,7 +26,7 @@ trigger_inputs:
   # and the Python logic operators: 'and', 'or', 'not' and so on. Dont forget to use brackets...
   input_logic: 'CH1 and CH2'
 
-  
+
   # Threshold voltages for the trigger inputs in V.
   # Stretches and delays each trigger input signal for an number of clock cycles (corresponds to 6.25ns steps),
   # TLU can trigger on a rising or falling edge. Trigger polarity is set using a string or boolean,
