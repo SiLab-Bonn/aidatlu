@@ -53,7 +53,7 @@ This means DUT interface signals (e.g. clock signals) are disrupted during these
 | `ignore_busy` | (Optional) Specific DUT interface ignores busy signals. | List | `[false, false, false, false]` |
 | `trigger_threshold` | (Required) Threshold setting of each individual trigger input channel given in V. | List | None |
 | `trigger_inputs_logic` | (Required) Trigger Logic configuration accepts a Python expression for the trigger inputs. The logic is set by using the variables for the input channels `CH1`, `CH2`, `CH3`, `CH4`, `CH5` and `CH6` and the Python logic operators `and`, `or`, `not` and so on. Don't forget to use brackets... | String | None |
-| `trigger_polarity` | (Optional) TLU can trigger on a rising or falling edge. Set to `rising` or `falling` | String | `falling` |
+| `trigger_polarity` | (Optional) Each input channel can trigger on a rising or falling edge. Set to `rising` or `falling` | List | `['falling', 'falling', 'falling', 'falling', 'falling', 'falling']` |
 | `trigger_signal_stretch` | (Required) Stretches each individual trigger input by a given number of clock cycles (corresponds to `6.25ns` steps) | List | None |
 | `trigger_signal_delay` | (Required) Delays each individual trigger input by a given number of clock cycles (corresponds to `6.25ns` steps) | List | None |
 | `enable_clock_lemo_output` | (Optional) Enable the LEMO clock output. | String | False |

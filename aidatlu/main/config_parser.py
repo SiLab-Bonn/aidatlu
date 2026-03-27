@@ -91,6 +91,10 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
         raise ValueError(
             "Set PMT power of all 4 outputs. The length of pmt_power has to be 4!"
         )
+    if len(toml_conf["trigger_polarity"]) != 6:
+        raise ValueError(
+            "Set the polarity of all 6 trigger inputs. The length of trigger_polarity has to be 6!"
+        )
     if len(toml_conf["trigger_signal_stretch"]) != 6:
         raise ValueError(
             "Set the signal stretch of all 6 trigger inputs. The length of trigger_signal_stretch has to be 6!"
@@ -108,7 +112,9 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
     else:
         conf["internal_trigger_rate"] = toml_conf["internal_trigger_rate"]
     if "trigger_polarity" not in keys:
-        conf["trigger_polarity"] = "falling"
+        conf["trigger_polarity"] = (
+            ["falling", "falling", "falling", "falling", "falling", "falling"],
+        )
     else:
         conf["trigger_polarity"] = toml_conf["trigger_polarity"]
     if "enable_clock_lemo_output" not in keys:
