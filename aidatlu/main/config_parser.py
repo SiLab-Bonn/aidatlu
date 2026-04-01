@@ -1,6 +1,8 @@
 import yaml
 import tomllib
 
+from typing import Any
+
 
 def yaml_parser(conf_file_path: str) -> dict:
     """Parses a yaml configuration file to a configuration dictionary.
@@ -60,7 +62,9 @@ def yaml_parser(conf_file_path: str) -> dict:
     return conf
 
 
-def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
+def toml_parser(
+    conf_file_path: str | dict[str, Any], constellation: bool = False
+) -> dict:
     """Parses a toml configuration file to a configuration dictionary.
 
     Args:
@@ -70,7 +74,7 @@ def toml_parser(conf_file_path: str, constellation: bool = False) -> dict:
     Returns:
         conf: configuration dictionary
     """
-    if not constellation:
+    if not isinstance(conf_file_path, dict):
         with open(conf_file_path, "rb") as file:
             toml_conf = tomllib.load(file)
     else:

@@ -27,7 +27,7 @@ dependencies = [
 "Repository" = "https://github.com/SiLab-Bonn/aidatlu/"
 
 [project.optional-dependencies]
-constellation = ["ConstellationDAQ"]
+constellation = ["ConstellationDAQ>=0.8"]
 hw = ["uhal"]
 monitor = ["online_monitor"]
 test = ["pytest", "pytest-cov", "pytest-sugar"]
