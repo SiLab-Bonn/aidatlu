@@ -17,7 +17,6 @@ from aidatlu.hardware.i2c import I2CCore
 from aidatlu.main.config_parser import toml_parser
 from aidatlu.hardware.tlu_controller import TLUControl, TLUConfigure
 from aidatlu.test.utils import MockI2C
-import aidatlu.logger as logger
 
 
 class DUTInterfaceType(StrEnum):
