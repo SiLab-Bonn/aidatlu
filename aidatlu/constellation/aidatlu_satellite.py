@@ -80,7 +80,7 @@ class AidaTLU(TransmitterSatellite):
         self._init_tlu(configuration)
         return "Do reconfigure complete"
 
-    def do_starting(self, run_identifier: str = None) -> str:
+    def do_starting(self, run_identifier: str) -> str:
         if self.use_mock:
             start_time = time.time()
 
@@ -140,7 +140,7 @@ class AidaTLU(TransmitterSatellite):
                 while len(data_queue) >= 6:
                     self._handle_event([data_queue.popleft() for _ in range(6)])
 
-        t.do_run = False
+        setattr(t, "do_run", False)
         return "Do running complete"
 
     def do_stopping(self) -> str:
@@ -148,7 +148,7 @@ class AidaTLU(TransmitterSatellite):
         self.tlu_controller.pull_fifo_event()
         return "Do running complete"
 
-    def _read_config(self, config: Configuration):
+    def _read_config(self, config: Configuration) -> dict[str, Any]:
         "Reads and checks Constellation configuration"
         config.set_default(
             key="clock_config",
@@ -196,7 +196,7 @@ class AidaTLU(TransmitterSatellite):
 
         return configuration
 
-    def _init_tlu(self, config: Configuration) -> None:
+    def _init_tlu(self, config: dict[str, Any]) -> None:
         "Parse configuration file to TLU and initialize, set loggers"
         self.tlu_config = toml_parser(config, constellation=True)
         self.clock_file = config["clock_config"]
