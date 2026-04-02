@@ -265,7 +265,7 @@ class AidaTLU(TransmitterSatellite):
 
         if self.tlu_controller.get_event_fifo_csr() == 0x10:
             self.log.warning("FIFO is full")
-            
+
     @cscp_requestable([SatelliteState.ORBIT])
     def reset_counters(self) -> tuple[str, Any, dict[str, Any]]:
         self.tlu_controller.reset_fifo()
@@ -274,8 +274,8 @@ class AidaTLU(TransmitterSatellite):
         self.tlu_controller.get_event_fifo_csr()
         self.tlu_controller.reset_counters()
         self.tlu_controller.get_scalers()
-        return "Counters reset"
-      
+        return "Counters reset", None, {}
+
     @schedule_metric("Hz", 1, [SatelliteState.RUN])
     def pre_veto_rate(self) -> float:
         return self._pre_veto_rate
