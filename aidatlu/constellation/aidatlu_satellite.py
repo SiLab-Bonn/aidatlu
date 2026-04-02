@@ -263,8 +263,8 @@ class AidaTLU(TransmitterSatellite):
         if self.tlu_controller.get_event_fifo_csr() == 0x10:
             self.log.warning("FIFO is full")
 
-    @cscp_requestable
-    def reset_counters(self) -> str:
+    @cscp_requestable([SatelliteState.ORBIT])
+    def reset_counters(self) -> tuple[str, Any, dict[str, Any]]:
         self.tlu_controller.reset_fifo()
         self.tlu_controller.reset_timestamp()
         self.tlu_controller.get_event_fifo_fill_level()
