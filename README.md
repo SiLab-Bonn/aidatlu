@@ -9,7 +9,9 @@ The software is a lightweight version written in Python with a focus on readabil
 Most user cases can be set with a .yaml configuration file and started by executing a single Python script.
 For a more in-depth look at the hardware components please take a look at the official [AIDA-2020 TLU project](https://gitlab.com/ohwr/project/fmc-mtlu).
 Additionally, take a look at the [documentation](https://silab-bonn.github.io/aidatlu/) for this software.
+
 # Installation
+
 ## IPbus
 You need to install the ControlHub from the [IPbus](https://ipbus.web.cern.ch/doc/user/html/software/install/compile.html) software.
 Follow the linked tutorial for prerequisites and general installation.
@@ -38,8 +40,10 @@ The default IP address of the TLU is:
 ```
 192.168.200.30
 ```
-## Python packages
-Install the Python package as usual.
+## Python Packages
+
+### From Source
+After cloning the repository, install the Python packages as usual.
 ```bash
 pip install -e .
 ```
@@ -49,36 +53,47 @@ To connect to the hardware, you need to install the `hw` component as well.
 pip install -e .[hw]
 ```
 
-# Usage
-There are multiple ways to use the control software of the AIDA 2020 TLU.
-If one executes tlu.py in the main directory, the TLU is initialized, configured and starts a run automatically.
+### From PyPI
 ```bash
-    python tlu.py
+pip install aidatlu
 ```
-The TLU is configured with the standard tlu_configuration file. To stop the run use ctrl+c.
 
+# Usage
 
-While configuring the TLU outputs are powered on and off.
-This leads to problems in AIDA mode where the clock is powered off shortly during configuration.
-To avoid this at the start of runs in AIDA mode the best way is to use the aidatlu_run.py script.
-This is started and controlled with the terminal input:
+## Stand-Alone Python Implementation
+Connect to the TLU, configure and start a run via:
+```bash
+    pyaidatlu -c path/to/configuration.yaml
+```
+All configurations are done by the use of a [yaml file](https://github.com/SiLab-Bonn/aidatlu/tree/main/aidatlu).
+To stop the run use `ctrl+c`.
+
+After installing from source, it is also possible to control the TLU via IPython:
 ```bash
     python -i aidatlu_run.py
 ```
-This initializes the main tlu.py script. One is now able to control the TLU through the Python terminal interface,
+One is now able to control the TLU through the Python terminal interface,
 with the following commands:
 ```bash
     tlu.configure()
     tlu.run()
-    tlu.help()
 ```
-Naturally, this also works for any EUDET mode runs.
-Runs are stopped with the keyboard interrupt ctr+c.
-For more commands take a look at the python script aidatlu.py.
+Runs are stopped with the keyboard interrupt `ctr+c`.
 
-All configurations are done by the use of a yaml file (tlu_configuration.yaml).
+## Constellation
+Start a satellite with:
+```bash
+    SatelliteAidaTLU -g testbeam -n TLU
+```
+For more information take a look at the [constellation readme](https://github.com/SiLab-Bonn/aidatlu/tree/main/aidatlu/constellation).
 
 # Tests
+
+Test the software by using a TLU mock.
+Just set the environment variable:
+```bash
+    TEST=True pyaidatlu -c path/to/configuration.yaml
+```
 With [pytest](https://docs.pytest.org/en/stable/) the AIDA TLU control program can be tested.
 There is also an implemented AIDA-TLU mock, to allow tests and software development without hardware,
 which also allows software development and testing without a working IPbus installation.
@@ -87,14 +102,8 @@ The mock is used as a default.
 ```bash
     pytest -sv
 ```
-To test with connected hardware set an environment variable ```HW=True````:
+To test with connected hardware set an environment variable:
 
 ```bash
     HW=True pytest -sv
-```
-
-You can also set the variable ```HW=False```` to test the mock TLU:
-
-```bash
-    HW=False pytest -sv
 ```

@@ -8,8 +8,8 @@ from typing import Any
 
 import numpy as np
 
-from constellation.core.configuration import Configuration
-from constellation.core.message.cscp1 import SatelliteState
+from constellation.core.configuration import Configuration, enum_type
+from constellation.core.protocol.cscp1 import SatelliteState
 from constellation.core.monitoring import schedule_metric
 from constellation.core.transmitter_satellite import TransmitterSatellite
 from constellation.core.commandmanager import cscp_requestable
@@ -18,7 +18,6 @@ from aidatlu.hardware.i2c import I2CCore
 from aidatlu.main.config_parser import toml_parser
 from aidatlu.hardware.tlu_controller import TLUControl, TLUConfigure
 from aidatlu.test.utils import MockI2C
-import aidatlu.logger as logger
 
 
 class DUTInterfaceType(StrEnum):
@@ -123,21 +122,21 @@ class AidaTLU(TransmitterSatellite):
 
         return "Do starting complete"
 
-    def do_run(self, run_identifier: str) -> str:
+    def do_run(self) -> str:
         t = threading.Thread(target=self.handle_status)
         t.start()
 
         # We ideally pull 6 uint32s, but we might pull more or less
         # Thus, add data to a queue and pop in blocks of 6 uint32s
         data_queue = deque()
-        while not self._state_thread_evt.is_set():
+        while not self.stop_requested():
             evt = self.tlu_controller.pull_fifo_event()
             if np.size(evt) > 1:
                 data_queue.extend(evt)
                 while len(data_queue) >= 6:
                     self._handle_event([data_queue.popleft() for _ in range(6)])
 
-        t.do_run = False
+        setattr(t, "do_run", False)
         return "Do running complete"
 
     def do_stopping(self) -> str:
@@ -145,7 +144,7 @@ class AidaTLU(TransmitterSatellite):
         self.tlu_controller.pull_fifo_event()
         return "Do running complete"
 
-    def _read_config(self, config: Configuration):
+    def _read_config(self, config: Configuration) -> dict[str, Any]:
         "Reads and checks Constellation configuration"
         config.set_default(
             key="clock_config",
@@ -157,20 +156,24 @@ class AidaTLU(TransmitterSatellite):
         config.set_default(key="internal_trigger_rate", value=0)
         config.set_default(key="enable_clock_lemo_output", value=False)
         config.set_default(key="status_interval", value=1.0)
+        config.set_default(
+            key="trigger_polarity",
+            value=["falling", "falling", "falling", "falling", "falling", "falling"],
+        )
 
         configuration = {
             "internal_trigger_rate": config.get_int(key="internal_trigger_rate"),
             "dut_interfaces": config.get_array(
                 key="dut_interfaces",
-                element_type=lambda x: DUTInterfaceType[str(x).upper()].value,
+                element_type=enum_type(DUTInterfaceType),
             ),
             "trigger_threshold": config.get_array(
                 key="trigger_threshold", element_type=float
             ),
             "trigger_inputs_logic": config.get(key="trigger_inputs_logic"),
-            "trigger_polarity": config.get(
+            "trigger_polarity": config.get_array(
                 key="trigger_polarity",
-                return_type=lambda x: TriggerPolarity[str(x).upper()].value,
+                element_type=enum_type(TriggerPolarity),
             ),
             "trigger_signal_stretch": config.get_array(
                 key="trigger_signal_stretch", element_type=int
@@ -189,7 +192,7 @@ class AidaTLU(TransmitterSatellite):
 
         return configuration
 
-    def _init_tlu(self, config: Configuration) -> None:
+    def _init_tlu(self, config: dict[str, Any]) -> None:
         "Parse configuration file to TLU and initialize, set loggers"
         self.tlu_config = toml_parser(config, constellation=True)
         self.clock_file = config["clock_config"]
@@ -262,7 +265,7 @@ class AidaTLU(TransmitterSatellite):
 
         if self.tlu_controller.get_event_fifo_csr() == 0x10:
             self.log.warning("FIFO is full")
-
+            
     @cscp_requestable([SatelliteState.ORBIT])
     def reset_counters(self) -> tuple[str, Any, dict[str, Any]]:
         self.tlu_controller.reset_fifo()
@@ -272,63 +275,43 @@ class AidaTLU(TransmitterSatellite):
         self.tlu_controller.reset_counters()
         self.tlu_controller.get_scalers()
         return "Counters reset"
+      
+    @schedule_metric("Hz", 1, [SatelliteState.RUN])
+    def pre_veto_rate(self) -> float:
+        return self._pre_veto_rate
 
-    @schedule_metric("Hz", 1)
-    def pre_veto_rate(self) -> float | None:
-        if self.fsm.state == SatelliteState.RUN:
-            return self._pre_veto_rate
-        return None
+    @schedule_metric("Hz", 1, [SatelliteState.RUN])
+    def post_veto_rate(self) -> float:
+        return self._post_veto_rate
 
-    @schedule_metric("Hz", 1)
-    def post_veto_rate(self) -> float | None:
-        if self.fsm.state == SatelliteState.RUN:
-            return self._post_veto_rate
-        return None
+    @schedule_metric("", 1, [SatelliteState.RUN])
+    def post_veto(self) -> int:
+        return self.tlu_controller.get_post_veto_trigger_number()
 
-    @schedule_metric("", 1)
-    def post_veto(self) -> int | None:
-        if self.fsm.state == SatelliteState.RUN:
-            return self.tlu_controller.get_post_veto_trigger_number()
-        return None
+    @schedule_metric("", 1, [SatelliteState.RUN])
+    def pre_veto(self) -> int:
+        return self.tlu_controller.get_pre_veto_trigger_number()
 
-    @schedule_metric("", 1)
-    def pre_veto(self) -> int | None:
-        if self.fsm.state == SatelliteState.RUN:
-            return self.tlu_controller.get_pre_veto_trigger_number()
-        return None
+    @schedule_metric("", 1, [SatelliteState.ORBIT, SatelliteState.RUN])
+    def sc1(self) -> int:
+        return self.tlu_controller.get_scaler(0)
 
-    @schedule_metric("", 1)
-    def sc1(self) -> int | None:
-        if self.fsm.state in [SatelliteState.ORBIT, SatelliteState.RUN]:
-            return self.tlu_controller.get_scaler(0)
-        return None
+    @schedule_metric("", 1, [SatelliteState.ORBIT, SatelliteState.RUN])
+    def sc2(self) -> int:
+        return self.tlu_controller.get_scaler(1)
 
-    @schedule_metric("", 1)
-    def sc2(self) -> int | None:
-        if self.fsm.state in [SatelliteState.ORBIT, SatelliteState.RUN]:
-            return self.tlu_controller.get_scaler(1)
-        return None
+    @schedule_metric("", 1, [SatelliteState.ORBIT, SatelliteState.RUN])
+    def sc3(self) -> int:
+        return self.tlu_controller.get_scaler(2)
 
-    @schedule_metric("", 1)
-    def sc3(self) -> int | None:
-        if self.fsm.state in [SatelliteState.ORBIT, SatelliteState.RUN]:
-            return self.tlu_controller.get_scaler(2)
-        return None
+    @schedule_metric("", 1, [SatelliteState.ORBIT, SatelliteState.RUN])
+    def sc4(self) -> int:
+        return self.tlu_controller.get_scaler(3)
 
-    @schedule_metric("", 1)
-    def sc4(self) -> int | None:
-        if self.fsm.state in [SatelliteState.ORBIT, SatelliteState.RUN]:
-            return self.tlu_controller.get_scaler(3)
-        return None
+    @schedule_metric("", 1, [SatelliteState.ORBIT, SatelliteState.RUN])
+    def sc5(self) -> int:
+        return self.tlu_controller.get_scaler(4)
 
-    @schedule_metric("", 1)
-    def sc5(self) -> int | None:
-        if self.fsm.state in [SatelliteState.ORBIT, SatelliteState.RUN]:
-            return self.tlu_controller.get_scaler(4)
-        return None
-
-    @schedule_metric("", 1)
-    def sc6(self) -> int | None:
-        if self.fsm.state in [SatelliteState.ORBIT, SatelliteState.RUN]:
-            return self.tlu_controller.get_scaler(5)
-        return None
+    @schedule_metric("", 1, [SatelliteState.ORBIT, SatelliteState.RUN])
+    def sc6(self) -> int:
+        return self.tlu_controller.get_scaler(5)

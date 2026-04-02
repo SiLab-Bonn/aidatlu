@@ -90,7 +90,7 @@ def test_trigger_logic_configuration():
     )
     tlu_configure.conf_trigger_logic()
     if MOCK:
-        assert TLU.i2c.read_register("triggerInputs.InvertEdgeW") == 0x1
+        assert TLU.i2c.read_register("triggerInputs.InvertEdgeW") == 0x3F
         assert TLU.i2c.read_register("triggerLogic.InternalTriggerIntervalW") == 0x640
         # Read register does not have the same value as the write register for the mock
         TLU.i2c.write_register(
