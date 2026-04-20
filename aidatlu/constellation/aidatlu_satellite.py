@@ -54,7 +54,7 @@ class AidaTLU(TransmitterSatellite):
             self.i2c_method = MockI2C
             self.hw = None
 
-        self._init_tlu(configuration)
+        self._init_tlu(config)
         self.tlu_configure.configure()
         self.tlu_controller.get_event_fifo_fill_level()
         self.tlu_controller.get_event_fifo_csr()
