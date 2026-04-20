@@ -12,6 +12,7 @@ from constellation.core.configuration import Configuration, enum_type
 from constellation.core.protocol.cscp1 import SatelliteState
 from constellation.core.monitoring import schedule_metric
 from constellation.core.transmitter_satellite import TransmitterSatellite
+from constellation.core.commandmanager import cscp_requestable
 
 from aidatlu.hardware.i2c import I2CCore
 from aidatlu.main.config_parser import toml_parser
@@ -56,15 +57,16 @@ class AidaTLU(TransmitterSatellite):
             self.hw = None
 
         self._init_tlu(configuration)
-
+        self.tlu_configure.configure()
+        self.tlu_controller.get_event_fifo_fill_level()
+        self.tlu_controller.get_event_fifo_csr()
+        self.tlu_controller.reset_counters()
+        self.tlu_controller.get_scalers()
         return "Initializing complete"
 
     def do_launching(self, payload: Any = None) -> str:
-        self.tlu_controller.reset_counters()
         self.tlu_controller.reset_fifo()
         self.tlu_controller.reset_timestamp()
-        self.tlu_configure.configure()
-        self.conf_list = self.tlu_configure.get_configuration_table()
         self.tlu_controller.get_event_fifo_fill_level()
         self.tlu_controller.get_event_fifo_csr()
         self.tlu_controller.reset_counters()
@@ -72,15 +74,9 @@ class AidaTLU(TransmitterSatellite):
         return "Do launching complete"
 
     def do_landing(self) -> str:
-        self.tlu_controller.reset_configuration()
         return "Do landing complete"
 
-    def do_reconfigure(self, config: Configuration) -> str:
-        configuration = self._read_config(config)
-        self._init_tlu(configuration)
-        return "Do reconfigure complete"
-
-    def do_starting(self, run_identifier: str) -> str:
+    def do_starting(self, run_identifier: str = None) -> str:
         if self.use_mock:
             start_time = time.time()
 
@@ -269,6 +265,16 @@ class AidaTLU(TransmitterSatellite):
 
         if self.tlu_controller.get_event_fifo_csr() == 0x10:
             self.log.warning("FIFO is full")
+
+    @cscp_requestable([SatelliteState.ORBIT])
+    def reset_counters(self) -> tuple[str, Any, dict[str, Any]]:
+        self.tlu_controller.reset_fifo()
+        self.tlu_controller.reset_timestamp()
+        self.tlu_controller.get_event_fifo_fill_level()
+        self.tlu_controller.get_event_fifo_csr()
+        self.tlu_controller.reset_counters()
+        self.tlu_controller.get_scalers()
+        return "Counters reset", None, {}
 
     @schedule_metric("Hz", 1, [SatelliteState.RUN])
     def pre_veto_rate(self) -> float:

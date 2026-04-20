@@ -40,8 +40,8 @@ SatelliteAidaTLU -g testbeam -n TLU
 ```
 
 ```{note}
-The TLU configuration resets during launching and landing.
-This means DUT interface signals (e.g. clock signals) are disrupted during these transitions.
+The TLU configuration resets during initializing.
+This means DUT interface signals (e.g. clock signals) are disrupted here.
 ```
 
 ## Parameters
@@ -100,6 +100,12 @@ The following metrics are distributed by this satellite and can be subscribed to
 | `SC4` | Total number that trigger input 4 received a valid signal | Integer | 1s |
 | `SC5` | Total number that trigger input 5 received a valid signal | Integer | 1s |
 | `SC6` | Total number that trigger input 6 received a valid signal | Integer | 1s |
+
+## Custom Commands
+
+| Command | Description | Arguments | Return Value | Allowed States |
+|---------|-------------|-----------|--------------|----------------|
+| `reset_counters` | Resets all internal counters of the TLU | - | String | `INIT`, `ORBIT`, `RUN` |
 
 ## Data
 
