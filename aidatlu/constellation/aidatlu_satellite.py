@@ -15,7 +15,6 @@ from constellation.core.transmitter_satellite import TransmitterSatellite
 from constellation.core.commandmanager import cscp_requestable
 
 from aidatlu.hardware.i2c import I2CCore
-from aidatlu.main.config_parser import toml_parser
 from aidatlu.hardware.tlu_controller import TLUControl, TLUConfigure
 from aidatlu.test.utils import MockI2C
 
@@ -40,8 +39,7 @@ class AidaTLU(TransmitterSatellite):
         self.file_path = Path(__file__).parent
 
     def do_initializing(self, config: Configuration) -> str:
-
-        configuration = self._read_config(config)
+        self.tlu_conf = self._read_config(config)
 
         if not self.use_mock:
             import uhal
@@ -56,7 +54,7 @@ class AidaTLU(TransmitterSatellite):
             self.i2c_method = MockI2C
             self.hw = None
 
-        self._init_tlu(configuration)
+        self._init_tlu(config)
         self.tlu_configure.configure()
         self.tlu_controller.get_event_fifo_fill_level()
         self.tlu_controller.get_event_fifo_csr()
@@ -152,54 +150,86 @@ class AidaTLU(TransmitterSatellite):
                 (self.file_path / ".." / "misc" / "aida_tlu_clk_config.txt").resolve()
             ),
         )
-        config.set_default(key="ignore_busy", value=[False, False, False, False])
+
         config.set_default(key="internal_trigger_rate", value=0)
         config.set_default(key="enable_clock_lemo_output", value=False)
         config.set_default(key="status_interval", value=1.0)
-        config.set_default(
-            key="trigger_polarity",
-            value=["falling", "falling", "falling", "falling", "falling", "falling"],
-        )
 
-        configuration = {
+        tlu_conf = {
             "internal_trigger_rate": config.get_int(key="internal_trigger_rate"),
-            "dut_interfaces": config.get_array(
-                key="dut_interfaces",
-                element_type=enum_type(DUTInterfaceType),
-            ),
-            "trigger_threshold": config.get_array(
-                key="trigger_threshold", element_type=float
-            ),
-            "trigger_inputs_logic": config.get(key="trigger_inputs_logic"),
-            "trigger_polarity": config.get_array(
-                key="trigger_polarity",
-                element_type=enum_type(TriggerPolarity),
-            ),
-            "trigger_signal_stretch": config.get_array(
-                key="trigger_signal_stretch", element_type=int
-            ),
-            "trigger_signal_delay": config.get_array(
-                key="trigger_signal_delay", element_type=int
-            ),
             "enable_clock_lemo_output": config.get(key="enable_clock_lemo_output"),
-            "pmt_power": config.get_array(key="pmt_power", element_type=float),
-            "clock_config": config.get_path(key="clock_config", check_exists=True),
-            "ignore_busy": config.get_array(key="ignore_busy", element_type=bool),
+            "save_data": False,
+            "output_data_path": None,
+            "zmq_connection": None,
+            "max_trigger_number": None,
+            "timeout": None,
         }
+        if config.get(key="clock_config") in [False, None, "off"]:
+            tlu_conf["clock_config"] = str(
+                (self.file_path / ".." / "misc" / "aida_tlu_clk_config.txt").resolve()
+            )
+        else:
+            tlu_conf["clock_config"] = config.get_path(
+                key="clock_config", check_exists=True
+            )
+
+        dut_interfaces = config.get_section("dut_interfaces")
+        trigger_inputs = config.get_section("trigger_inputs")
+
+        for i in range(4):
+            tlu_conf["DUT_%i_ignore_busy" % (i + 1)] = dut_interfaces.get_section(
+                "dut_%i" % (i + 1)
+            ).get(key="ignore_busy", default_value=False, return_type=bool)
+            tlu_conf["pmt_control_%i" % (i + 1)] = config.get_section(
+                "pmt_power"
+            ).get_float(key="control_voltage_%i" % (i + 1))
+            if dut_interfaces.get_section("dut_%i" % (i + 1)).get(key="mode") == False:
+                tlu_conf["DUT_%i" % (i + 1)] = False
+            else:
+                tlu_conf["DUT_%i" % (i + 1)] = dut_interfaces.get_section(
+                    "dut_%i" % (i + 1)
+                ).get(
+                    key="mode",
+                    return_type=lambda x: DUTInterfaceType[str(x).upper()].value,
+                )
+
+        for i in range(6):
+            trigger_inputs.get_section("input_%i" % (i + 1)).set_default(
+                key="polarity", value="falling"
+            )
+            tlu_conf["threshold_%i" % (i + 1)] = trigger_inputs.get_section(
+                "input_%i" % (i + 1)
+            ).get_float(key="threshold")
+            tlu_conf["stretch_%i" % (i + 1)] = trigger_inputs.get_section(
+                "input_%i" % (i + 1)
+            ).get_int(key="stretch")
+            tlu_conf["delay_%i" % (i + 1)] = trigger_inputs.get_section(
+                "input_%i" % (i + 1)
+            ).get_int(key="delay")
+        tlu_conf["trigger_polarity"] = [
+            trigger_inputs.get_section("input_%i" % (i + 1)).get(
+                key="polarity",
+                return_type=lambda x: TriggerPolarity[str(x).upper()].value,
+            )
+            for i in range(6)
+        ]
+
+        tlu_conf["trigger_inputs_logic"] = trigger_inputs.get(
+            key="input_logic", return_type=str
+        )
 
         self.status_interval = config.get_float("status_interval")
         self.log.debug("Calculating status every %.3f s" % self.status_interval)
 
-        return configuration
+        return tlu_conf
 
     def _init_tlu(self, config: dict[str, Any]) -> None:
         "Parse configuration file to TLU and initialize, set loggers"
-        self.tlu_config = toml_parser(config, constellation=True)
-        self.clock_file = config["clock_config"]
+        self.clock_file = self.tlu_conf["clock_config"]
         self.tlu_controller = TLUControl(self.hw, i2c=self.i2c_method)
         self.tlu_controller.write_clock_config(self.clock_file)
 
-        self.tlu_configure = TLUConfigure(self.tlu_controller, self.tlu_config)
+        self.tlu_configure = TLUConfigure(self.tlu_controller, self.tlu_conf)
         self.tlu_controller.reset_configuration()
 
     def _handle_event(self, evt: list) -> None:
