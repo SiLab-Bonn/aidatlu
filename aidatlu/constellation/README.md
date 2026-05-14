@@ -105,7 +105,7 @@ The following metrics are distributed by this satellite and can be subscribed to
 
 | Command | Description | Arguments | Return Value | Allowed States |
 |---------|-------------|-----------|--------------|----------------|
-| `reset_counters` | Resets all internal counters of the TLU | - | String | `INIT`, `ORBIT`, `RUN` |
+| `reset_counters` | Resets all internal counters of the TLU | - | String | `ORBIT` |
 
 ## Data
 
