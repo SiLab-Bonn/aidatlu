@@ -10,6 +10,7 @@ import numpy as np
 
 from constellation.core.configuration import Configuration, enum_type
 from constellation.core.protocol.cscp1 import SatelliteState
+from constellation.core.message.cscp1 import CSCP1Message
 from constellation.core.monitoring import schedule_metric
 from constellation.core.transmitter_satellite import TransmitterSatellite
 from constellation.core.commandmanager import cscp_requestable
@@ -267,7 +268,9 @@ class AidaTLU(TransmitterSatellite):
             self.log.warning("FIFO is full")
 
     @cscp_requestable([SatelliteState.ORBIT])
-    def reset_counters(self) -> tuple[str, Any, dict[str, Any]]:
+    def reset_counters(
+        self, request: CSCP1Message | None = None
+    ) -> tuple[str, Any, dict[str, Any]]:
         self.tlu_controller.reset_fifo()
         self.tlu_controller.reset_timestamp()
         self.tlu_controller.get_event_fifo_fill_level()
