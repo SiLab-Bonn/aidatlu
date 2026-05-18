@@ -22,6 +22,7 @@ from aidatlu.test.utils import MockI2C
 
 class DUTInterfaceType(StrEnum):
     EUDET = "eudet"
+    EUDET_WITH_BUSY = "eudet_with_busy"
     AIDA = "aida"
     AIDATRIG = "aidatrig"
     OFF = "off"
