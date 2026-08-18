@@ -13,11 +13,11 @@ from rich.theme import Theme
 # - `logging.INFO`     : 20
 # - `logging.WARNING`  : 30
 # - `logging.NOTICE`   : 25
-# - `logging.SUCCESS`  : 40
+# - `logging.SUCCESS`  : 45
 
 logging.NOTICE = 25
 logging.addLevelName(logging.NOTICE, "NOTICE")
-logging.SUCCESS = 40
+logging.SUCCESS = 45
 logging.addLevelName(logging.SUCCESS, "SUCCESS")
 FORMAT = "[%(name)-16s] %(message)s"
 
