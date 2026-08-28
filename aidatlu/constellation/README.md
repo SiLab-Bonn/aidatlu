@@ -49,7 +49,7 @@ This means DUT interface signals (e.g. clock signals) are disrupted here.
 | Configuration | Description | Type | Default Value |
 |-----------|-------------|------| ------|
 | `internal_trigger_rate` | (Optional) Generates internal triggers with a given frequency given in Hz. | Integer | 0 |
-| `dut_interfaces` | (Required) Specify the operation mode of the DUT interface (`aida`, `eudet`, `aidatrig`, `off`), given as list with a required length of 4. `aida` and `eudet` correspond to the classic AIDA and EUDET mode respectively and `aidatrig` to the AIDA-mode with handshake. Disable a DUT interface with `off`. | List | None |
+| `dut_interfaces` | (Required) Specify the operation mode of the DUT interface (`aida`, `eudet`, `aidatrig`, `eudet_with_busy`, `off`), given as list with a required length of 4. `aida` and `eudet` correspond to the classic AIDA and EUDET mode respectively and `aidatrig` to the AIDA-mode with handshake. `eudet_with_busy` additionally allows an asserted DUTClk from the device to produce a global veto. Disable a DUT interface with `off`. | List | None |
 | `ignore_busy` | (Optional) Specific DUT interface ignores busy signals. | List | `[false, false, false, false]` |
 | `trigger_threshold` | (Required) Threshold setting of each individual trigger input channel given in V. | List | None |
 | `trigger_inputs_logic` | (Required) Trigger Logic configuration accepts a Python expression for the trigger inputs. The logic is set by using the variables for the input channels `CH1`, `CH2`, `CH3`, `CH4`, `CH5` and `CH6` and the Python logic operators `and`, `or`, `not` and so on. Don't forget to use brackets... | String | None |

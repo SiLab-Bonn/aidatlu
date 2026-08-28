@@ -9,7 +9,7 @@ To disable the generation of internal triggers set this frequency to zero.
 ### DUT Module (dut_module)
 The DUT module configures the individual DUT interfaces.
 Where each interface can be set to one operating mode.
-The possible modes are 'aida', 'aidatrig' and 'eudet'.
+The possible modes are 'aida', 'aidatrig', 'eudet' and 'eudet_with_busy'.
 With 'aidatrig' the AIDA mode with additional trigger number.
 And 'aida' or 'eudet' the AIDA or EUDET operating modes.
 It is important to note that only working DUT devices should be enabled.
